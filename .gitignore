@@ -1,0 +1,14 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# OS X #
+.DS_Store
+
+# Eclipse #
+.classpath
+.project
+target
