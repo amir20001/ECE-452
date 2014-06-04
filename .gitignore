@@ -10,4 +10,5 @@
 
 # Eclipse #
 .classpath
+.project
 target
