@@ -4,10 +4,14 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.PlusClient;
 
 import android.app.Activity;
@@ -35,13 +39,17 @@ public class LoginActivity extends Activity implements OnClickListener,
 	
 	
 	//Google Variables
-	private boolean g_SignInClicked;
 	private static final String g_TAG = "LoginActivity";
 	private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
+	private static final int RC_SIGN_IN = 0;
 	
-	private PlusClient g_PlusClient;
+	private boolean g_SignInClicked;
+	private boolean g_IntentInProgress;
+	
+	private GoogleApiClient g_GoogleApiClient;
 	private ConnectionResult g_ConnectionResult;
-	private ProgressDialog g_ConnectionProgressDialog;
+	
+	private SignInButton g_signInButton;
 	
 	//Facebook override
 	@Override
@@ -54,15 +62,15 @@ public class LoginActivity extends Activity implements OnClickListener,
 	    fb_uiHelper.onCreate(savedInstanceState);
 	    
 	    //initialize google client
-	    g_PlusClient = new PlusClient.Builder(this, this, this)
-	    	.setActions("http://schemas.google.com/AddActivity")
-	    	.setScopes(Scopes.PLUS_LOGIN)
-	    	.build();
+	    g_signInButton = (SignInButton) findViewById(R.id.button_googleAuth);
+	    g_signInButton.setOnClickListener(this);
 	    
-	    g_ConnectionProgressDialog = new ProgressDialog(this);
-	    g_ConnectionProgressDialog.setMessage("Signing In..");
-	    
-	    findViewById(R.id.button_googleAuth).setOnClickListener(this);
+	    g_GoogleApiClient = new GoogleApiClient.Builder(this)
+        		.addConnectionCallbacks(this)
+    			.addOnConnectionFailedListener(this)
+    			.addApi(Plus.API)
+    			.addScope(Plus.SCOPE_PLUS_LOGIN).build();
+	    	
 	    
 	}
 	//Facebook override
@@ -71,11 +79,24 @@ public class LoginActivity extends Activity implements OnClickListener,
 	    super.onResume();
 	    fb_uiHelper.onResume();
 	}
-	//Facebook override
+	//Facebook/Google override
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
+	    //Facebook
 	    fb_uiHelper.onActivityResult(requestCode, resultCode, data);
+	    //Google
+	    if(requestCode == RC_SIGN_IN){
+	    	if(resultCode != RESULT_OK){
+	    		g_SignInClicked = false;
+	    	}
+	    	
+	    	g_IntentInProgress = false;
+	    	
+	    	if(!g_GoogleApiClient.isConnecting()){
+	    		g_GoogleApiClient.connect();
+	    	}
+	    }
 	}
 	//Facebook override
 	@Override
@@ -112,15 +133,33 @@ public class LoginActivity extends Activity implements OnClickListener,
 	    }
 	}
 	//Google override
+	protected void onStart(){
+		super.onStart();
+		g_GoogleApiClient.connect();
+	}
+	
+	//Google override
+	protected void onStop(){
+		super.onStop();
+		if(g_GoogleApiClient.isConnected()){
+			g_GoogleApiClient.disconnect();
+		}
+	}
+	
+	//Google override
 	public void onConnectionFailed(ConnectionResult result)
 	{
-	        if (result.hasResolution()) {
-	            try {
-	                result.startResolutionForResult(this,
-	                        REQUEST_CODE_RESOLVE_ERR);
-	            } catch (SendIntentException e) {
-	                g_PlusClient.connect();
-	            }
+	        if (!result.hasResolution()) {
+	            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this, 0).show();
+	            return;
+	        }
+	        
+	        if(!g_IntentInProgress){
+	        	g_ConnectionResult = result;
+	        	
+	        	if(g_SignInClicked){
+	        		resolveSignInErrors();
+	        	}
 	        }
 
 		    // Save the intent so that we can start an activity when the user clicks
@@ -131,46 +170,44 @@ public class LoginActivity extends Activity implements OnClickListener,
 	@Override
 	public void onConnected(Bundle connectionHint) {
 	    // We've resolved any connection errors.
-		g_ConnectionProgressDialog.dismiss();
 		Log.d(g_TAG, "connected");
+		g_SignInClicked = false;
     	Intent i = new Intent(LoginActivity.this,
                 ListeningRoom.class);
         startActivity(i);
         finish();
 
 	}
-
-	@Override
-	public void onDisconnected() {
-	    Log.d(g_TAG, "disconnected");
-    	Intent i = new Intent(LoginActivity.this,
-                LoginActivity.class);
-        startActivity(i);
-        finish();
-
-	}
 	
 	@Override
+	public void onConnectionSuspended(int arg0){
+		g_GoogleApiClient.connect();
+	}
+	
+	//On-Click override for Google sign-in button
+	@Override
 	public void onClick(View v) {
-	    if (v.getId() == R.id.button_googleAuth
-	            && !g_PlusClient.isConnected()) {
-	        if(g_ConnectionResult == null)
-	        {
-	        	g_ConnectionProgressDialog.show();
-	        }
-	        else
-	        {
-	            try {
-	                g_ConnectionResult.startResolutionForResult(
-	                        getParent(), REQUEST_CODE_RESOLVE_ERR);
-	            } catch (SendIntentException e) {
-	                // Try connecting again.
-	                g_ConnectionResult = null;
-	                g_PlusClient.connect();
-	            }
-	        }
+	    if (v.getId() == R.id.button_googleAuth)
+	    {
+	    	if(!g_GoogleApiClient.isConnecting()){
+	    		g_SignInClicked = true;
+	    		resolveSignInErrors();
+	    	}
 	    }
 	    
+	}
+	//Resolve sign-in errors for google sign-in
+	private void resolveSignInErrors()
+	{
+		if(g_ConnectionResult.hasResolution()){
+			try{
+				g_IntentInProgress = true;
+				g_ConnectionResult.startResolutionForResult(this, RC_SIGN_IN);
+			} catch (SendIntentException e){
+				g_IntentInProgress = false;
+				g_GoogleApiClient.connect();
+			}
+		}
 	}
 
 

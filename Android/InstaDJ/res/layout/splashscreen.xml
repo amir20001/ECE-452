@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/image_profile"
         android:layout_width="69dp"
         android:layout_height="264dp"
         android:layout_column="0"

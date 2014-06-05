@@ -3,9 +3,10 @@
     tools:context="com.instasolutions.instadj.ListeningRoom" >
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:id="@+id/action_listeners"
+        android:title="@string/action_listeners"
+        android:icon="@drawable/ic_action_group"
+        android:showAsAction="always"/>
+    	
 
 </menu>

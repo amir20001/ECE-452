@@ -43,13 +43,16 @@ public class ListeningRoom extends FragmentActivity
     private CharSequence mTitle;
     private CurrentRoomFragment curRoomFrag;
     private StationsFragment stationsFrag;
-    private Fragment fragment;
+    private FavoritesFragment favoritesFrag;
+    private ProfileFragment profileFrag;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         curRoomFrag = new CurrentRoomFragment();
         stationsFrag = new StationsFragment();
+        favoritesFrag = new FavoritesFragment();
+        profileFrag = new ProfileFragment();
         setContentView(R.layout.activity_listening_room);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -74,6 +77,12 @@ public class ListeningRoom extends FragmentActivity
         	break;
         case 1:
         	selectedFragment = stationsFrag;
+        	break;
+        case 2:
+        	selectedFragment = favoritesFrag;
+        	break;
+        case 3:
+        	selectedFragment = profileFrag;
         	break;
         default: 
         	selectedFragment = curRoomFrag;

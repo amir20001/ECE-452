@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,6 +43,7 @@ public class CurrentRoomFragment extends Fragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_current_room, container, false);
         activity = this.getActivity();
+        this.setHasOptionsMenu(true);
         return view;
     }
     
@@ -49,6 +52,12 @@ public class CurrentRoomFragment extends Fragment {
     {
     	super.onActivityCreated(savedInstanceState);
 		initialize();
+    }
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+    	inflater.inflate(R.menu.current_room, menu);
+    	super.onCreateOptionsMenu(menu, inflater);
     }
     
     public void initialize()
