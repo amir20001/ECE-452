@@ -21,11 +21,12 @@ $(document).ready(function() {
         var fileIndex = $('#fileTable tr').children().length;
         $('#fileTable').append(
                 '<tr><td>'+
-                '   <input type="file" name="files['+ fileIndex +']" />'+
+                '   <input id ="'+id+'" type="file" name="files['+ fileIndex +']"  accept="audio/mpeg" />'+
                 '</td></tr>');
     });
      
 });
+
 </script>
 </head>
 <body>
@@ -41,10 +42,10 @@ $(document).ready(function() {
     <br>
     <table id="fileTable">
 			<tr>
-				<td><input name="files[0]" type="file" /></td>
+				<td><input name="files[0]" type="file" accept="audio/mpeg"/></td>
 			</tr>
 			<tr>
-				<td><input name="files[1]" type="file" /></td>
+				<td><input name="files[1]" type="file" accept="audio/mpeg"/></td>
 			</tr>
 		</table>
     <br/><input type="submit" value="Upload" />
