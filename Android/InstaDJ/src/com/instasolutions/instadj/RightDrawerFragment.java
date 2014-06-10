@@ -29,7 +29,7 @@ import android.widget.Toast;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment {
+public class RightDrawerFragment extends Fragment {
 
     /**
      * Remember the position of the selected item.
@@ -59,8 +59,11 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+    
+    private SongListAdapter mSongHistoryList;
+    private UserListAdapter mUserList;
 
-    public NavigationDrawerFragment() {
+    public RightDrawerFragment() {
     }
 
     @Override
@@ -91,6 +94,7 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	
     		mDrawerListView = (ListView) inflater.inflate(
                     R.layout.fragment_navigation_drawer, container, false);
             mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -99,18 +103,17 @@ public class NavigationDrawerFragment extends Fragment {
                     selectItem(position);
                 }
             });
-            mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                    getActionBar().getThemedContext(),
-                    android.R.layout.simple_list_item_activated_1,
-                    android.R.id.text1,
-                    new String[]{
-                            getString(R.string.title_section1),
-                            getString(R.string.title_section2),
-                            getString(R.string.title_section3),
-                            getString(R.string.title_section4),
-                    }));
+	        SparseArray<SongData> songs = new SparseArray<SongData>();
+	        songs.append(0, new SongData(this.getActivity(), "TestTitle", "TestArtist", "TestAlbum", "1:00", "http://imgs.tuts.dragoart.com/how-to-draw-the-green-day-heart-grenade-letters_1_000000000968_5.jpg"));
+	        songs.append(1, new SongData(this.getActivity(), "TestTitle2", "TestArtist2", "TestAlbum2", "2:00", "http://artsorigin.com/blog/wp-content/uploads/2009/05/graduation-album-cover.jpg"));
+	        mSongHistoryList = new SongListAdapter(this.getActivity(), songs );
+	        SparseArray<UserData> users = new SparseArray<UserData>();
+	        users.append(0, new UserData(this.getActivity(), "Testname", "http://lifesenergy.co.uk/wp-content/uploads/2013/11/profile.jpg"));
+	        users.append(1, new UserData(this.getActivity(), "Testname2", ""));
+	        mUserList = new UserListAdapter(this.getActivity(), users);
+	        mDrawerListView.setAdapter(mSongHistoryList);
             mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-        
+
         return mDrawerListView;
     }
 
@@ -201,7 +204,7 @@ public class NavigationDrawerFragment extends Fragment {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(position);
+            mCallbacks.onRightDrawerItemSelected(position);
         }
     }
     
@@ -252,6 +255,25 @@ public class NavigationDrawerFragment extends Fragment {
             return true;
         }
         
+        if (item != null && item.getItemId() == R.id.action_listeners) {
+            if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                mDrawerLayout.closeDrawer(Gravity.RIGHT);
+            } else {
+    	        mDrawerListView.setAdapter(mUserList);
+                mDrawerLayout.openDrawer(Gravity.RIGHT);
+            }
+            return true;
+        }     
+        else if (item != null && item.getItemId() == R.id.action_history) {
+            if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                mDrawerLayout.closeDrawer(Gravity.RIGHT);
+            } else {
+    	        mDrawerListView.setAdapter(mSongHistoryList);
+                mDrawerLayout.openDrawer(Gravity.RIGHT);
+            }
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -277,6 +299,6 @@ public class NavigationDrawerFragment extends Fragment {
         /**
          * Called when an item in the navigation drawer is selected.
          */
-        void onNavigationDrawerItemSelected(int position);
+        void onRightDrawerItemSelected(int position);
     }
 }

@@ -30,13 +30,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class ListeningRoom extends FragmentActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, RightDrawerFragment.NavigationDrawerCallbacks{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-
+    private NavigationDrawerFragment mNavigationDrawerFragment_left;
+    private RightDrawerFragment mNavigationDrawerFragment_right;
+    
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -54,13 +55,21 @@ public class ListeningRoom extends FragmentActivity
         favoritesFrag = new FavoritesFragment();
         profileFrag = new ProfileFragment();
         setContentView(R.layout.activity_listening_room);
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mNavigationDrawerFragment_left = (NavigationDrawerFragment)
+                getFragmentManager().findFragmentById(R.id.navigation_drawer_left);
         mTitle = getTitle();
 
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
+        mNavigationDrawerFragment_left.setUp(
+                R.id.navigation_drawer_left,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+        
+        mNavigationDrawerFragment_right = (RightDrawerFragment)
+                getFragmentManager().findFragmentById(R.id.navigation_drawer_right);
+        
+        // Set up the drawer.
+        mNavigationDrawerFragment_right.setUp(
+                R.id.navigation_drawer_right,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         
     }
@@ -93,6 +102,12 @@ public class ListeningRoom extends FragmentActivity
                 .commit();
         
     }
+    
+    @Override
+    public void onRightDrawerItemSelected(int position) {
+        // update the main content by replacing fragment
+        
+    }
 
 
     public void restoreActionBar() {
@@ -105,7 +120,7 @@ public class ListeningRoom extends FragmentActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+        if (!mNavigationDrawerFragment_left.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
@@ -122,9 +137,6 @@ public class ListeningRoom extends FragmentActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
     

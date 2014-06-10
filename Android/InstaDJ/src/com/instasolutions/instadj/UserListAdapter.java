@@ -14,7 +14,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -24,27 +23,27 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class SongListAdapter extends BaseAdapter{
+public class UserListAdapter extends BaseAdapter{
 
 	private Activity activity;
-	private SparseArray<SongData> songs = new SparseArray<SongData>();
+	private SparseArray<UserData> users = new SparseArray<UserData>();
 	private static LayoutInflater inflater = null;
 	
-	public SongListAdapter(Activity a, SparseArray<SongData> d)
+	public UserListAdapter(Activity a, SparseArray<UserData> d)
 	{
 		activity = a;
-		songs = d;
+		users = d;
 		inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	@Override
 	public int getCount() {
 		
-		return songs.size();
+		return users.size();
 	}
 
 	@Override
 	public Object getItem(int pos) {
-		return songs.get(pos);
+		return users.get(pos);
 	}
 
 	@Override
@@ -56,43 +55,36 @@ public class SongListAdapter extends BaseAdapter{
 	public View getView(int pos, View view, ViewGroup viewgroup) {
 		View v = view;
 		if(view==null)
-			v = inflater.inflate(R.layout.list_row_songs, null);
+			v = inflater.inflate(R.layout.list_row_users, null);
 		
-		TextView title = (TextView)v.findViewById(R.id.song_title);
-		TextView artist = (TextView)v.findViewById(R.id.song_artist);
-		TextView album = (TextView)v.findViewById(R.id.song_album);
-		TextView duration = (TextView)v.findViewById(R.id.song_duration);
-		ImageView art = (ImageView)v.findViewById(R.id.list_album_art);
+		TextView UserName = (TextView)v.findViewById(R.id.user_name);
+		ImageView Picture = (ImageView)v.findViewById(R.id.list_user_picture);
 			
-		SongData song = songs.get(pos);
+		UserData user = users.get(pos);
 		
-		title.setText(song.Title);
-		artist.setText(song.Artist);
-		album.setText(song.Album);
-		duration.setText(song.Duration);
+		UserName.setText(user.UserName);
+		Picture.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.com_facebook_profile_picture_blank_square));
 		
-	    art.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.blankart));
-		
-		final DownloadArtworkTask task = new DownloadArtworkTask(art);
-		task.execute(song.Art_URL);
+		final DownloadPictureTask task = new DownloadPictureTask(Picture);
+		task.execute(user.Picture_URL);
 		
 		return v;
 	}
 	
 	
-	private class DownloadArtworkTask extends AsyncTask<String, Void, Bitmap>{
+	private class DownloadPictureTask extends AsyncTask<String, Void, Bitmap>{
 		
 		private final WeakReference<ImageView> imageViewReference;
 		
-		public DownloadArtworkTask(ImageView imageView)
+		public DownloadPictureTask(ImageView imageView)
 		{
 			imageViewReference = new WeakReference<ImageView>(imageView);
 		}
 		
 		@Override
-		protected Bitmap doInBackground(String... Art_URLs) {
+		protected Bitmap doInBackground(String... Picture_URLs) {
 			try {
-		        URL url = new URL(Art_URLs[0]);
+		        URL url = new URL(Picture_URLs[0]);
 		        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		        connection.setDoInput(true);
 		        connection.connect();
@@ -106,14 +98,14 @@ public class SongListAdapter extends BaseAdapter{
 		}
 		
 		@Override
-		protected void onPostExecute(Bitmap art)
+		protected void onPostExecute(Bitmap picture)
 		{
 			if(imageViewReference != null){
 				final ImageView imageview = imageViewReference.get();
 				if(imageview != null)
 				{
-					if(art != null)
-						imageview.setImageBitmap(art);
+					if(picture != null)
+						imageview.setImageBitmap(picture);
 				}
 			}
 		}
