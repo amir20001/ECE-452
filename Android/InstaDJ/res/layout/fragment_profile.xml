@@ -9,8 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dp"
-        android:src="@drawable/com_facebook_profile_picture_blank_square" />
+        android:layout_marginTop="23dp" />
 
     <TextView
         android:id="@+id/text_name"
