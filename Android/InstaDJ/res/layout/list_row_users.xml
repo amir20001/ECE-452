@@ -39,7 +39,7 @@
          android:layout_centerVertical="true"
          android:layout_toRightOf="@+id/thumbnail"
          android:text="Username"
-         android:textColor="#040404"
+         android:textColor="@color/white"
          android:textSize="15dip"
          android:textStyle="bold"
          android:typeface="sans" />

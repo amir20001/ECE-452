@@ -28,7 +28,7 @@
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
         android:text="Song Title"
-        android:textColor="#040404"
+        android:textColor="@color/white"
         android:typeface="sans"
         android:textSize="15dip"
         android:textStyle="bold"/>
@@ -43,7 +43,7 @@
         android:layout_marginTop="1dip"
         android:layout_toRightOf="@+id/thumbnail"
         android:text="Album"
-        android:textColor="#343434"
+        android:textColor="@color/platinum"
         android:textSize="10dip" />
  
     <!-- Rightend Duration -->
@@ -74,7 +74,7 @@
          android:layout_alignParentRight="true"
          android:layout_below="@+id/song_album"
          android:text="Artist"
-         android:textColor="#343434"
+         android:textColor="@color/platinum"
          android:textSize="10dip" />
  
 </RelativeLayout>
