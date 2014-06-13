@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -26,11 +27,14 @@ public class CurrentRoomFragment extends Fragment {
 	/** Called when the activity is first created. */
     private SeekBar seekbar;
     private MediaPlayer mediaplayer;
-    private Button btn_play;
+    private ImageButton btn_play;
     private Handler updateHandler = new Handler();
     private TextView text_curTime;
     private TextView text_endTime;
-    private ImageView image_art;
+    private TextView text_songName;
+    private TextView text_artist;
+    private ImageView large_art;
+    private ImageView small_art;
     private int firstPlay = 1;
     private double curTime = 0;
     private double endTime = 0;
@@ -64,18 +68,24 @@ public class CurrentRoomFragment extends Fragment {
     {
 	    Uri.Builder uri_b = new Uri.Builder();
         mediaplayer = MediaPlayer.create(activity, uri_b.path(path).build());
-		btn_play = (Button)activity.findViewById(R.id.Button_Play);
+		btn_play = (ImageButton)activity.findViewById(R.id.Button_Play);
         seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
         text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
         text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
-        image_art = (ImageView)activity.findViewById(R.id.image_art);
+        text_songName = (TextView)activity.findViewById(R.id.text_song);
+        text_artist = (TextView)activity.findViewById(R.id.text_artist);
+        large_art = (ImageView)activity.findViewById(R.id.image_art);
+        small_art = (ImageView)activity.findViewById(R.id.album_art);
         MediaMetadataRetriever media = new MediaMetadataRetriever();
         media.setDataSource(path);
+        text_songName.setText(media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
+        text_artist.setText(media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
         byte[] data = media.getEmbeddedPicture();
         if(data != null)
         {
         	Bitmap art_bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        	image_art.setImageBitmap(art_bitmap);	
+        	large_art.setImageBitmap(art_bitmap);	
+        	small_art.setImageBitmap(art_bitmap);
         }
     }
 	
@@ -84,18 +94,19 @@ public class CurrentRoomFragment extends Fragment {
 	    	
 	    	if(firstPlay == 1)
 	    	{
+	    		endTime = mediaplayer.getDuration();
 	    		seekbar.setMax((int)endTime);
 	    		firstPlay = 0;
 	    	}
 	    	if(mediaplayer.isPlaying())
 	    	{
 	    		mediaplayer.pause();
-	    		btn_play.setText("Play");
+	    		btn_play.setImageResource(R.drawable.ic_action_play);
 	    	}
 	    	else
 	    	{
 		    	mediaplayer.start();
-		    	btn_play.setText("Pause");
+		    	btn_play.setImageResource(R.drawable.ic_action_pause);
 		    	curTime = mediaplayer.getCurrentPosition();
 		    	endTime = mediaplayer.getDuration();
 		    	
