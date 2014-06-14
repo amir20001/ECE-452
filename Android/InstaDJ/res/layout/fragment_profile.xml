@@ -1,25 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/transparent_black"> >
 
-    <ImageView
-        android:id="@+id/image_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dp" />
-
-    <TextView
-        android:id="@+id/text_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/image_profile"
-        android:layout_marginLeft="34dp"
-        android:layout_marginTop="26dp"
-        android:text="TextView" />
 
     <Button
         android:id="@+id/button_Logout"
@@ -30,5 +13,23 @@
         android:layout_marginBottom="18dp"
         android:layout_marginRight="30dp"
         android:text="Logout" />
+
+    <TextView
+        android:id="@+id/text_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="32dp"
+        android:text="TextView"
+        android:textColor="@color/white" />
+
+    <ImageView
+        android:id="@+id/image_profile_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/com_facebook_profile_picture_blank_square" />
 
 </RelativeLayout>

@@ -7,6 +7,12 @@
         android:title="@string/action_listeners"
         android:icon="@drawable/ic_action_group"
         android:showAsAction="always"/>
+    
+    <item
+        android:id="@+id/action_history"
+        android:title="@string/action_history"
+        android:icon="@drawable/ic_action_storage"
+        android:showAsAction="always"/>
     	
 
 </menu>
