@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dip" >
+
+     <TextView
+         android:id="@+id/playlist_name"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentTop="true"
+         android:text="PlaylistName"
+         android:textColor="@color/white"
+         android:textSize="15dip"
+         android:textStyle="bold"
+         android:typeface="sans" />
+
+     <TextView
+         android:id="@+id/playlist_genre"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignRight="@+id/playlist_name"
+         android:layout_below="@+id/playlist_name"
+         android:text="Genre"
+         android:textAppearance="?android:attr/textAppearanceSmall"
+         android:textColor="@color/platinum" />
+
+     <TextView
+         android:id="@+id/playlsit_tracks"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/playlist_name"
+         android:layout_alignBottom="@+id/playlist_name"
+         android:layout_alignParentRight="true"
+         android:text="#Tracks"
+         android:textColor="@color/platinum" />
+ 
+</RelativeLayout>
