@@ -29,6 +29,7 @@ public class SongListAdapter extends BaseAdapter{
 	private Activity activity;
 	private SparseArray<SongData> songs = new SparseArray<SongData>();
 	private static LayoutInflater inflater = null;
+	private int resource = 0;
 	
 	public SongListAdapter(Activity a, SparseArray<SongData> d)
 	{
@@ -36,6 +37,15 @@ public class SongListAdapter extends BaseAdapter{
 		songs = d;
 		inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
+	
+	public SongListAdapter(Activity a, SparseArray<SongData> d, int r)
+	{
+		activity = a;
+		songs = d;
+		inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		resource = r;
+	}
+	
 	@Override
 	public int getCount() {
 		
@@ -55,8 +65,12 @@ public class SongListAdapter extends BaseAdapter{
 	@Override
 	public View getView(int pos, View view, ViewGroup viewgroup) {
 		View v = view;
-		if(view==null)
-			v = inflater.inflate(R.layout.list_row_songs, null);
+		if(view==null){
+			if(resource == R.layout.list_row_songs_select)
+				v = inflater.inflate(R.layout.list_row_songs_select, null);
+			else
+				v = inflater.inflate(R.layout.list_row_songs, null);
+		}
 		
 		TextView title = (TextView)v.findViewById(R.id.song_title);
 		TextView artist = (TextView)v.findViewById(R.id.song_artist);
@@ -73,8 +87,15 @@ public class SongListAdapter extends BaseAdapter{
 		
 	    art.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.blankart));
 		
-		final DownloadArtworkTask task = new DownloadArtworkTask(art);
-		task.execute(song.Art_URL);
+	    if(song.Art_URL != null)
+	    {
+			final DownloadArtworkTask task = new DownloadArtworkTask(art);
+			task.execute(song.Art_URL);
+	    }
+	    else if(song.Art_Bitmap != null)
+	    {
+	    	art.setImageBitmap(song.Art_Bitmap);
+	    }
 		
 		return v;
 	}

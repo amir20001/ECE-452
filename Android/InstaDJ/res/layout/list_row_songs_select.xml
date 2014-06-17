@@ -4,24 +4,27 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="5dip" >
- 
-    <!--  ListRow Left sied Thumbnail image -->
-    <LinearLayout android:id="@+id/thumbnail"
+
+    <!-- ListRow Left sied Thumbnail image -->
+
+    <LinearLayout
+        android:id="@+id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="3dip"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="5dip">
- 
+        android:layout_marginRight="5dip"
+        android:padding="3dip" >
+
         <ImageView
             android:id="@+id/list_album_art"
             android:layout_width="50dip"
             android:layout_height="50dip"
             android:src="@drawable/blankart" />
- 
+
     </LinearLayout>
- 
-    <!-- Title Of Song-->
+
+    <!-- Title Of Song -->
+
     <TextView
         android:id="@+id/song_title"
         android:layout_width="wrap_content"
@@ -30,10 +33,10 @@
         android:layout_toRightOf="@+id/thumbnail"
         android:text="Song Title"
         android:textColor="@color/white"
-        android:typeface="sans"
         android:textSize="15dip"
-        android:textStyle="bold"/>
- 
+        android:textStyle="bold"
+        android:typeface="sans" />
+
     <!-- Artist Name -->
 
     <TextView
@@ -46,31 +49,39 @@
         android:text="Album"
         android:textColor="@color/platinum"
         android:textSize="10dip" />
- 
+
     <!-- Rightend Duration -->
+
     <TextView
         android:id="@+id/song_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/song_title"
+        android:layout_marginRight="5dip"
         android:gravity="right"
         android:text="5:45"
-        android:layout_marginRight="5dip"
-        android:textSize="10dip"
         android:textColor="#10bcc9"
-        android:textStyle="bold"/>
- 
+        android:textSize="10dip"
+        android:textStyle="bold" />
 
-     <TextView
-         android:id="@+id/song_artist"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/song_album"
-         android:layout_alignParentRight="true"
-         android:layout_below="@+id/song_album"
-         android:text="Artist"
-         android:textColor="@color/platinum"
-         android:textSize="10dip" />
- 
+
+    <TextView
+        android:id="@+id/song_artist"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/song_album"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/song_album"
+        android:text="Artist"
+        android:textColor="@color/platinum"
+        android:textSize="10dip" />
+
+    <CheckBox
+        android:id="@+id/checkBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/song_duration" />
+
 </RelativeLayout>
