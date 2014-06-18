@@ -2,6 +2,7 @@ package com.instasolutions.instadj;
 
 import java.util.concurrent.TimeUnit;
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,15 +12,21 @@ import android.support.v4.app.ListFragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
 public class NewPlaylistFragment extends Fragment implements
-		LoaderManager.LoaderCallbacks<Cursor>{
+		LoaderManager.LoaderCallbacks<Cursor>, OnClickListener{
 
 	private static final int URL_LOADER = 0;
     String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
@@ -27,8 +34,11 @@ public class NewPlaylistFragment extends Fragment implements
     		MediaStore.Audio.Media.TITLE,
     		MediaStore.Audio.Media.ARTIST,
     		MediaStore.Audio.Media.ALBUM,
-    		MediaStore.Audio.Media.DURATION
+    		MediaStore.Audio.Media.DURATION,
+    		MediaStore.Audio.Media.DATA
     };
+    ListView listview = null;
+    SongListAdapter songlist_adapter = null;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -43,6 +53,18 @@ public class NewPlaylistFragment extends Fragment implements
 	        
 	        return view;
 	    }
+	
+    @Override
+	public void onActivityCreated(Bundle savedInstanceState)
+    {
+    	super.onActivityCreated(savedInstanceState);
+		
+    	Button cancelButton = (Button)this.getActivity().findViewById(R.id.newplaylist_cancel_button);
+    	Button saveButton = (Button)this.getActivity().findViewById(R.id.newplaylist_save_button);
+    	cancelButton.setOnClickListener(this);
+    	saveButton.setOnClickListener(this);
+    	
+    }
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderID, Bundle bundle) {
@@ -67,7 +89,7 @@ public class NewPlaylistFragment extends Fragment implements
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		
-        ListView listview = (ListView)this.getActivity().findViewById(R.id.newplaylist_songlist);
+        listview = (ListView)this.getActivity().findViewById(R.id.newplaylist_songlist);
         SparseArray<SongData> songs = new SparseArray<SongData>();
         for(int i = 0; cursor.moveToNext(); cursor.moveToNext(), i++){
         	Integer durLong = Integer.valueOf(cursor.getString(3));
@@ -78,16 +100,67 @@ public class NewPlaylistFragment extends Fragment implements
 			    	         TimeUnit.MILLISECONDS.toSeconds(durLong) - 
 			    	         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durLong)));
         	}
-        	songs.append(i, new SongData(this.getActivity(), cursor.getString(0), cursor.getString(1), cursor.getString(2), durString, ""));
+        	songs.append(i, new SongData(this.getActivity(), cursor.getString(0), cursor.getString(1), 
+        				cursor.getString(2), durString, cursor.getString(4), ""));
         }
-        SongListAdapter adapter = new SongListAdapter(this.getActivity(), songs, R.layout.list_row_songs_select);
-        listview.setAdapter(adapter);
+        songlist_adapter = new SongListAdapter(this.getActivity(), songs, true);
+        listview.setAdapter(songlist_adapter);
 		
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch(v.getId()){
+			case R.id.newplaylist_cancel_button:
+				getFragmentManager().popBackStack();
+				break;
+			case R.id.newplaylist_save_button:
+				createPlaylist();
+				getFragmentManager().popBackStack();
+				break;
+			default:
+				break;
+		}
+		
+		if(v.getId() != R.id.newplaylist_name_input)
+		{
+			InputMethodManager inputMethodManager = (InputMethodManager) this.getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+			inputMethodManager.hideSoftInputFromWindow(this.getActivity().getCurrentFocus().getWindowToken(), 0);
+		}
+	}
+	
+	private PlaylistData createPlaylist()
+	{
+		PlaylistData returnPlaylist = new PlaylistData();
+		for(int i = 0, c = 0; i < listview.getCount();i++)
+		{
+			if(songlist_adapter.getCheckBoxArray().get(i))
+			{
+				View view = listview.getAdapter().getView(i, null, null);
+				TextView title = (TextView)view.findViewById(R.id.song_title);
+				TextView artist = (TextView)view.findViewById(R.id.song_artist);
+				TextView album = (TextView)view.findViewById(R.id.song_album);
+				TextView duration = (TextView)view.findViewById(R.id.song_duration);
+				TextView path = (TextView)view.findViewById(R.id.song_contentpath);
+				returnPlaylist.Songs.append(c, new SongData(this.getActivity(), title.getText().toString(), 
+						artist.getText().toString(), album.getText().toString(), duration.getText().toString(), 
+						path.getText().toString(), ""));
+				c++;
+			}
+		}
+		EditText playlistName = (EditText)this.getActivity().findViewById(R.id.newplaylist_name_input);
+		Spinner playlistGenre = (Spinner)this.getActivity().findViewById(R.id.newplaylist_genre_spinner);
+		
+		returnPlaylist.Name = playlistName.getText().toString();
+		returnPlaylist.Genre = playlistGenre.getSelectedItem().toString();
+		returnPlaylist.TrackCount = returnPlaylist.Songs.size();
+		return returnPlaylist;
+
 	}
 
 }

@@ -78,10 +78,19 @@
         android:textSize="10dip" />
 
     <CheckBox
-        android:id="@+id/checkBox1"
+        android:id="@+id/songs_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/song_duration" />
+
+    <TextView
+        android:id="@+id/song_contentpath"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/song_album"
+        android:layout_centerHorizontal="true"
+        android:text="TextView"
+        android:visibility="invisible" />
 
 </RelativeLayout>

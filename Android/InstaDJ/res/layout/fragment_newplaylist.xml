@@ -11,11 +11,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="14dp"
-        android:text="Station Name:"
+        android:text="Playlist Name:"
         android:textColor="@color/white" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/newplaylist_name_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/newplaylist_name_label"
@@ -32,8 +32,7 @@
         android:layout_height="100dp"
         android:layout_above="@+id/newplaylist_cancel_button"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/editText1"
-        android:layout_marginTop="20dp" >
+        android:layout_below="@+id/newplaylist_genre_spinner" >
 
     </ListView>
 
@@ -53,5 +52,23 @@
         android:layout_marginLeft="17dp"
         android:layout_toRightOf="@+id/newplaylist_cancel_button"
         android:text="Save" />
+
+    <TextView
+        android:id="@+id/newplaylist_genre_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/newplaylist_name_input"
+        android:layout_marginTop="16dp"
+        android:text="Playlist Genre:"
+        android:textColor="@color/white" />
+
+    <Spinner
+        android:id="@+id/newplaylist_genre_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newplaylist_cancel_button"
+        android:layout_alignTop="@+id/newplaylist_genre_label"
+        android:entries="@array/genres_array" />
 
 </RelativeLayout>

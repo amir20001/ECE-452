@@ -3,6 +3,7 @@ package com.instasolutions.instadj;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -46,9 +47,10 @@ public class PlaylistsFragment extends Fragment implements OnClickListener{
 		{
 			case R.id.playlists_new_button:
 				FragmentManager fragmentManager = this.getFragmentManager();
-				 fragmentManager.beginTransaction()
-	                .replace(R.id.container, new NewPlaylistFragment())
-	                .commit();
+				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container, new NewPlaylistFragment());
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
 				break;
 			default:
 				break;

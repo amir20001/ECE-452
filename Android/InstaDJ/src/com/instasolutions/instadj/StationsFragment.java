@@ -23,12 +23,12 @@ public class StationsFragment extends ListFragment {
 	        stations.append(0, new StationData(activity, "Station 1", 
 	        		new UserData(this.getActivity(), "TestUser", ""), 
 	        		new PlaylistData(activity, "Playlist1", "Pop", 10), 
-	        		new SongData(activity, "SongName1", "Artist1", "Album1", "2:00", "http://artsorigin.com/blog/wp-content/uploads/2009/05/graduation-album-cover.jpg"), 
+	        		new SongData(activity, "SongName1", "Artist1", "Album1", "2:00", "", "http://artsorigin.com/blog/wp-content/uploads/2009/05/graduation-album-cover.jpg"), 
 	        		2));
 	        stations.append(1, new StationData(activity, "Station 2", 
 	        		new UserData(this.getActivity(), "TestUser2", ""), 
 	        		new PlaylistData(activity, "Playlist1", "Pop", 10), 
-	        		new SongData(activity, "SongName2", "Artist2", "Album2", "1:00", ""), 
+	        		new SongData(activity, "SongName2", "Artist2", "Album2", "1:00", "", ""), 
 	        		5));
 	        StationListAdapter adapter = new StationListAdapter(this.getActivity(), stations );
 	        setListAdapter(adapter);
