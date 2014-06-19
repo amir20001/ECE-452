@@ -1,6 +1,6 @@
 package com.ece452.domain;
 
-public class User {
+public class User extends BaseEntity {
 	private String username;
 	private String pictureUrl;;
 

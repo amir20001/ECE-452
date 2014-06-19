@@ -14,8 +14,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.mysql.jdbc.Statement;
-
 import com.ece452.domain.Song;
+import com.ece452.domain.User;
+import com.ece452.mapper.SongMapper;
+import com.ece452.mapper.UserMapper;
 
 @Repository
 public class SongDao {
@@ -67,6 +69,19 @@ public class SongDao {
 				}
 			}
 		}
+	}
+
+	public Song getSong(String id) {
+		Song song = null;
+		String sql = "SELECT * FROM song WHERE id= ?";
+		try {
+			song = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new SongMapper());
+		} catch (Exception e) {
+			// No user was found with the specified id, return null
+			return null;
+		}
+		return song;
 	}
 
 }

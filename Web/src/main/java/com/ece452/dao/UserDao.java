@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ece452.domain.User;
+import com.ece452.mapper.UserMapper;
 
 @Repository
 public class UserDao {
@@ -50,4 +51,19 @@ public class UserDao {
 		}
 
 	}
+
+	public User getUser (String username) {
+		User user = null;
+		String sql = "SELECT * FROM user WHERE username = ?";
+
+		try {
+			user = jdbcTemplate.queryForObject(sql, new Object[] { username },
+					new UserMapper());
+		} catch (Exception e) {
+			// No user was found with the specified id, return null
+			return null;
+		}
+		return user;
+	}
+
 }

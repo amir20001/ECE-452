@@ -1,6 +1,6 @@
 package com.ece452.domain;
 
-public class Room {
+public class Room extends BaseEntity {
 	private int id;
 	private String name;
 	private String ownerUserName;

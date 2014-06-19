@@ -37,7 +37,6 @@ public class FileUploadController {
 	public String save(@ModelAttribute("uploadForm") FileUploadForm uploadForm,
 			Model map, HttpServletRequest request)
 			throws IllegalStateException, IOException {
-		boolean first = true;
 		List<MultipartFile> files = uploadForm.getFiles();
 		List<String> fileNames = new ArrayList<String>();
 		String ext;
