@@ -51,9 +51,9 @@ public class FileUploadController {
 				if (multipartFile.getSize() != 0) {
 					// file size is greater than 0
 					Song song = new Song();
-					song.setName(fileName);
-					song.setUUID(UUID.randomUUID().toString());
-					String fullPath = path + File.separator + song.getUUID()
+					song.setFileName(fileName);
+					song.setUuid(UUID.randomUUID().toString());
+					String fullPath = path + File.separator + song.getUuid()
 							+ "." + ext;
 					File dest = new File(fullPath);
 					multipartFile.transferTo(dest);
