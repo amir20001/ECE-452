@@ -50,7 +50,6 @@ public class RoomController {
 		room = roomDao.insert(room);
 		// return room info with id
 		mapper.writeValue(response.getOutputStream(), room);
-
 	}
 
 	@RequestMapping(value = "/info/{roomId}", method = RequestMethod.GET)
@@ -63,5 +62,7 @@ public class RoomController {
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), room);
 	}
+
+	
 
 }
