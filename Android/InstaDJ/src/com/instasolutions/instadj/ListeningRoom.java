@@ -155,6 +155,11 @@ public class ListeningRoom extends FragmentActivity
     	return playlistsFrag;
     }
     
+    public CurrentRoomFragment getCurrentRoomFragment()
+    {
+    	return curRoomFrag;
+    }
+    
    
 };
 

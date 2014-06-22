@@ -2,12 +2,17 @@ package com.instasolutions.instadj;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class StationsFragment extends ListFragment {
 	
@@ -34,5 +39,17 @@ public class StationsFragment extends ListFragment {
 	        setListAdapter(adapter);
 	        return view;
 	    }
+	
+	@Override
+	 public void onListItemClick(ListView lv, View v, int position, long id)
+	{
+		CurrentRoomFragment fragment = ((ListeningRoom)activity).getCurrentRoomFragment();
+		fragment.setStation((StationData)lv.getAdapter().getItem(position));
+		FragmentManager fragmentManager = this.getFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+	}
 
 }

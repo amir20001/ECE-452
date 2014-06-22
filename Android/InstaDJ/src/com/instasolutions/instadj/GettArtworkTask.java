@@ -23,6 +23,12 @@ public class GettArtworkTask extends AsyncTask<String, Void, Bitmap>{
 	
 	@Override
 	protected Bitmap doInBackground(String... Art_URLs) {
+		
+		if(Art_URLs[0].equals("") || Art_URLs[0] == null)
+		{
+			return null;
+		}
+		
 		try{
 			if(Art_URLs[0].contains("http"))
 			{

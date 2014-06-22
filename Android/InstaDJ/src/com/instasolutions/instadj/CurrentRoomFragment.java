@@ -33,6 +33,7 @@ public class CurrentRoomFragment extends Fragment {
     private TextView text_endTime;
     private TextView text_songName;
     private TextView text_artist;
+    private TextView text_stationName;
     private ImageView large_art;
     private ImageView small_art;
     private int firstPlay = 1;
@@ -40,6 +41,7 @@ public class CurrentRoomFragment extends Fragment {
     private double endTime = 0;
     private String path = "/storage/sdcard1/Music/01 Danza Kuduro.mp3";
     private Activity activity;
+    private StationData station = null;
     
     @Override
     public View onCreateView(LayoutInflater inflater, 
@@ -74,6 +76,7 @@ public class CurrentRoomFragment extends Fragment {
         text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
         text_songName = (TextView)activity.findViewById(R.id.text_song);
         text_artist = (TextView)activity.findViewById(R.id.text_artist);
+        text_stationName = (TextView)activity.findViewById(R.id.currentroom_stationname_text);
         large_art = (ImageView)activity.findViewById(R.id.image_art);
         small_art = (ImageView)activity.findViewById(R.id.album_art);
         MediaMetadataRetriever media = new MediaMetadataRetriever();
@@ -87,6 +90,18 @@ public class CurrentRoomFragment extends Fragment {
         	large_art.setImageBitmap(art_bitmap);	
         	small_art.setImageBitmap(art_bitmap);
         }
+        
+        if(station != null)
+        {
+        	text_stationName.setText(station.Name);
+        	text_songName.setText(station.Song.Title);
+        	text_artist.setText(station.Song.Artist);
+        }
+    }
+    
+    public void setStation(StationData s)
+    {
+    	this.station = s;
     }
 	
 	 public void play(View view)
