@@ -78,46 +78,5 @@ public class SongListAdapter extends BaseAdapter{
 		
 		return v;
 	}
-	
-	
-	private class DownloadArtworkTask extends AsyncTask<String, Void, Bitmap>{
-		
-		private final WeakReference<ImageView> imageViewReference;
-		
-		public DownloadArtworkTask(ImageView imageView)
-		{
-			imageViewReference = new WeakReference<ImageView>(imageView);
-		}
-		
-		@Override
-		protected Bitmap doInBackground(String... Art_URLs) {
-			try {
-		        URL url = new URL(Art_URLs[0]);
-		        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		        connection.setDoInput(true);
-		        connection.connect();
-		        InputStream input = connection.getInputStream();
-		        return BitmapFactory.decodeStream(input);
-		        
-		    } catch (IOException e) {
-		        e.printStackTrace();
-		        return null;
-		    }
-		}
-		
-		@Override
-		protected void onPostExecute(Bitmap art)
-		{
-			if(imageViewReference != null){
-				final ImageView imageview = imageViewReference.get();
-				if(imageview != null)
-				{
-					if(art != null)
-						imageview.setImageBitmap(art);
-				}
-			}
-		}
-		
-	}
 
 }
