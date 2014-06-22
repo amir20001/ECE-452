@@ -10,11 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class PlaylistsFragment extends Fragment implements OnClickListener{
+public class PlaylistsFragment extends Fragment implements OnClickListener, OnItemClickListener{
+	
+	SparseArray<PlaylistData> playlists = new SparseArray<PlaylistData>();
 
 	/** Called when the activity is first created. */
 	@Override
@@ -33,11 +37,11 @@ public class PlaylistsFragment extends Fragment implements OnClickListener{
     	Button NewPlaylistButton = (Button)this.getActivity().findViewById(R.id.playlists_new_button);
     	NewPlaylistButton.setOnClickListener(this);
     	
-    	SparseArray<PlaylistData> playlists = new SparseArray<PlaylistData>();
         playlists.append(0, new PlaylistData(this.getActivity(), "Playlist1", "Pop", 10));
         playlists.append(1, new PlaylistData(this.getActivity(), "Playlist2", "Mix", 50));
         PlayListAdapter adapter = new PlayListAdapter(this.getActivity(), playlists );
         ListView lv = (ListView)this.getActivity().findViewById(R.id.playlists_list);
+        lv.setOnItemClickListener(this);
         lv.setAdapter(adapter);
 		
     }
@@ -55,6 +59,24 @@ public class PlaylistsFragment extends Fragment implements OnClickListener{
 			default:
 				break;
 		}
+		
+	}
+	
+	public void addPlaylist(PlaylistData playlist)
+	{
+		playlists.append(playlists.size(), playlist);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> av, View v, int i, long l) {
+		PlaylistViewFragment fragment = new PlaylistViewFragment();
+		fragment.setPlaylist((PlaylistData)av.getAdapter().getItem(i));
+		FragmentManager fragmentManager = this.getFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+		
 		
 	}
 

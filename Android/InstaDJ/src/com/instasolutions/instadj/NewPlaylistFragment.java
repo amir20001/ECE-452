@@ -120,7 +120,8 @@ public class NewPlaylistFragment extends Fragment implements
 				getFragmentManager().popBackStack();
 				break;
 			case R.id.newplaylist_save_button:
-				createPlaylist();
+				PlaylistsFragment fragment = ((ListeningRoom)this.getActivity()).getPlaylistsFragment();
+				fragment.addPlaylist(createPlaylist());
 				getFragmentManager().popBackStack();
 				break;
 			default:

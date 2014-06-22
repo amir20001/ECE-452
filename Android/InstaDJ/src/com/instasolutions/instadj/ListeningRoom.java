@@ -150,6 +150,11 @@ public class ListeningRoom extends FragmentActivity
     	curRoomFrag.play(view);
     }
     
+    public PlaylistsFragment getPlaylistsFragment()
+    {
+    	return playlistsFrag;
+    }
+    
    
 };
 
