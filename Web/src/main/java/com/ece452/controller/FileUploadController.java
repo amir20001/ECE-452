@@ -37,7 +37,6 @@ public class FileUploadController {
 	public String save(@ModelAttribute("uploadForm") FileUploadForm uploadForm,
 			Model map, HttpServletRequest request)
 			throws IllegalStateException, IOException {
-		boolean first = true;
 		List<MultipartFile> files = uploadForm.getFiles();
 		List<String> fileNames = new ArrayList<String>();
 		String ext;
@@ -51,9 +50,9 @@ public class FileUploadController {
 				if (multipartFile.getSize() != 0) {
 					// file size is greater than 0
 					Song song = new Song();
-					song.setName(fileName);
-					song.setUUID(UUID.randomUUID().toString());
-					String fullPath = path + File.separator + song.getUUID()
+					song.setFileName(fileName);
+					song.setUuid(UUID.randomUUID().toString());
+					String fullPath = path + File.separator + song.getUuid()
 							+ "." + ext;
 					File dest = new File(fullPath);
 					multipartFile.transferTo(dest);

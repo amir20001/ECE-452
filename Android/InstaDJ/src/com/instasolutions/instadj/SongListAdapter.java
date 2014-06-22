@@ -16,26 +16,48 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.CompoundButton;
 
-public class SongListAdapter extends BaseAdapter{
+public class SongListAdapter extends BaseAdapter implements CompoundButton.OnCheckedChangeListener{
 
 	private Activity activity;
 	private SparseArray<SongData> songs = new SparseArray<SongData>();
+	private SparseBooleanArray checkBoxArray = new SparseBooleanArray();
 	private static LayoutInflater inflater = null;
+	private Boolean UseSelect = false;
 	
 	public SongListAdapter(Activity a, SparseArray<SongData> d)
 	{
 		activity = a;
 		songs = d;
 		inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
 	}
+	
+	public SongListAdapter(Activity a, SparseArray<SongData> d, Boolean useSelect)
+	{
+		activity = a;
+		songs = d;
+		inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		UseSelect = useSelect;
+	}
+	
+	public SparseBooleanArray getCheckBoxArray()
+	{
+		return checkBoxArray;
+	}
+	
 	@Override
 	public int getCount() {
 		
@@ -55,8 +77,14 @@ public class SongListAdapter extends BaseAdapter{
 	@Override
 	public View getView(int pos, View view, ViewGroup viewgroup) {
 		View v = view;
-		if(view==null)
-			v = inflater.inflate(R.layout.list_row_songs, null);
+		if(view==null){
+			if(UseSelect)
+			{
+				v = inflater.inflate(R.layout.list_row_songs_select, null);
+			}
+			else
+				v = inflater.inflate(R.layout.list_row_songs, null);
+		}
 		
 		TextView title = (TextView)v.findViewById(R.id.song_title);
 		TextView artist = (TextView)v.findViewById(R.id.song_artist);
@@ -71,12 +99,55 @@ public class SongListAdapter extends BaseAdapter{
 		album.setText(song.Album);
 		duration.setText(song.Duration);
 		
+		if(UseSelect)
+		{
+			TextView SongPath = (TextView)v.findViewById(R.id.song_contentpath);
+			CheckBox checkbox = (CheckBox)v.findViewById(R.id.songs_checkbox);
+			Boolean checked = checkBoxArray.get(pos);
+			SongPath.setText(song.LocalPath);
+			checkbox.setTag(pos);
+			checkbox.setOnCheckedChangeListener(null);
+			if(checked != null)
+			{
+				checkbox.setChecked(checked);;
+			}
+			else
+			{
+				checkbox.setChecked(false);
+				checkBoxArray.append(pos, false);
+			}
+
+			checkbox.setOnCheckedChangeListener(this);
+			
+		}
+		
 	    art.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.blankart));
 		
-		final DownloadArtworkTask task = new DownloadArtworkTask(art);
-		task.execute(song.Art_URL);
+	    if(song.Art_URL != null)
+	    {
+			final GettArtworkTask task = new GettArtworkTask(art);
+			task.execute(song.Art_URL);
+	    }
+	    else if(song.Art_Bitmap != null)
+	    {
+	    	art.setImageBitmap(song.Art_Bitmap);
+	    }
+	    else if(song.LocalPath != null)
+	    {
+			final GettArtworkTask task = new GettArtworkTask(art);
+			task.execute(song.LocalPath);
+	    }
 		
 		return v;
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if(buttonView.isChecked())
+			checkBoxArray.put((Integer)buttonView.getTag(), true);
+		else
+			checkBoxArray.put((Integer)buttonView.getTag(), false);
+		
 	}
 
 }

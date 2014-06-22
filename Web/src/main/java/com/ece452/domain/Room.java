@@ -1,9 +1,11 @@
 package com.ece452.domain;
 
-public class Room {
+public class Room extends BaseEntity {
 	private int id;
 	private String name;
-	private String url;
+	private String ownerUserName;
+	private int listenerCount;
+	private int currentSongID;
 
 	public int getId() {
 		return id;
@@ -21,16 +23,33 @@ public class Room {
 		this.name = name;
 	}
 
-	public String getUrl() {
-		return url;
+	@Override
+	public String toString() {
+		return "Id: " + id + ",Name: " + name;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public String getOwnerUserName() {
+		return ownerUserName;
 	}
-	
-	@Override
-	public String toString(){
-		return "Id: "+id +",Name: "+name+",url: "+url;
+
+	public void setOwnerUserName(String ownerUserName) {
+		this.ownerUserName = ownerUserName;
 	}
+
+	public int getListenerCount() {
+		return listenerCount;
+	}
+
+	public void setListenerCount(int listenerCount) {
+		this.listenerCount = listenerCount;
+	}
+
+	public int getCurrentSongID() {
+		return currentSongID;
+	}
+
+	public void setCurrentSongID(int currentSongID) {
+		this.currentSongID = currentSongID;
+	}
+
 }

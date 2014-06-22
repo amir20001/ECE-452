@@ -2,12 +2,17 @@ package com.instasolutions.instadj;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class StationsFragment extends ListFragment {
 	
@@ -23,16 +28,28 @@ public class StationsFragment extends ListFragment {
 	        stations.append(0, new StationData(activity, "Station 1", 
 	        		new UserData(this.getActivity(), "TestUser", ""), 
 	        		new PlaylistData(activity, "Playlist1", "Pop", 10), 
-	        		new SongData(activity, "SongName1", "Artist1", "Album1", "2:00", "http://artsorigin.com/blog/wp-content/uploads/2009/05/graduation-album-cover.jpg"), 
+	        		new SongData(activity, "SongName1", "Artist1", "Album1", "2:00", "", "http://artsorigin.com/blog/wp-content/uploads/2009/05/graduation-album-cover.jpg"), 
 	        		2));
 	        stations.append(1, new StationData(activity, "Station 2", 
 	        		new UserData(this.getActivity(), "TestUser2", ""), 
 	        		new PlaylistData(activity, "Playlist1", "Pop", 10), 
-	        		new SongData(activity, "SongName2", "Artist2", "Album2", "1:00", ""), 
+	        		new SongData(activity, "SongName2", "Artist2", "Album2", "1:00", "", ""), 
 	        		5));
 	        StationListAdapter adapter = new StationListAdapter(this.getActivity(), stations );
 	        setListAdapter(adapter);
 	        return view;
 	    }
+	
+	@Override
+	 public void onListItemClick(ListView lv, View v, int position, long id)
+	{
+		CurrentRoomFragment fragment = ((ListeningRoom)activity).getCurrentRoomFragment();
+		fragment.setStation((StationData)lv.getAdapter().getItem(position));
+		FragmentManager fragmentManager = this.getFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+	}
 
 }

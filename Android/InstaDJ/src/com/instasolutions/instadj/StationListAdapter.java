@@ -63,7 +63,7 @@ public class StationListAdapter extends BaseAdapter{
 		StationSongArtist.setText(station.Song.Artist);
 		StationListeningCount.setText(String.valueOf(station.ListenerCount));
 
-		final DownloadArtworkTask task = new DownloadArtworkTask(StationSongArt);
+		final GettArtworkTask task = new GettArtworkTask(StationSongArt);
 		task.execute(station.Song.Art_URL);
 		
 		return v;

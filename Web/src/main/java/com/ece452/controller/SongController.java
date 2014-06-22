@@ -17,52 +17,43 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.ece452.dao.RoomDao;
-import com.ece452.domain.Room;
+import com.ece452.dao.SongDao;
+import com.ece452.domain.Song;
 
 @Controller
-@RequestMapping("/room")
-public class RoomController {
+@RequestMapping("/song")
+public class SongController {
 
 	@Autowired
-	RoomDao roomDao;
+	SongDao songDao;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	public void create(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// 1. get received JSON data from request
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				request.getInputStream()));
+
 		String json = "";
 		if (br != null) {
 			json = br.readLine();
 		}
 
-		// 2. initiate jackson mapper
 		ObjectMapper mapper = new ObjectMapper();
-
-		// 3. Convert received JSON to Article
-		Room room = mapper.readValue(json, Room.class);
-
+		Song song = mapper.readValue(json, Song.class);
 		response.setContentType("application/json");
+		song = songDao.insert(song);
+		mapper.writeValue(response.getOutputStream(), song);
 
-		room = roomDao.insert(room);
-		// return room info with id
-		mapper.writeValue(response.getOutputStream(), room);
 	}
 
-	@RequestMapping(value = "/info/{roomId}", method = RequestMethod.GET)
-	public void getDoctorView(@PathVariable("roomId") String roomID,
+	@RequestMapping(value = "/info/{songId}", method = RequestMethod.GET)
+	public void getDoctorView(@PathVariable("songId") String songId,
 			HttpServletResponse response) throws JsonGenerationException,
 			JsonMappingException, IOException {
-
-		Room room = roomDao.getRoom(roomID);
+		Song song = songDao.getSong(songId);
 		ObjectMapper mapper = new ObjectMapper();
 		response.setContentType("application/json");
-		mapper.writeValue(response.getOutputStream(), room);
+		mapper.writeValue(response.getOutputStream(), song);
 	}
-
-	
-
 }
