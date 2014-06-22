@@ -40,7 +40,7 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
         playlists.append(0, new PlaylistData(this.getActivity(), "Playlist1", "Pop", 10));
         playlists.append(1, new PlaylistData(this.getActivity(), "Playlist2", "Mix", 50));
         PlayListAdapter adapter = new PlayListAdapter(this.getActivity(), playlists );
-        ListView lv = (ListView)this.getActivity().findViewById(R.id.playlists_list);
+         ListView lv = (ListView)this.getActivity().findViewById(R.id.playlists_list);
         lv.setOnItemClickListener(this);
         lv.setAdapter(adapter);
 		

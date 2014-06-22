@@ -32,4 +32,14 @@ public class SongData {
 		this.Art_Bitmap = Art_Bitmap;
 		
 	}
+	
+	public SongData(Activity activity, String Title, String Artist, String Album, String Duration, String LocalPath){
+		this.Title = Title;
+		this.Artist = Artist;
+		this.Album = Album;
+		this.Duration = Duration;
+		this.LocalPath = LocalPath;
+		
+	}
+	
 }

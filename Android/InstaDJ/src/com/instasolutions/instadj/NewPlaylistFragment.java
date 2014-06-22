@@ -4,6 +4,9 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -101,7 +104,7 @@ public class NewPlaylistFragment extends Fragment implements
 			    	         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durLong)));
         	}
         	songs.append(i, new SongData(this.getActivity(), cursor.getString(0), cursor.getString(1), 
-        				cursor.getString(2), durString, cursor.getString(4), ""));
+        				cursor.getString(2), durString, cursor.getString(4)));
         }
         songlist_adapter = new SongListAdapter(this.getActivity(), songs, true);
         listview.setAdapter(songlist_adapter);
@@ -142,15 +145,8 @@ public class NewPlaylistFragment extends Fragment implements
 		{
 			if(songlist_adapter.getCheckBoxArray().get(i))
 			{
-				View view = listview.getAdapter().getView(i, null, null);
-				TextView title = (TextView)view.findViewById(R.id.song_title);
-				TextView artist = (TextView)view.findViewById(R.id.song_artist);
-				TextView album = (TextView)view.findViewById(R.id.song_album);
-				TextView duration = (TextView)view.findViewById(R.id.song_duration);
-				TextView path = (TextView)view.findViewById(R.id.song_contentpath);
-				returnPlaylist.Songs.append(c, new SongData(this.getActivity(), title.getText().toString(), 
-						artist.getText().toString(), album.getText().toString(), duration.getText().toString(), 
-						path.getText().toString(), ""));
+				SongListAdapter view = (SongListAdapter)listview.getAdapter();
+				returnPlaylist.Songs.append(c, (SongData)view.getItem(i));
 				c++;
 			}
 		}

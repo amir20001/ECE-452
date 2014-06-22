@@ -125,12 +125,17 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 		
 	    if(song.Art_URL != null)
 	    {
-			final DownloadArtworkTask task = new DownloadArtworkTask(art);
+			final GettArtworkTask task = new GettArtworkTask(art);
 			task.execute(song.Art_URL);
 	    }
 	    else if(song.Art_Bitmap != null)
 	    {
 	    	art.setImageBitmap(song.Art_Bitmap);
+	    }
+	    else if(song.LocalPath != null)
+	    {
+			final GettArtworkTask task = new GettArtworkTask(art);
+			task.execute(song.LocalPath);
 	    }
 		
 		return v;
