@@ -24,10 +24,10 @@
         android:text="TextView"
         android:textColor="@color/white" />
 
-    <ImageView
+    <com.facebook.widget.ProfilePictureView
         android:id="@+id/image_profile_pic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/com_facebook_profile_picture_blank_square" />

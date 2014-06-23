@@ -1,8 +1,11 @@
 package com.instasolutions.instadj;
 
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.Scopes;
@@ -18,10 +21,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 public class LoginActivity extends Activity implements OnClickListener,
 	ConnectionCallbacks, OnConnectionFailedListener{
@@ -119,6 +125,21 @@ public class LoginActivity extends Activity implements OnClickListener,
 	//facebook connection handler 
 	private void fb_onSessionStateChange(Session session, SessionState state, Exception exception) {
 	    if (state.isOpened()) {
+            Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+
+                @Override
+                public void onCompleted(GraphUser user, Response response) {
+                    if (user != null) {
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                        SharedPreferences.Editor prefEdit = prefs.edit();
+                        prefEdit.putString("FirstName", user.getFirstName());
+                        prefEdit.putString("LastName", user.getLastName());
+                        prefEdit.putString("UserID", user.getId());
+                        prefEdit.commit();
+                        Log.i(fb_TAG, user.getFirstName() + " " + user.getLastName());
+                    }
+                }
+            });
 	    	Intent i = new Intent(LoginActivity.this,
                     ListeningRoom.class);
             startActivity(i);
@@ -172,6 +193,9 @@ public class LoginActivity extends Activity implements OnClickListener,
 	    // We've resolved any connection errors.
 		Log.d(g_TAG, "connected");
 		g_SignInClicked = false;
+
+
+
     	Intent i = new Intent(LoginActivity.this,
                 ListeningRoom.class);
         startActivity(i);

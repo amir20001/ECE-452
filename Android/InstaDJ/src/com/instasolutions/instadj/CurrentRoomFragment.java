@@ -39,7 +39,7 @@ public class CurrentRoomFragment extends Fragment {
     private int firstPlay = 1;
     private double curTime = 0;
     private double endTime = 0;
-    private String path = "/storage/sdcard1/Music/01 Danza Kuduro.mp3";
+    private String path = "/storage/sdcard0/Music/01 Djobi Djoba.mp3";
     private Activity activity;
     private StationData station = null;
     
