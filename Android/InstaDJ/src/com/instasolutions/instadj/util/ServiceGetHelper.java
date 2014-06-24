@@ -35,7 +35,7 @@ public class ServiceGetHelper extends AsyncTask<String, Void, String> {
 				}
 				return result;
 			} catch (Exception e) {
-				Log.e("MYAPP", "exception", e);
+				Log.e("instadj", "exception", e);
 				return result;
 			}
 
