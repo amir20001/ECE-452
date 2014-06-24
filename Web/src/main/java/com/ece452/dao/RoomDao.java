@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -79,6 +81,17 @@ public class RoomDao {
 			return null;
 		}
 		return room;
+	}
+
+	public List<Room> getAllRooms() {
+		String sql = "SELECT * FROM room;";
+		List<Room> rooms = new ArrayList<Room>();
+		try {
+			rooms = jdbcTemplate.query(sql, new RoomMapper());
+			return rooms;
+		} catch (Exception e) {
+			return rooms;
+		}
 	}
 
 }

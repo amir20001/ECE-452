@@ -1,8 +1,8 @@
-USE instadj;
-DROP SCHEMA instadj;
-CREATE SCHEMA instadj;
+USE ece452;
+DROP SCHEMA ece452;
+CREATE SCHEMA ece452;
 
-CREATE TABLE u (
+CREATE TABLE user (
   username VARCHAR(255),
   picture_url VARCHAR (255),
  PRIMARY KEY (username)
