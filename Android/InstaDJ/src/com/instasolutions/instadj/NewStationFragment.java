@@ -120,7 +120,7 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
         	jstation.put("listenerCount", returnStation.ListenerCount);
         	
         	ServicePostHelper post = new ServicePostHelper();
-        	post.execute("http://192.168.1.141:8080/1.0.0-BUILD-SNAPSHOT/room/insert",jstation.toString());
+        	post.execute("http://instadj.amir20001.cloudbees.net/room/insert",jstation.toString());
         }catch (Exception e){
         	Log.e("instaDJ", "JSONException", e);
         }
