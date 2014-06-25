@@ -18,7 +18,7 @@ public class StationData {
 		this.ListenerCount = 0;
 	}
 	
-	public StationData(Activity activity, String name, UserData owner, PlaylistData playlist, SongData song, int listenerCount){
+	public StationData(String name, UserData owner, PlaylistData playlist, SongData song, int listenerCount){
 		this.Name = name;
 		this.Owner = owner;
 		this.Playlist = playlist;

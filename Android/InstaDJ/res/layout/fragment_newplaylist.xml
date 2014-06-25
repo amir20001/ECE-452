@@ -14,18 +14,6 @@
         android:text="Playlist Name:"
         android:textColor="@color/white" />
 
-    <EditText
-        android:id="@+id/newplaylist_name_input"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/newplaylist_name_label"
-        android:layout_alignBottom="@+id/newplaylist_name_label"
-        android:layout_alignParentRight="true"
-        android:ems="10" >
-
-        <requestFocus />
-    </EditText>
-
     <ListView
         android:id="@+id/newplaylist_songlist"
         android:layout_width="match_parent"
@@ -35,23 +23,6 @@
         android:layout_below="@+id/newplaylist_genre_spinner" >
 
     </ListView>
-
-    <Button
-        android:id="@+id/newplaylist_cancel_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="Cancel" />
-
-    <Button
-        android:id="@+id/newplaylist_save_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="17dp"
-        android:layout_toRightOf="@+id/newplaylist_cancel_button"
-        android:text="Save" />
 
     <TextView
         android:id="@+id/newplaylist_genre_label"
@@ -67,8 +38,34 @@
         android:id="@+id/newplaylist_genre_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/newplaylist_cancel_button"
-        android:layout_alignTop="@+id/newplaylist_genre_label"
-        android:entries="@array/genres_array" />
+        android:layout_below="@+id/newplaylist_name_input"
+        android:layout_toRightOf="@+id/newplaylist_genre_label" />
+
+    <EditText
+        android:id="@+id/newplaylist_name_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/newplaylist_name_label"
+        android:layout_alignBottom="@+id/newplaylist_name_label"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/newplaylist_name_label"
+        android:ems="10"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/newplaylist_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/newplaylist_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/newplaylist_save_button"
+        android:text="Cancel" />
 
 </RelativeLayout>

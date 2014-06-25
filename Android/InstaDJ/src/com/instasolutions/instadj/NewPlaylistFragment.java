@@ -1,5 +1,8 @@
 package com.instasolutions.instadj;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
@@ -40,7 +43,6 @@ public class NewPlaylistFragment extends Fragment implements
     		MediaStore.Audio.Media.DURATION,
     		MediaStore.Audio.Media.DATA
     };
-    ListView listview = null;
     SongListAdapter songlist_adapter = null;
 	
 	/** Called when the activity is first created. */
@@ -64,9 +66,12 @@ public class NewPlaylistFragment extends Fragment implements
 		
     	Button cancelButton = (Button)this.getActivity().findViewById(R.id.newplaylist_cancel_button);
     	Button saveButton = (Button)this.getActivity().findViewById(R.id.newplaylist_save_button);
+    	Spinner genreSpinner = (Spinner)this.getActivity().findViewById(R.id.newplaylist_genre_spinner);
+    	
     	cancelButton.setOnClickListener(this);
     	saveButton.setOnClickListener(this);
-    	
+    	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner_genre_view, getResources().getStringArray(R.array.genres_array));
+    	genreSpinner.setAdapter(adapter);
     }
 
 	@Override
@@ -92,7 +97,7 @@ public class NewPlaylistFragment extends Fragment implements
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		
-        listview = (ListView)this.getActivity().findViewById(R.id.newplaylist_songlist);
+        ListView listview = (ListView)this.getActivity().findViewById(R.id.newplaylist_songlist);
         SparseArray<SongData> songs = new SparseArray<SongData>();
         for(int i = 0; cursor.moveToNext(); cursor.moveToNext(), i++){
         	Integer durLong = Integer.valueOf(cursor.getString(3));
@@ -103,7 +108,7 @@ public class NewPlaylistFragment extends Fragment implements
 			    	         TimeUnit.MILLISECONDS.toSeconds(durLong) - 
 			    	         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durLong)));
         	}
-        	songs.append(i, new SongData(this.getActivity(), cursor.getString(0), cursor.getString(1), 
+        	songs.append(i, new SongData(cursor.getString(0), cursor.getString(1), 
         				cursor.getString(2), durString, cursor.getString(4)));
         }
         songlist_adapter = new SongListAdapter(this.getActivity(), songs, true);
@@ -141,12 +146,11 @@ public class NewPlaylistFragment extends Fragment implements
 	private PlaylistData createPlaylist()
 	{
 		PlaylistData returnPlaylist = new PlaylistData();
-		for(int i = 0, c = 0; i < listview.getCount();i++)
+		for(int i = 0, c = 0; i < songlist_adapter.getCount();i++)
 		{
 			if(songlist_adapter.getCheckBoxArray().get(i))
 			{
-				SongListAdapter view = (SongListAdapter)listview.getAdapter();
-				returnPlaylist.Songs.append(c, (SongData)view.getItem(i));
+				returnPlaylist.Songs.append(c, (SongData)songlist_adapter.getItem(i));
 				c++;
 			}
 		}

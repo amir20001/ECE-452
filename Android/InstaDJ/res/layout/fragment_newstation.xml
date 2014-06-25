@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/transparent_black" >
+
+    <TextView
+        android:id="@+id/newstation_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="14dp"
+        android:text="Station Name:"
+        android:textColor="@color/white" />
+
+    <ListView
+        android:id="@+id/newstation_playlistlist"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_above="@+id/newstation_cancel_button"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/newstation_playlist_label" >
+
+    </ListView>
+
+    <EditText
+        android:id="@+id/newstation_name_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/newstation_name_label"
+        android:layout_alignBottom="@+id/newstation_name_label"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/newstation_name_label"
+        android:ems="10"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/newstation_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/newstation_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/newstation_save_button"
+        android:text="Cancel" />
+
+    <TextView
+        android:id="@+id/newstation_playlist_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/newstation_name_input"
+        android:layout_marginTop="15dp"
+        android:text="Playlist:"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

@@ -16,13 +16,13 @@ public class PlaylistData {
 		this.Genre = "";
 		this.TrackCount = 0;
 	}
-	public PlaylistData(Activity activity, String name, String genre, int trackCount){
+	public PlaylistData(String name, String genre, int trackCount){
 		this.Name = name;
 		this.Genre = genre;
 		this.TrackCount = trackCount;
 	}
 	
-	public PlaylistData(Activity activity, String name, String genre, int trackCount, SparseArray<SongData> songs){
+	public PlaylistData(String name, String genre, int trackCount, SparseArray<SongData> songs){
 		this.Name = name;
 		this.Genre = genre;
 		this.TrackCount = trackCount;

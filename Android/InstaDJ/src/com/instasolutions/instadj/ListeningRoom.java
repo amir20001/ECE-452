@@ -160,6 +160,11 @@ public class ListeningRoom extends FragmentActivity
     	return curRoomFrag;
     }
     
+    public StationsFragment getStationsFragment()
+    {
+    	return stationsFrag;
+    }
+    
    
 };
 

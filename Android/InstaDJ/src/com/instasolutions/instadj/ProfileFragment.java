@@ -51,7 +51,7 @@ public class ProfileFragment extends Fragment {
     {
     	super.onActivityCreated(savedInstanceState);
 		btn_logout = (Button) activity.findViewById(R.id.button_Logout);
-		image_profile = (ImageView) activity.findViewById(R.id.image_profile);
+		image_profile = (ImageView) activity.findViewById(R.id.splash_image);
 		text_name = (TextView) activity.findViewById(R.id.text_name);
 		fb_session = Session.getActiveSession();
         profile_pic = (ProfilePictureView) activity.findViewById(R.id.image_profile_pic);

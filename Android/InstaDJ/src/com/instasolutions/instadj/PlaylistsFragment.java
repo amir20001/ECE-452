@@ -19,6 +19,7 @@ import android.widget.ListView;
 public class PlaylistsFragment extends Fragment implements OnClickListener, OnItemClickListener{
 	
 	SparseArray<PlaylistData> playlists = new SparseArray<PlaylistData>();
+	ListView lv = null;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -37,10 +38,10 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
     	Button NewPlaylistButton = (Button)this.getActivity().findViewById(R.id.playlists_new_button);
     	NewPlaylistButton.setOnClickListener(this);
     	
-        playlists.append(0, new PlaylistData(this.getActivity(), "Playlist1", "Pop", 10));
-        playlists.append(1, new PlaylistData(this.getActivity(), "Playlist2", "Mix", 50));
+        playlists.append(0, new PlaylistData("Playlist1", "Pop", 10));
+        playlists.append(1, new PlaylistData("Playlist2", "Mix", 50));
         PlayListAdapter adapter = new PlayListAdapter(this.getActivity(), playlists );
-         ListView lv = (ListView)this.getActivity().findViewById(R.id.playlists_list);
+        lv = (ListView)this.getActivity().findViewById(R.id.playlists_list);
         lv.setOnItemClickListener(this);
         lv.setAdapter(adapter);
 		
@@ -65,6 +66,11 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
 	public void addPlaylist(PlaylistData playlist)
 	{
 		playlists.append(playlists.size(), playlist);
+	}
+	
+	public ListView getPlaylistsListView()
+	{
+		return lv;
 	}
 
 	@Override

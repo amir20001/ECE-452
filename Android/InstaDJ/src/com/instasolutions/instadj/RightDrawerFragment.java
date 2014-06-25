@@ -90,12 +90,12 @@ public class RightDrawerFragment extends Fragment {
                 }
             });
 	        SparseArray<SongData> songs = new SparseArray<SongData>();
-	        songs.append(0, new SongData(this.getActivity(), "TestTitle", "TestArtist", "TestAlbum", "1:00", "", "http://imgs.tuts.dragoart.com/how-to-draw-the-green-day-heart-grenade-letters_1_000000000968_5.jpg"));
-	        songs.append(1, new SongData(this.getActivity(), "TestTitle2", "TestArtist2", "TestAlbum2", "2:00", "", "http://artsorigin.com/blog/wp-content/uploads/2009/05/graduation-album-cover.jpg"));
+	        songs.append(0, new SongData("TestTitle", "TestArtist", "TestAlbum", "1:00", "", "http://imgs.tuts.dragoart.com/how-to-draw-the-green-day-heart-grenade-letters_1_000000000968_5.jpg"));
+	        songs.append(1, new SongData("TestTitle2", "TestArtist2", "TestAlbum2", "2:00", "", "http://artsorigin.com/blog/wp-content/uploads/2009/05/graduation-album-cover.jpg"));
 	        mSongHistoryList = new SongListAdapter(this.getActivity(), songs );
 	        SparseArray<UserData> users = new SparseArray<UserData>();
-	        users.append(0, new UserData(this.getActivity(), "Testname", "http://lifesenergy.co.uk/wp-content/uploads/2013/11/profile.jpg"));
-	        users.append(1, new UserData(this.getActivity(), "Testname2", ""));
+	        users.append(0, new UserData("Testname", "http://lifesenergy.co.uk/wp-content/uploads/2013/11/profile.jpg"));
+	        users.append(1, new UserData("Testname2", ""));
 	        mUserList = new UserListAdapter(this.getActivity(), users);
 	        mDrawerListView.setAdapter(mSongHistoryList);
             mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);

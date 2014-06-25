@@ -6,12 +6,22 @@
     android:orientation="vertical" >
 
     <ImageView
-        android:id="@+id/image_profile"
-        android:layout_width="69dp"
-        android:layout_height="264dp"
+        android:id="@+id/splash_image"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
         android:layout_column="0"
         android:layout_gravity="center"
         android:layout_row="0"
-        android:src="@drawable/ic_launcher" />
+        android:adjustViewBounds="false"
+        android:scaleType="fitStart"
+        android:src="@drawable/animation_logo1" />
+
+     <ProgressBar
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_column="0"
+         android:layout_gravity="center_horizontal|top"
+         android:layout_row="1"
+         android:indeterminate="true" />
 
 </GridLayout>

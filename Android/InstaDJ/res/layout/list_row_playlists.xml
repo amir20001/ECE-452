@@ -36,5 +36,6 @@
          android:layout_alignParentRight="true"
          android:text="#Tracks"
          android:textColor="@color/platinum" />
+
  
 </RelativeLayout>

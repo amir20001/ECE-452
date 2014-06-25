@@ -5,14 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".LoginFragment" >
 
-   <ImageView
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:background="@drawable/temp_logo_256"
-       android:layout_marginBottom="20dp"
-       android:layout_above="@+id/button_googleAuth"
-       android:layout_centerHorizontal="true" />
-
     <com.facebook.widget.LoginButton
         android:id="@+id/button_facebookAuth"
         android:layout_width="wrap_content"
@@ -33,5 +25,12 @@
         android:layout_alignLeft="@+id/button_facebookAuth"
         android:layout_alignStart="@+id/button_facebookAuth">
     </com.google.android.gms.common.SignInButton>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_googleAuth"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/instadjlogo" />
 
 </RelativeLayout>
