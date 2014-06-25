@@ -1,6 +1,8 @@
 package com.ece452.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,10 +27,23 @@ public class UserController {
 	@Autowired
 	UserDao userDao;
 
-	@RequestMapping(value = "/addfavourite", method = RequestMethod.POST)
-	public void addFavourite(HttpServletRequest request,
+	@RequestMapping(value = "/insert", method = RequestMethod.POST)
+	public void insertUser(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		// TODO
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				request.getInputStream()));
+		String json = "";
+		if (br != null) {
+			json = br.readLine();
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		User user = mapper.readValue(json, User.class);
+		if( userDao.getUser(user.getUsername()) == null){
+			// make sure user does not already exist
+			userDao.inset(user);
+		}
+		
+		mapper.writeValue(response.getOutputStream(), user);
 	}
 
 	@RequestMapping(value = "/info/{username}", method = RequestMethod.GET)

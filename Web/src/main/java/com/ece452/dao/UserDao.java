@@ -28,7 +28,7 @@ public class UserDao {
 
 	public User inset(User user) {
 
-		String sql = "INSERT INTO room (username,picture_url) VALUES (?,?)";
+		String sql = "INSERT INTO user (username,picture_url) VALUES (?,?)";
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();

@@ -1,24 +1,8 @@
 package com.instasolutions.instadj;
 
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
-import com.facebook.model.GraphUser;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.PlusClient;
+import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
@@ -27,7 +11,21 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.TextView;
+
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.plus.Plus;
+import com.instasolutions.instadj.util.ServicePostHelper;
 
 public class LoginActivity extends Activity implements OnClickListener,
 	ConnectionCallbacks, OnConnectionFailedListener{
@@ -123,6 +121,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 	    fb_uiHelper.onSaveInstanceState(outState);
 	}
 	//facebook connection handler 
+	@SuppressWarnings("deprecation")
 	private void fb_onSessionStateChange(Session session, SessionState state, Exception exception) {
 	    if (state.isOpened()) {
             Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
@@ -136,6 +135,19 @@ public class LoginActivity extends Activity implements OnClickListener,
                         prefEdit.putString("LastName", user.getLastName());
                         prefEdit.putString("UserID", user.getId());
                         prefEdit.commit();
+                        
+                        UserData ud = new UserData(user.getName(), "test");
+                        
+                        try{
+                        	JSONObject jud = new JSONObject();
+                        	jud.put("username", ud.UserName);
+                        	jud.put("pictureUrl", ud.Picture_URL);
+                        	ServicePostHelper post = new ServicePostHelper();
+                        	post.execute("http://instadj.amir20001.cloudbees.net/user/insert",jud.toString());
+                        }catch (Exception e){
+                        	Log.e("instaDJ", "JSONException", e);
+                        }
+                       
                         Log.i(fb_TAG, user.getFirstName() + " " + user.getLastName());
                     }
                 }
