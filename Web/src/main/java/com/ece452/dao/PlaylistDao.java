@@ -41,8 +41,7 @@ public class PlaylistDao {
 					Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, playlist.getName());
 			statement.setString(2, playlist.getGenre());
-
-			statement.setInt(4, playlist.getTrackCount());
+			statement.setInt(3, playlist.getTrackCount());
 			statement.executeUpdate();
 
 			generatedKeys = statement.getGeneratedKeys();
@@ -51,7 +50,7 @@ public class PlaylistDao {
 				playlist.setId(generatedKeys.getInt(1));
 			} else {
 				throw new SQLException(
-						"Creating room failed, no generated key obtained.");
+						"Creating playlist failed, no generated key obtained.");
 			}
 			generatedKeys.close();
 			statement.close();

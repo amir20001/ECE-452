@@ -3,9 +3,6 @@ package com.instasolutions.instadj;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -69,27 +65,27 @@ public class CurrentRoomFragment extends Fragment {
     public void initialize()
     {
 	    Uri.Builder uri_b = new Uri.Builder();
-        mediaplayer = MediaPlayer.create(activity, uri_b.path(path).build());
-		btn_play = (ImageButton)activity.findViewById(R.id.Button_Play);
-        seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
-        text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
-        text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
-        text_songName = (TextView)activity.findViewById(R.id.text_song);
-        text_artist = (TextView)activity.findViewById(R.id.text_artist);
-        text_stationName = (TextView)activity.findViewById(R.id.currentroom_stationname_text);
-        large_art = (ImageView)activity.findViewById(R.id.image_art);
-        small_art = (ImageView)activity.findViewById(R.id.album_art);
-        MediaMetadataRetriever media = new MediaMetadataRetriever();
-        media.setDataSource(path);
-        text_songName.setText(media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
-        text_artist.setText(media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
-        byte[] data = media.getEmbeddedPicture();
-        if(data != null)
-        {
-        	Bitmap art_bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        	large_art.setImageBitmap(art_bitmap);	
-        	small_art.setImageBitmap(art_bitmap);
-        }
+//        mediaplayer = MediaPlayer.create(activity, uri_b.path(path).build());
+//		btn_play = (ImageButton)activity.findViewById(R.id.Button_Play);
+//        seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
+//        text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
+//        text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
+//        text_songName = (TextView)activity.findViewById(R.id.text_song);
+//        text_artist = (TextView)activity.findViewById(R.id.text_artist);
+//        text_stationName = (TextView)activity.findViewById(R.id.currentroom_stationname_text);
+//        large_art = (ImageView)activity.findViewById(R.id.image_art);
+//        small_art = (ImageView)activity.findViewById(R.id.album_art);
+//        MediaMetadataRetriever media = new MediaMetadataRetriever();
+//        media.setDataSource(path);
+//        text_songName.setText(media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
+//        text_artist.setText(media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
+//        byte[] data = media.getEmbeddedPicture();
+//        if(data != null)
+//        {
+//        	Bitmap art_bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+//        	large_art.setImageBitmap(art_bitmap);	
+//        	small_art.setImageBitmap(art_bitmap);
+//        }
         
         if(station != null)
         {
