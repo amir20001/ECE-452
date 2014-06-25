@@ -11,7 +11,7 @@ public class Song extends BaseEntity {
 	private String duration;
 	private String uuid;
 	private int id;
-	private int roomId;
+	private int playlistId;
 	private transient Metadata metadata;
 
 	public int getId() {
@@ -21,14 +21,7 @@ public class Song extends BaseEntity {
 	public void setId(int id) {
 		this.id = id;
 	}
-
-	public int getRoomId() {
-		return roomId;
-	}
-
-	public void setRoomId(int roomId) {
-		this.roomId = roomId;
-	}
+ 
 
 	public Metadata getMetadata() {
 		return metadata;
@@ -84,6 +77,14 @@ public class Song extends BaseEntity {
 
 	public void setDuration(String duration) {
 		this.duration = duration;
+	}
+
+	public int getPlaylistId() {
+		return playlistId;
+	}
+
+	public void setPlaylistId(int playlistId) {
+		this.playlistId = playlistId;
 	}
 
 }

@@ -27,33 +27,27 @@ public class RoomController {
 	@Autowired
 	RoomDao roomDao;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	public void create(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// 1. get received JSON data from request
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				request.getInputStream()));
 		String json = "";
 		if (br != null) {
 			json = br.readLine();
 		}
-
-		// 2. initiate jackson mapper
+		
 		ObjectMapper mapper = new ObjectMapper();
-
-		// 3. Convert received JSON to Article
 		Room room = mapper.readValue(json, Room.class);
-
 		response.setContentType("application/json");
-
 		room = roomDao.insert(room);
 		// return room info with id
 		mapper.writeValue(response.getOutputStream(), room);
 	}
 
-	@RequestMapping(value = "/info/{roomId}", method = RequestMethod.GET)
-	public void getDoctorView(@PathVariable("roomId") String roomID,
+	@RequestMapping(value = "/get/{roomId}", method = RequestMethod.GET)
+	public void getRoom(@PathVariable("roomId") String roomID,
 			HttpServletResponse response) throws JsonGenerationException,
 			JsonMappingException, IOException {
 
@@ -62,7 +56,5 @@ public class RoomController {
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), room);
 	}
-
-	
 
 }

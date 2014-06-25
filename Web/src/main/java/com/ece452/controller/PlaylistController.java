@@ -3,6 +3,7 @@ package com.ece452.controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,43 +18,62 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.ece452.dao.SongDao;
-import com.ece452.domain.Song;
+import com.ece452.dao.PlaylistDao;
+import com.ece452.domain.Playlist;
 
 @Controller
-@RequestMapping("/song")
-public class SongController {
+@RequestMapping("/playlist")
+public class PlaylistController {
 
 	@Autowired
-	SongDao songDao;
+	PlaylistDao playlistDao;
 
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
-	public void create(HttpServletRequest request, HttpServletResponse response)
+	public void insert(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				request.getInputStream()));
-
 		String json = "";
 		if (br != null) {
 			json = br.readLine();
 		}
 
 		ObjectMapper mapper = new ObjectMapper();
-		Song song = mapper.readValue(json, Song.class);
+		Playlist playlist = mapper.readValue(json, Playlist.class);
 		response.setContentType("application/json");
-		song = songDao.insert(song);
-		mapper.writeValue(response.getOutputStream(), song);
-
+		playlist = playlistDao.insert(playlist);
+		// return room info with id
+		mapper.writeValue(response.getOutputStream(), playlist);
 	}
-
-	@RequestMapping(value = "/get/{songId}", method = RequestMethod.GET)
-	public void getSong(@PathVariable("songId") String songId,
+	
+	@RequestMapping(value = "/get/{playlistId}", method = RequestMethod.GET)
+	public void getPlayList(@PathVariable("playlistId") String playlistId,
 			HttpServletResponse response) throws JsonGenerationException,
 			JsonMappingException, IOException {
-		Song song = songDao.getSong(songId);
+
+		Playlist playlist = playlistDao.getPlaylist(playlistId);
 		ObjectMapper mapper = new ObjectMapper();
 		response.setContentType("application/json");
-		mapper.writeValue(response.getOutputStream(), song);
+		mapper.writeValue(response.getOutputStream(), playlist);
 	}
+	
+	
+	
+	@RequestMapping(value = "/getall", method = RequestMethod.GET)
+	public void getAllPlaylists(@PathVariable("playlistId") String playlistId,
+			HttpServletResponse response) throws JsonGenerationException,
+			JsonMappingException, IOException {
+
+		List<Playlist> playlists = playlistDao.getAllPlaylist();
+		
+		
+		ObjectMapper mapper = new ObjectMapper();
+		response.setContentType("application/json");
+		mapper.writeValue(response.getOutputStream(), playlists);
+	}
+	
+	
+	
+
 }
