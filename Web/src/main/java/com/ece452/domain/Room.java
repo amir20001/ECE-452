@@ -6,6 +6,7 @@ public class Room extends BaseEntity {
 	private String ownerUserName;
 	private int listenerCount;
 	private int currentSongID;
+	private int playlistId;
 
 	public int getId() {
 		return id;
@@ -51,5 +52,15 @@ public class Room extends BaseEntity {
 	public void setCurrentSongID(int currentSongID) {
 		this.currentSongID = currentSongID;
 	}
+
+	public int getPlaylistId() {
+		return playlistId;
+	}
+
+	public void setPlaylistId(int playlistId) {
+		this.playlistId = playlistId;
+	}
+
+ 
 
 }

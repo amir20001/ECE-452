@@ -33,10 +33,9 @@ CREATE TABLE room (
  `name` VARCHAR (225),
  owner_user_name VARCHAR(255),
  playlist_id INT NULL,
- listenerCount INT,
+ listener_count INT,
  current_song_id INT NULL,
- PRIMARY KEY (id),
- CONSTRAINT fk_room_owner_user_name FOREIGN KEY (owner_user_name) REFERENCES `user`(username),
- CONSTRAINT fk_room_current_song_id FOREIGN KEY (current_song_id) REFERENCES song (id),
- CONSTRAINT fk_room_playlist FOREIGN KEY (playlist_id) REFERENCES playlist (id)
-);
+ PRIMARY KEY (id)
+ -- CONSTRAINT fk_room_owner_user_name FOREIGN KEY (owner_user_name) REFERENCES `user`(username),
+ -- CONSTRAINT fk_room_current_song_id FOREIGN KEY (current_song_id) REFERENCES song (id)
+ );

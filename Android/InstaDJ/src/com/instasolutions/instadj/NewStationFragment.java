@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.json.JSONObject;
+
+import com.instasolutions.instadj.util.ServicePostHelper;
+
 import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -105,6 +109,21 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 		PlayListAdapter playlistAdapter = (PlayListAdapter)lv.getAdapter();
 		returnStation.Playlist = (PlaylistData)playlistAdapter.getItem(selectedPlaylistPos);
 		returnStation.Song = new SongData();
+		
+		try{
+        	JSONObject jstation = new JSONObject();
+        	jstation.put("name", returnStation.Name);
+        	jstation.put("ownerUserName", "Amir Behnam");
+        	//TODO change this to a real id later 
+        	jstation.put("playlistId", 1);
+        	jstation.put("currentSongID", 1);
+        	jstation.put("listenerCount", returnStation.ListenerCount);
+        	
+        	ServicePostHelper post = new ServicePostHelper();
+        	post.execute("http://192.168.1.141:8080/1.0.0-BUILD-SNAPSHOT/room/insert",jstation.toString());
+        }catch (Exception e){
+        	Log.e("instaDJ", "JSONException", e);
+        }
 		
 		return returnStation;
 
