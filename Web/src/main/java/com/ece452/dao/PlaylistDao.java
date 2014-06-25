@@ -82,7 +82,7 @@ public class PlaylistDao {
 	}
 
 	public List<Playlist> getAllPlaylist() {
-		String sql = "SELECT * FROM room;";
+		String sql = "SELECT * FROM playlist;";
 		List<Playlist> playlists = new ArrayList<Playlist>();
 		try {
 			playlists = jdbcTemplate.query(sql, new PlaylistMapper());
