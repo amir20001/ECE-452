@@ -61,15 +61,14 @@ public class ListeningRoom extends FragmentActivity
                 getFragmentManager().findFragmentById(R.id.navigation_drawer_left);
         mTitle = getTitle();
 
-        // Set up the drawer.
+        // Set up the left drawer.
         mNavigationDrawerFragment_left.setUp(
                 R.id.navigation_drawer_left,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-        
+
         mNavigationDrawerFragment_right = (RightDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer_right);
-        
-        // Set up the drawer.
+        // Set up the right drawer        
         mNavigationDrawerFragment_right.setUp(
                 R.id.navigation_drawer_right,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -99,7 +98,7 @@ public class ListeningRoom extends FragmentActivity
         	selectedFragment = profileFrag;
         	break;
         default: 
-        	selectedFragment = curRoomFrag;
+        	selectedFragment = stationsFrag;
         	break;
         }
         fragmentManager.beginTransaction()
@@ -145,11 +144,6 @@ public class ListeningRoom extends FragmentActivity
         return super.onOptionsItemSelected(item);
     }
     
-    public void play(View view)
-    {
-    	curRoomFrag.play(view);
-    }
-    
     public PlaylistsFragment getPlaylistsFragment()
     {
     	return playlistsFrag;
@@ -163,6 +157,11 @@ public class ListeningRoom extends FragmentActivity
     public StationsFragment getStationsFragment()
     {
     	return stationsFrag;
+    }
+    
+    public RightDrawerFragment getRightDrawerFragment()
+    {
+    	return mNavigationDrawerFragment_right;
     }
     
    

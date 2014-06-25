@@ -66,7 +66,7 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 
 	@Override
 	public Object getItem(int pos) {
-		return songs.get(pos);
+			return songs.get(pos);
 	}
 
 	@Override
@@ -149,5 +149,16 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 			checkBoxArray.put((Integer)buttonView.getTag(), false);
 		
 	}
+	
+	public SparseArray<SongData> getArray()
+	{
+		return songs;
+	}
+	
+	public void setArray(SparseArray<SongData> sArray)
+	{
+		songs = sArray;
+	}
+	
 
 }

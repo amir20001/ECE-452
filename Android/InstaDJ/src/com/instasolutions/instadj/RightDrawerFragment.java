@@ -90,9 +90,7 @@ public class RightDrawerFragment extends Fragment {
                 }
             });
 	        SparseArray<SongData> songs = new SparseArray<SongData>();
-	        songs.append(0, new SongData("TestTitle", "TestArtist", "TestAlbum", "1:00", "", "http://imgs.tuts.dragoart.com/how-to-draw-the-green-day-heart-grenade-letters_1_000000000968_5.jpg"));
-	        songs.append(1, new SongData("TestTitle2", "TestArtist2", "TestAlbum2", "2:00", "", "http://artsorigin.com/blog/wp-content/uploads/2009/05/graduation-album-cover.jpg"));
-	        mSongHistoryList = new SongListAdapter(this.getActivity(), songs );
+	    	mSongHistoryList = new SongListAdapter(this.getActivity(), songs );
 	        SparseArray<UserData> users = new SparseArray<UserData>();
 	        users.append(0, new UserData("Testname", "http://lifesenergy.co.uk/wp-content/uploads/2013/11/profile.jpg"));
 	        users.append(1, new UserData("Testname2", ""));
@@ -271,5 +269,12 @@ public class RightDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onRightDrawerItemSelected(int position);
+    }
+    
+    public void updateSongHistory(SongData song)
+    {	SparseArray<SongData> songs = mSongHistoryList.getArray();
+    	songs.append(songs.size(), song);
+    	mSongHistoryList.setArray(songs);
+    	mDrawerListView.setAdapter(mSongHistoryList);
     }
 }
