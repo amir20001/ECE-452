@@ -46,8 +46,8 @@ public class UserController {
 		mapper.writeValue(response.getOutputStream(), user);
 	}
 
-	@RequestMapping(value = "/info/{username}", method = RequestMethod.GET)
-	public void getDoctorView(@PathVariable("username") String username,
+	@RequestMapping(value = "/get/{username}", method = RequestMethod.GET)
+	public void getSong(@PathVariable("username") String username,
 			HttpServletResponse response) throws JsonGenerationException,
 			JsonMappingException, IOException {
 

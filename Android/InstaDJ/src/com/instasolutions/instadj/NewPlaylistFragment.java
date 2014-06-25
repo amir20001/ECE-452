@@ -1,20 +1,18 @@
 package com.instasolutions.instadj;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,10 +24,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
+
+import com.instasolutions.instadj.util.ServicePostHelper;
 
 public class NewPlaylistFragment extends Fragment implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnClickListener{
@@ -160,6 +156,19 @@ public class NewPlaylistFragment extends Fragment implements
 		returnPlaylist.Name = playlistName.getText().toString();
 		returnPlaylist.Genre = playlistGenre.getSelectedItem().toString();
 		returnPlaylist.TrackCount = returnPlaylist.Songs.size();
+		
+		try{
+        	JSONObject jplaylist = new JSONObject();
+        	jplaylist.put("name", returnPlaylist.Name);
+        	jplaylist.put("genre", returnPlaylist.Genre);
+        	jplaylist.put("trackCount", returnPlaylist.TrackCount);
+        	ServicePostHelper post = new ServicePostHelper();
+        	post.execute("http://instadj.amir20001.cloudbees.net/playlist/insert",jplaylist.toString());
+        }catch (Exception e){
+        	Log.e("instaDJ", "JSONException", e);
+        }
+       
+		
 		return returnPlaylist;
 
 	}
