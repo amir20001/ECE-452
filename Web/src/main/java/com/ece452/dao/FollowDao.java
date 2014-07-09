@@ -4,17 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ece452.domain.Follow;
 import com.ece452.domain.User;
+import com.ece452.mapper.UserMapper;
 import com.mysql.jdbc.Statement;
 @Repository
 public class FollowDao {
@@ -66,13 +67,25 @@ public class FollowDao {
 	}
 
 	public List<User> getAllFollowing(User user) {
-		// TODO
-		throw new NotImplementedException();
+		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.following AND follow.followed = ?;";
+		List<User> users = new ArrayList<User>();
+		try {
+			users = jdbcTemplate.query(sql,new Object[] { user.getUserId()} ,new UserMapper());
+			return users;
+		} catch (Exception e) {
+			return users;
+		}
 	}
 
 	public List<User> getAllFollowed(User user) {
-		// TODO
-		throw new NotImplementedException();
+		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.followed AND follow.following = ?;";
+		List<User> users = new ArrayList<User>();
+		try {
+			users = jdbcTemplate.query(sql,new Object[] { user.getUserId()} ,new UserMapper());
+			return users;
+		} catch (Exception e) {
+			return users;
+		}
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.ece452.domain;
 
-public class Favourite {
+public class Favourite extends BaseEntity{
 	private int id;
 	private String title;
 	private String artist;

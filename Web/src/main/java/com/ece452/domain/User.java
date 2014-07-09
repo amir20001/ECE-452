@@ -39,11 +39,11 @@ public class User extends BaseEntity {
 		this.roomId = roomId;
 	}
 
-	public String getuserID() {
+	public String getUserId() {
 		return userID;
 	}
 
-	public void setuserID(String userid) {
+	public void setUserId(String userid) {
 		this.userID = userid;
 	}
 

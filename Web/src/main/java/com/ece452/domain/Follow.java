@@ -1,6 +1,6 @@
 package com.ece452.domain;
 
-public class Follow {
+public class Follow extends BaseEntity {
 	private int id;
 	private int following;
 	private int followed;

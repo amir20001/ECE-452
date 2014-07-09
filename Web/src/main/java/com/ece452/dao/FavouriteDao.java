@@ -4,16 +4,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ece452.domain.Favourite;
+import com.ece452.mapper.FavouriteMapper;
 import com.mysql.jdbc.Statement;
 
 @Repository
@@ -69,9 +70,16 @@ public class FavouriteDao {
 
 	}
 
-	public List<Favourite> getAllFavourites() {
-		// TODO
-		throw new NotImplementedException();
+	public List<Favourite> getAllFavourites(String userId) {
+		String sql = "select * from favourite where user_id = ?";
+		List<Favourite> favourite = new ArrayList<Favourite>();
+		try {
+			favourite = jdbcTemplate.query(sql, new Object[] { userId },
+					new FavouriteMapper());
+			return favourite;
+		} catch (Exception e) {
+			return favourite;
+		}
 	}
 
 }

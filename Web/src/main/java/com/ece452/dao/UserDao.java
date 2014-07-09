@@ -35,7 +35,7 @@ public class UserDao {
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, user.getuserID());
+			statement.setString(1, user.getUserId());
 			statement.setString(2, user.getFirstName());
 			statement.setString(3, user.getLastName());
 			statement.setInt(4, user.getScore());
@@ -55,6 +55,7 @@ public class UserDao {
 		}
 
 	}
+
 
 	public User getUser(String userid) {
 		User user = null;

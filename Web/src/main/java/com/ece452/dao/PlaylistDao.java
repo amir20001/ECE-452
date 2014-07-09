@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ece452.domain.Playlist;
-import com.ece452.domain.User;
 import com.ece452.mapper.PlaylistMapper;
 import com.mysql.jdbc.Statement;
 
