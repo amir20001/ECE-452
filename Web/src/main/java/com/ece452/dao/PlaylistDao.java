@@ -83,11 +83,11 @@ public class PlaylistDao {
 		return playlist;
 	}
 
-	public List<Playlist> getPlaylistsByUser(User user) {
+	public List<Playlist> getPlaylistsByUser(int userId ) {
 		String sql = "SELECT * FROM playlist where user_id = ?;";
 		List<Playlist> playlists = new ArrayList<Playlist>();
 		try {
-			playlists = jdbcTemplate.query(sql, new Object[] { user.getId() },
+			playlists = jdbcTemplate.query(sql, new Object[] { userId },
 					new PlaylistMapper());
 			return playlists;
 		} catch (Exception e) {

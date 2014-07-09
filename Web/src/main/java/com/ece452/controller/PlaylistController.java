@@ -62,6 +62,17 @@ public class PlaylistController {
 		mapper.writeValue(response.getOutputStream(), playlist);
 	}
 	
+	@RequestMapping(value = "/getbyuser/{userId}", method = RequestMethod.GET)
+	public void getPlayListByUser(@PathVariable("userId") int userId,
+			HttpServletResponse response) throws JsonGenerationException,
+			JsonMappingException, IOException {
+
+		  List<Playlist> playlistsByUser = playlistDao.getPlaylistsByUser(userId);
+		ObjectMapper mapper = new ObjectMapper();
+		response.setContentType("application/json");
+		mapper.writeValue(response.getOutputStream(), playlistsByUser);
+	}
+	
 	
 	
 	@RequestMapping(value = "/getall", method = RequestMethod.GET)

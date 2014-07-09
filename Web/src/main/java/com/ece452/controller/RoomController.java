@@ -41,7 +41,7 @@ public class RoomController {
 		if (br != null) {
 			json = br.readLine();
 		}
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		Room room = mapper.readValue(json, Room.class);
 		response.setContentType("application/json");
@@ -60,8 +60,19 @@ public class RoomController {
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), room);
 	}
-	
-	@RequestMapping(value ="/view", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/getall", method = RequestMethod.GET)
+	public void getAllRooms(HttpServletResponse response)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		List<Room> allRooms = roomDao.getAllRooms();
+
+		ObjectMapper mapper = new ObjectMapper();
+		response.setContentType("application/json");
+		mapper.writeValue(response.getOutputStream(), allRooms);
+
+	}
+
+	@RequestMapping(value = "/view", method = RequestMethod.GET)
 	public ModelAndView showLoginPage(HttpSession session, Model model) {
 		List<Room> rooms = roomDao.getAllRooms();
 		model.addAttribute("rooms", rooms);
