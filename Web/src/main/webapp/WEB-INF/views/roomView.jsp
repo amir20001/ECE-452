@@ -29,6 +29,14 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <body>
 <h1>Add a friends room.</h1>
  
+ 	<div class="panel panel-default">
+		<display:table class="table table-striped table-condensed"
+			name="rooms">
+			<display:column property="id" title="roomID" />
+			<display:column property="name" />
+			<display:column property="genre" />
+		</display:table>
+		
 <form action="main.jsp" method="POST">
 Room Name: <input type="text" name="roomID">
 <br />
