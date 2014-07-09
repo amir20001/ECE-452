@@ -2,7 +2,6 @@ package com.ece452.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class UserDao {
 
 	public User inset(User user) {
 
-		String sql = "INSERT INTO user (userid,firstname, lastname, score,room_id) VALUES (?,?,?,?)";
+		String sql = "INSERT INTO user (userid,firstname, lastname, score,room_id) VALUES (?,?,?,?,?)";
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
@@ -57,10 +56,9 @@ public class UserDao {
 
 	}
 
-
 	public User getUser(String userid) {
 		User user = null;
-		String sql = "SELECT * FROM user WHERE userid = ?";
+		String sql = "SELECT * FROM user WHERE user_id = ?";
 
 		try {
 			user = jdbcTemplate.queryForObject(sql, new Object[] { userid },
