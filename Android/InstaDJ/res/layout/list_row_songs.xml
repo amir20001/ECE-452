@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="5dip" >
+    android:padding="5dip" 
+    android:descendantFocusability="blocksDescendants" >
  
     <!--  ListRow Left sied Thumbnail image -->
     <LinearLayout android:id="@+id/thumbnail"
@@ -72,5 +73,15 @@
          android:text="Artist"
          android:textColor="@color/platinum"
          android:textSize="10dip" />
+
+     <ImageButton
+         android:id="@+id/song_delete_button"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBottom="@+id/song_album"
+         android:layout_marginRight="15dp"
+         android:layout_toLeftOf="@+id/song_duration"
+         android:background="@null"
+         android:src="@drawable/ic_action_discard" />
  
 </RelativeLayout>

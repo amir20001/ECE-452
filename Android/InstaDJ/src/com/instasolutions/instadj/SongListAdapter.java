@@ -25,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.CompoundButton;
@@ -36,6 +37,7 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 	private SparseBooleanArray checkBoxArray = new SparseBooleanArray();
 	private static LayoutInflater inflater = null;
 	private Boolean UseSelect = false;
+	private Boolean UseButtons = false;
 	
 	public SongListAdapter(Activity a, SparseArray<SongData> d)
 	{
@@ -86,7 +88,7 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 				v = inflater.inflate(R.layout.list_row_songs, null);
 		}
 		
-		TextView title = (TextView)v.findViewById(R.id.song_title);
+		final TextView title = (TextView)v.findViewById(R.id.song_title);
 		TextView artist = (TextView)v.findViewById(R.id.song_artist);
 		TextView album = (TextView)v.findViewById(R.id.song_album);
 		TextView duration = (TextView)v.findViewById(R.id.song_duration);
@@ -119,6 +121,24 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 
 			checkbox.setOnCheckedChangeListener(this);
 			
+		}
+		else
+		{
+			ImageButton deleteButton = (ImageButton)v.findViewById(R.id.song_delete_button);
+			if(UseButtons)
+			{
+				deleteButton.setOnClickListener(new OnClickListener() { 
+			        @Override 
+			        public void onClick(View v) { 
+			        	//TODO: Change to remove from server and update list
+			            title.setText("Deleted");
+			        } 
+			    }); 
+			}
+			else
+			{
+				deleteButton.setVisibility(ImageView.INVISIBLE);
+			}
 		}
 		
 	    art.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.blankart));
@@ -158,6 +178,11 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 	public void setArray(SparseArray<SongData> sArray)
 	{
 		songs = sArray;
+	}
+	
+	public void setButtonsEnabled(boolean buttons)
+	{
+		this.UseButtons = buttons;
 	}
 	
 
