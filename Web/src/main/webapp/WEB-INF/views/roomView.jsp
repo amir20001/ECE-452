@@ -1,33 +1,40 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://displaytag.sf.net" prefix="display"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+    <title>Create Rooms</title>
+    
+        <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap responsive -->
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <!-- Font awesome - iconic font with IE7 support --> 
+    <link href="css/font-awesome.css" rel="stylesheet">
+    <link href="css/font-awesome-ie7.css" rel="stylesheet">
+    <!-- Bootbusiness theme -->
+    <link href="css/boot-business.css" rel="stylesheet">
+<script
+src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+
+</head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Welcome</title>
+<title>User View</title>
 <!-- <link type="text/css" href="resources/css/bootstrap.css" rel="stylesheet" /> -->
 <link type="text/css" href="css/bootstrap-responsive.min.css"
 	rel="stylesheet">
 <link
 	href="<%=request.getContextPath()%>/resources/css/bootstrap.min.css"
 	rel="stylesheet" />
-
-</head>
+	
 <body>
+<h1>Add a friends room.</h1>
+ 
+<form action="main.jsp" method="POST">
+Room Name: <input type="text" name="roomID">
+<br />
+Room Genre: <input type="text" name="room_genre" />
+<input type="submit" value="Submit" />
 
-	<div class="panel panel-default">
-		<display:table class="table table-striped table-condensed"
-			name="rooms">
-			<display:column property="id" title="ID" />
-			<display:column property="name" />
-			<display:column property="ownerUserName" />
-
-			<display:column property="listenerCount" />
-			<display:column property="currentSongID" />
-			<display:column property="playlistId" />
-
-		</display:table>
+</form>
 </body>
 </html>

@@ -25,7 +25,7 @@ public class StartController {
 	public ModelAndView showLoginPage(HttpSession session, Model model) {
 		List<Room> allRooms = roomDao.getAllRooms();
 		model.addAttribute("rooms", allRooms);
-		return new ModelAndView("welcome");
+		return new ModelAndView("roomView");
 	}
 
 	@RequestMapping(value = "logout", method = RequestMethod.GET)
