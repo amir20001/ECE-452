@@ -1,20 +1,26 @@
 package com.ece452.domain;
 
 public class Favourite {
-	private String songName;
+	private int id;
+	private String title;
 	private String artist;
-					
-	@Override
-	public String toString() {
-		return "Song Name: " + getSongName() + ", Artist: " + getArtist();
+	private String album;
+	private int userId;
+
+	public int getId() {
+		return id;
 	}
 
-	public String getSongName() {
-		return songName;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public void setSongName(String songName) {
-		this.songName = songName;
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getArtist() {
@@ -24,4 +30,21 @@ public class Favourite {
 	public void setArtist(String artist) {
 		this.artist = artist;
 	}
+
+	public String getAlbum() {
+		return album;
+	}
+
+	public void setAlbum(String album) {
+		this.album = album;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
 }

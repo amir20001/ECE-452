@@ -4,19 +4,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.ece452.domain.Song;
-import com.ece452.mapper.SongMapper;
+import com.ece452.domain.Follow;
+import com.ece452.domain.User;
 import com.mysql.jdbc.Statement;
-
 @Repository
-public class SongDao {
+public class FollowDao {
+
 	private DataSource dataSource;
 
 	private JdbcTemplate jdbcTemplate;
@@ -27,35 +29,30 @@ public class SongDao {
 		this.dataSource = dataSource;
 	}
 
-	public Song insert(Song song) {
-		String sql = "INSERT INTO song (file_name,uuid,playlist_id,title,artist,album,duration,net_score) VALUES (?,?,?,?,?,?,?,?)";
+	public Follow insert(Follow follow) {
+		String sql = "INSERT INTO follow (follwing,followed) VALUES (?,?)";
 		ResultSet generatedKeys = null;
 		Connection conn = null;
+
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql,
 					Statement.RETURN_GENERATED_KEYS);
-			statement.setString(1, song.getFileName());
-			statement.setString(2, song.getUuid());
-			statement.setInt(3, song.getPlaylistId());
-			statement.setString(4, song.getTitle());
-			statement.setString(5, song.getArtist());
-			statement.setString(6, song.getAlbum());
-			statement.setString(7, song.getDuration());
-			statement.setInt(8, song.getNetScore());
-			statement.executeUpdate();
+			statement.setInt(1, follow.getFollowing());
+			statement.setInt(2, follow.getFollowed());
 
+			statement.executeUpdate();
 			generatedKeys = statement.getGeneratedKeys();
 			if (generatedKeys.next()) {
 				// get auto increment key
-				song.setId(generatedKeys.getInt(1));
+				follow.setId(generatedKeys.getInt(1));
 			} else {
 				throw new SQLException(
-						"Creating song failed, no generated key obtained.");
+						"Creating follow failed, no generated key obtained.");
 			}
 			generatedKeys.close();
 			statement.close();
-			return song;
+			return follow;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -68,17 +65,14 @@ public class SongDao {
 		}
 	}
 
-	public Song getSong(String id) {
-		Song song = null;
-		String sql = "SELECT * FROM song WHERE id= ?";
-		try {
-			song = jdbcTemplate.queryForObject(sql, new Object[] { id },
-					new SongMapper());
-		} catch (Exception e) {
-			// No user was found with the specified id, return null
-			return null;
-		}
-		return song;
+	public List<User> getAllFollowing(User user) {
+		// TODO
+		throw new NotImplementedException();
+	}
+
+	public List<User> getAllFollowed(User user) {
+		// TODO
+		throw new NotImplementedException();
 	}
 
 }

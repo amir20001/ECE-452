@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ece452.domain.Playlist;
+import com.ece452.domain.User;
 import com.ece452.mapper.PlaylistMapper;
 import com.mysql.jdbc.Statement;
 
@@ -32,7 +33,7 @@ public class PlaylistDao {
 
 	public Playlist insert(Playlist playlist) {
 
-		String sql = "INSERT INTO playlist (name,genre,track_count) VALUES (?,?,?)";
+		String sql = "INSERT INTO playlist (name,genre,track_count,user_id) VALUES (?,?,?,?)";
 		ResultSet generatedKeys = null;
 		Connection conn = null;
 		try {
@@ -42,6 +43,7 @@ public class PlaylistDao {
 			statement.setString(1, playlist.getName());
 			statement.setString(2, playlist.getGenre());
 			statement.setInt(3, playlist.getTrackCount());
+			statement.setInt(4, playlist.getUserId());
 			statement.executeUpdate();
 
 			generatedKeys = statement.getGeneratedKeys();
@@ -79,6 +81,18 @@ public class PlaylistDao {
 			return null;
 		}
 		return playlist;
+	}
+
+	public List<Playlist> getPlaylistsByUser(User user) {
+		String sql = "SELECT * FROM playlist where user_id = ?;";
+		List<Playlist> playlists = new ArrayList<Playlist>();
+		try {
+			playlists = jdbcTemplate.query(sql, new Object[] { user.getId() },
+					new PlaylistMapper());
+			return playlists;
+		} catch (Exception e) {
+			return playlists;
+		}
 	}
 
 	public List<Playlist> getAllPlaylist() {

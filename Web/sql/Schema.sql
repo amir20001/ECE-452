@@ -12,7 +12,7 @@ CREATE TABLE `user` (
 	UNIQUE (username)
 );
 
-CREATE TABLE following (
+CREATE TABLE follow (
 	id INT AUTO_INCREMENT,
 	follwing INT,
 	followed INT,
@@ -59,7 +59,7 @@ CREATE TABLE song(
 CREATE TABLE room (
 	 id INT AUTO_INCREMENT,
 	 `name` VARCHAR (225),
-	 owner_user_name VARCHAR(255),
+	 owner_id VARCHAR(255),
 	 playlist_id INT NULL,
 	 listener_count INT,
 	 current_song_id INT NULL,

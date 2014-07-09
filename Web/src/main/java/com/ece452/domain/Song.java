@@ -13,6 +13,7 @@ public class Song extends BaseEntity {
 	private int id;
 	private int playlistId;
 	private transient Metadata metadata;
+	private int netScore;
 
 	public int getId() {
 		return id;
@@ -21,7 +22,6 @@ public class Song extends BaseEntity {
 	public void setId(int id) {
 		this.id = id;
 	}
- 
 
 	public Metadata getMetadata() {
 		return metadata;
@@ -85,6 +85,14 @@ public class Song extends BaseEntity {
 
 	public void setPlaylistId(int playlistId) {
 		this.playlistId = playlistId;
+	}
+
+	public int getNetScore() {
+		return netScore;
+	}
+
+	public void setNetScore(int netScore) {
+		this.netScore = netScore;
 	}
 
 }
