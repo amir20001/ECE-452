@@ -27,7 +27,7 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 	rel="stylesheet" />
 	
 <body>
-<h1>Add a friends room.</h1>
+<h1>Add a music room.</h1>
  
  	<div class="panel panel-default">
 		<display:table class="table table-striped table-condensed"
@@ -35,12 +35,15 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 			<display:column property="id" title="roomID" />
 			<display:column property="name" />
 			<display:column property="genre" />
+			<display:column property="owner_id" />
 		</display:table>
 		
 <form action="main.jsp" method="POST">
 Room Name: <input type="text" name="roomID">
 <br />
 Room Genre: <input type="text" name="room_genre" />
+<br />
+Owner: <input type="text" name="owner_id" />
 <input type="submit" value="Submit" />
 
 </form>
