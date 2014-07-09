@@ -3,22 +3,21 @@ DROP SCHEMA instadj;
 CREATE SCHEMA instadj;
 
 CREATE TABLE `user` (
-	id INT AUTO_INCREMENT,
-	username VARCHAR(255),
-	picture_url VARCHAR (255),
+	first_name VARCHAR(255),
+	last_name VARCHAR(255),
+	user_id VARCHAR(255),
 	score INT,
 	room_id INT NULL,
-	PRIMARY KEY (id),
-	UNIQUE (username)
+	PRIMARY KEY (user_id)
 );
 
 CREATE TABLE follow (
 	id INT AUTO_INCREMENT,
-	follwing INT,
-	followed INT,
+	follwing VARCHAR(255),
+	followed VARCHAR(255),
 	PRIMARY KEY (id),
-	CONSTRAINT fk_following_following FOREIGN KEY (follwing) REFERENCES `user`(id),
-	CONSTRAINT fk_following_followed FOREIGN KEY (followed) REFERENCES `user`(id)
+	CONSTRAINT fk_following_following FOREIGN KEY (follwing) REFERENCES `user`(user_id),
+	CONSTRAINT fk_following_followed FOREIGN KEY (followed) REFERENCES `user`(user_id)
 );
 
 CREATE TABLE favourite (
@@ -26,9 +25,9 @@ CREATE TABLE favourite (
 	title VARCHAR(255),
 	album VARCHAR(255),
 	artist VARCHAR(255),
-	user_id INT,
+	user_id VARCHAR(255),
 	PRIMARY KEY (id),
-	CONSTRAINT fk_favourite_user FOREIGN KEY (user_id) REFERENCES `user`(id)
+	CONSTRAINT fk_favourite_user FOREIGN KEY (user_id) REFERENCES `user`(user_id)
 );
 
 CREATE TABLE playlist(
@@ -36,9 +35,9 @@ CREATE TABLE playlist(
 	`name` VARCHAR(255),
 	genre VARCHAR(255),
 	track_count INT,
-	user_id INT,
+	user_id VARCHAR(255),
 	PRIMARY KEY (id),
-	CONSTRAINT fk_playlist_user FOREIGN KEY (user_id) REFERENCES `user`(id)
+	CONSTRAINT fk_playlist_user FOREIGN KEY (user_id) REFERENCES `user`(user_id)
 
 ); 
 
@@ -64,6 +63,6 @@ CREATE TABLE room (
 	 listener_count INT,
 	 current_song_id INT NULL,
 	 PRIMARY KEY (id),
-	 CONSTRAINT fk_room_owner_user_name FOREIGN KEY (owner_user_name) REFERENCES `user`(username),
+	 CONSTRAINT fk_room_owner_id FOREIGN KEY (owner_id) REFERENCES `user`(user_id),
 	 CONSTRAINT fk_room_current_song_id FOREIGN KEY (current_song_id) REFERENCES song (id)
  );
