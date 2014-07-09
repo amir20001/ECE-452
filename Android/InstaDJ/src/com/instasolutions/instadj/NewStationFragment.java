@@ -104,7 +104,8 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 		EditText stationName = (EditText)this.getActivity().findViewById(R.id.newstation_name_input);
 		
 		returnStation.Name = stationName.getText().toString();
-		returnStation.Owner = new UserData("CHANGETOCURRENTUSER", "");
+		//TODO: Change to current user
+		returnStation.Owner = new UserData("FIRSTNAME", "LASTNAME", "USERID");
 		ListView lv = ((ListeningRoom)getActivity()).getPlaylistsFragment().getPlaylistsListView();
 		PlayListAdapter playlistAdapter = (PlayListAdapter)lv.getAdapter();
 		returnStation.Playlist = (PlaylistData)playlistAdapter.getItem(selectedPlaylistPos);

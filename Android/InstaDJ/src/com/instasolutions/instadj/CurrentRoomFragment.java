@@ -172,7 +172,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	}
 	    	else
 	    	{
-	    		((ListeningRoom)getActivity()).getRightDrawerFragment().updateSongHistory(station.Song);
+	    		((RightDrawerFragment)getFragmentManager().findFragmentById(R.id.navigation_drawer_right)).updateSongHistory(station.Song);
 	    	}
 	    	
 	    	if(playlistPosition >= station.Playlist.Songs.size())

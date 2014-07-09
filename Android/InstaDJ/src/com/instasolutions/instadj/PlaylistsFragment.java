@@ -12,14 +12,17 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
-public class PlaylistsFragment extends Fragment implements OnClickListener, OnItemClickListener{
+public class PlaylistsFragment extends Fragment implements OnClickListener, OnItemClickListener, OnItemLongClickListener{
 	
 	SparseArray<PlaylistData> playlists = new SparseArray<PlaylistData>();
 	ListView lv = null;
+	int activeItem = 0;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -43,6 +46,7 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
         PlayListAdapter adapter = new PlayListAdapter(this.getActivity(), playlists );
         lv = (ListView)this.getActivity().findViewById(R.id.playlists_list);
         lv.setOnItemClickListener(this);
+        lv.setOnItemLongClickListener(this);
         lv.setAdapter(adapter);
 		
     }
@@ -84,6 +88,14 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
         fragmentTransaction.commit();
 		
 		
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> av, View v, int i, long l) {
+		
+		
+		activeItem = i;
+		return true;
 	}
 
 }

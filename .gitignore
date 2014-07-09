@@ -16,6 +16,7 @@ Thumbs.db
 .classpath
 .project
 target
+/Web/bin
 
 # Android Studio #
 /.idea

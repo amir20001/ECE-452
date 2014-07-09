@@ -136,12 +136,13 @@ public class LoginActivity extends Activity implements OnClickListener,
                         prefEdit.putString("UserID", user.getId());
                         prefEdit.commit();
                         
-                        UserData ud = new UserData(user.getName(), "test");
+                        UserData ud = new UserData(user.getFirstName(), user.getLastName(), user.getId());
                         
                         try{
                         	JSONObject jud = new JSONObject();
-                        	jud.put("username", ud.UserName);
-                        	jud.put("pictureUrl", ud.Picture_URL);
+                        	jud.put("userid", ud.UserID);
+                        	jud.put("firstname", ud.FirstName);
+                        	jud.put("lastname", ud.LastName);
                         	ServicePostHelper post = new ServicePostHelper();
                         	post.execute("http://instadj.amir20001.cloudbees.net/user/insert",jud.toString());
                         }catch (Exception e){

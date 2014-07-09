@@ -62,11 +62,11 @@ public class UserListAdapter extends BaseAdapter{
 			
 		UserData user = users.get(pos);
 		
-		UserName.setText(user.UserName);
+		UserName.setText(user.FirstName + " " + user.LastName);
 		Picture.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.com_facebook_profile_picture_blank_square));
 		
 		final DownloadPictureTask task = new DownloadPictureTask(Picture);
-		task.execute(user.Picture_URL);
+		task.execute("http://graph.facebook.com/" + user.UserID + "/picture?type=square");
 		
 		return v;
 	}

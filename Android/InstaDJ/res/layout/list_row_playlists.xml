@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="5dip" >
+    android:padding="5dip"
+    android:descendantFocusability="blocksDescendants"  >
 
      <TextView
          android:id="@+id/playlist_name"
@@ -37,5 +38,14 @@
          android:text="#Tracks"
          android:textColor="@color/platinum" />
 
+     <ImageButton
+         android:id="@+id/playlist_delete_button"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignTop="@+id/playlist_name"
+         android:layout_marginRight="14dp"
+         android:layout_toLeftOf="@+id/playlsit_tracks"
+         android:background="@null"
+         android:src="@drawable/ic_action_discard" />
  
 </RelativeLayout>

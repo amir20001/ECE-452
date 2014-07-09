@@ -58,7 +58,7 @@ public class ListeningRoom extends FragmentActivity
         profileFrag = new ProfileFragment();
         setContentView(R.layout.activity_listening_room);
         mNavigationDrawerFragment_left = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer_left);
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_left);
         mTitle = getTitle();
 
         // Set up the left drawer.
@@ -67,7 +67,7 @@ public class ListeningRoom extends FragmentActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         mNavigationDrawerFragment_right = (RightDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer_right);
+        		getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_right);
         // Set up the right drawer        
         mNavigationDrawerFragment_right.setUp(
                 R.id.navigation_drawer_right,
@@ -159,10 +159,6 @@ public class ListeningRoom extends FragmentActivity
     	return stationsFrag;
     }
     
-    public RightDrawerFragment getRightDrawerFragment()
-    {
-    	return mNavigationDrawerFragment_right;
-    }
     
    
 };

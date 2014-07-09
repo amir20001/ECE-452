@@ -41,12 +41,12 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
     	NewStationButton.setOnClickListener(this);
     	
 	        stations.append(0, new StationData("Station 1", 
-	        		new UserData("TestUser", ""), 
+	        		new UserData("FirstName1", "LastName1", "USERID1"), 
 	        		new PlaylistData("Playlist1", "Pop", 10), 
 	        		new SongData("SongName1", "Artist1", "Album1", "2:00", "", "http://artsorigin.com/blog/wp-content/uploads/2009/05/graduation-album-cover.jpg"), 
 	        		2));
 	        stations.append(1, new StationData("Station 2", 
-	        		new UserData("TestUser2", ""), 
+	        		new UserData("FirstName2", "LastName2", "USERID2"), 
 	        		new PlaylistData("Playlist1", "Pop", 10), 
 	        		new SongData("SongName2", "Artist2", "Album2", "1:00", "", ""), 
 	        		5));

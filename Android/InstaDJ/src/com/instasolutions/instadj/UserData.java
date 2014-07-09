@@ -1,14 +1,14 @@
 package com.instasolutions.instadj;
 
-import android.app.Activity;
-
 public class UserData {
 	
-	public String UserName;
-	public String Picture_URL;
+	public String FirstName;
+	public String LastName;
+	public String UserID;
 	
-	public UserData(String UserName, String Picture_URL){
-		this.UserName = UserName;
-		this.Picture_URL = Picture_URL;
+	public UserData(String FirstName, String LastName, String UserID){
+		this.FirstName = FirstName;
+		this.LastName = LastName;
+		this.UserID = UserID;
 	}
 }

@@ -31,26 +31,17 @@ public class UserDao {
 
 	public User inset(User user) {
 
-		String sql = "INSERT INTO user (username,picture_url,score,room_id) VALUES (?,?,?,?)";
-		ResultSet generatedKeys = null;
+		String sql = "INSERT INTO user (userid,firstname, lastname, score,room_id) VALUES (?,?,?,?)";
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, user.getUsername());
-			statement.setString(2, user.getPictureUrl());
-			statement.setInt(3, user.getScore());
-			statement.setInt(4, user.getRoomId());
+			statement.setString(1, user.getuserID());
+			statement.setString(2, user.getFirstName());
+			statement.setString(3, user.getLastName());
+			statement.setInt(4, user.getScore());
+			statement.setInt(5, user.getRoomId());
 
-			generatedKeys = statement.getGeneratedKeys();
-			if (generatedKeys.next()) {
-				// get auto increment key
-				user.setId(generatedKeys.getInt(1));
-			} else {
-				throw new SQLException(
-						"Creating user failed, no generated key obtained.");
-			}
-			generatedKeys.close();
 			statement.close();
 			return user;
 		} catch (SQLException e) {
@@ -66,26 +57,13 @@ public class UserDao {
 
 	}
 
-	public User getUserbyId(int id) {
+
+	public User getUser(String userid) {
 		User user = null;
-		String sql = "SELECT * FROM user WHERE id= ?";
+		String sql = "SELECT * FROM user WHERE userid = ?";
 
 		try {
-			user = jdbcTemplate.queryForObject(sql, new Object[] { id },
-					new UserMapper());
-		} catch (Exception e) {
-			// No user was found with the specified id, return null
-			return null;
-		}
-		return user;
-	}
-
-	public User getUser(String username) {
-		User user = null;
-		String sql = "SELECT * FROM user WHERE username = ?";
-
-		try {
-			user = jdbcTemplate.queryForObject(sql, new Object[] { username },
+			user = jdbcTemplate.queryForObject(sql, new Object[] { userid },
 					new UserMapper());
 		} catch (Exception e) {
 			// No user was found with the specified id, return null

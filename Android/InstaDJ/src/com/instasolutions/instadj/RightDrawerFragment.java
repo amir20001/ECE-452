@@ -2,7 +2,7 @@ package com.instasolutions.instadj;
 
 import android.app.Activity;
 import android.app.ActionBar;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -92,8 +92,8 @@ public class RightDrawerFragment extends Fragment {
 	        SparseArray<SongData> songs = new SparseArray<SongData>();
 	    	mSongHistoryList = new SongListAdapter(this.getActivity(), songs );
 	        SparseArray<UserData> users = new SparseArray<UserData>();
-	        users.append(0, new UserData("Testname", "http://lifesenergy.co.uk/wp-content/uploads/2013/11/profile.jpg"));
-	        users.append(1, new UserData("Testname2", ""));
+	        users.append(0, new UserData("TestFirst", "TestLast", "TESTID"));
+	        users.append(1, new UserData("TestFirst2", "TestLast2", "TESTLAST2"));
 	        mUserList = new UserListAdapter(this.getActivity(), users);
 	        mDrawerListView.setAdapter(mSongHistoryList);
             mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);

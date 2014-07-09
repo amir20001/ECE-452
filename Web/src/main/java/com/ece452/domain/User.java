@@ -1,28 +1,28 @@
 package com.ece452.domain;
 
 public class User extends BaseEntity {
-	private int id;
-	private String username;
-	private String pictureUrl;;
+	private String userID;
+	private String firstName;
+	private String lastName;
 	private int score;
 	private int roomId;
 
-	public String getUsername() {
-		return username;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setFirstName(String firstname) {
+		this.firstName = firstname;
 	}
 
-	public String getPictureUrl() {
-		return pictureUrl;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setPictureUrl(String pictureUrl) {
-		this.pictureUrl = pictureUrl;
+	public void setLastName(String lastname) {
+		this.lastName = lastname;
 	}
-
+	
 	public int getScore() {
 		return score;
 	}
@@ -39,12 +39,12 @@ public class User extends BaseEntity {
 		this.roomId = roomId;
 	}
 
-	public int getId() {
-		return id;
+	public String getuserID() {
+		return userID;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setuserID(String userid) {
+		this.userID = userid;
 	}
 
 }
