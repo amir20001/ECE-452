@@ -1,7 +1,7 @@
 package com.ece452.domain;
 
 public class User extends BaseEntity {
-	private String userID;
+	private String userId;
 	private String firstName;
 	private String lastName;
 	private int score;
@@ -40,11 +40,12 @@ public class User extends BaseEntity {
 	}
 
 	public String getUserId() {
-		return userID;
+		return userId;
 	}
 
-	public void setUserId(String userid) {
-		this.userID = userid;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
+
 
 }
