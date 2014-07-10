@@ -59,11 +59,11 @@ CREATE TABLE song(
 CREATE TABLE room (
 	 id INT AUTO_INCREMENT,
 	 `name` VARCHAR (225),
-	 owner_id VARCHAR(255),
+	 owner_user_id VARCHAR(255),
 	 playlist_id INT NULL,
 	 listener_count INT,
 	 current_song_id INT NULL,
 	 PRIMARY KEY (id),
-	 CONSTRAINT fk_room_owner_id FOREIGN KEY (owner_id) REFERENCES `user`(user_id),
+	 CONSTRAINT fk_room_owner_id FOREIGN KEY (owner_user_id) REFERENCES `user`(user_id),
 	 CONSTRAINT fk_room_current_song_id FOREIGN KEY (current_song_id) REFERENCES song (id)
  );
