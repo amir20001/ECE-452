@@ -5,6 +5,7 @@ public class Favourite extends BaseEntity{
 	private String title;
 	private String artist;
 	private String album;
+	private String duration;
 	private int userId;
 
 	public int getId() {
@@ -45,6 +46,14 @@ public class Favourite extends BaseEntity{
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration;
 	}
 
 }

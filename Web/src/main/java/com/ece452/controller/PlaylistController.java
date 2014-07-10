@@ -96,6 +96,13 @@ public class PlaylistController {
 	}
 	
 	
+	@RequestMapping(value ="/delete", method = RequestMethod.POST)
+	public void delete (HttpSession session, Model model) {
+		
+		 
+		
+ 	}
+	
 	
 	
 

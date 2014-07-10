@@ -26,6 +26,7 @@ CREATE TABLE favourite (
 	album VARCHAR(255),
 	artist VARCHAR(255),
 	user_id VARCHAR(255),
+	duration VARCHAR(255),
 	PRIMARY KEY (id),
 	CONSTRAINT fk_favourite_user FOREIGN KEY (user_id) REFERENCES `user`(user_id)
 );
