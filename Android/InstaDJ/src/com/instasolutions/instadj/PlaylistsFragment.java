@@ -24,7 +24,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class PlaylistsFragment extends Fragment implements OnClickListener, OnItemClickListener, OnItemLongClickListener{
@@ -50,7 +52,10 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
     	super.onActivityCreated(savedInstanceState);
     	
     	Button NewPlaylistButton = (Button)activity.findViewById(R.id.playlists_new_button);
+    	final ProgressBar pbar = (ProgressBar)activity.findViewById(R.id.playlists_progressbar);
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+    	
+    	pbar.setVisibility(ImageView.VISIBLE);
     	NewPlaylistButton.setOnClickListener(this);
         lv = (ListView)activity.findViewById(R.id.playlists_list);
         lv.setOnItemClickListener(this);
@@ -77,6 +82,7 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
     	        PlayListAdapter adapter = new PlayListAdapter(activity, playlists );
     	        adapter.setButtonsEnabled(true);;
     	        lv.setAdapter(adapter);
+    	        pbar.setVisibility(ImageView.INVISIBLE);
     	        
     	    }
 
