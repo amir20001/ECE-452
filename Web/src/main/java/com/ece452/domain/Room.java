@@ -7,6 +7,10 @@ public class Room extends BaseEntity {
 	private int listenerCount;
 	private int currentSongID;
 	private int playlistId;
+	@MapperIgnore
+	private User user;
+	@MapperIgnore
+	private Playlist playlist;
 
 	public int getId() {
 		return id;
@@ -61,8 +65,20 @@ public class Room extends BaseEntity {
 		this.ownerUserId = ownerUserId;
 	}
 
+	public User getUser() {
+		return user;
+	}
 
+	public void setUser(User user) {
+		this.user = user;
+	}
 
- 
+	public Playlist getPlaylist() {
+		return playlist;
+	}
+
+	public void setPlaylist(Playlist playlist) {
+		this.playlist = playlist;
+	}
 
 }

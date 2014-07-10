@@ -1,5 +1,6 @@
 package com.ece452.domain;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,7 +20,16 @@ public abstract class BaseEntity {
 		for (int i = 0; i < fields.length; i++) {
 			if (Modifier.isTransient(fields[i].getModifiers())) {
 				continue;
-			} else {
+			}else if (fields[i].getDeclaredAnnotations().length > 0){
+				Annotation[] declaredAnnotations = fields[i].getDeclaredAnnotations();
+				for (int j = 0; j < declaredAnnotations.length; j++) {
+					Annotation annotation = declaredAnnotations[i];
+					if(annotation instanceof MapperIgnore){
+						continue;
+					}
+				}
+			}
+			else {
 				String name = fields[i].getName();
 				String dbName = name.replaceAll("(.)([A-Z])", "$1_$2")
 						.toLowerCase();

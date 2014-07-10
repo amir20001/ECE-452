@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ece452.domain.Room;
+import com.ece452.mapper.RoomAndSubObjectMapper;
 import com.ece452.mapper.RoomMapper;
 import com.mysql.jdbc.Statement;
 
@@ -85,10 +86,10 @@ public class RoomDao {
 	}
 
 	public List<Room> getAllRooms() {
-		String sql = "SELECT * FROM room;";
+		String sql = "SELECT * FROM room INNER JOIN `user` ON room.owner_user_id= `user`.user_id JOIN playlist ON room.playlist_id = playlist.id;";
 		List<Room> rooms = new ArrayList<Room>();
 		try {
-			rooms = jdbcTemplate.query(sql, new RoomMapper());
+			rooms = jdbcTemplate.query(sql, new RoomAndSubObjectMapper());
 			return rooms;
 		} catch (Exception e) {
 			return rooms;
