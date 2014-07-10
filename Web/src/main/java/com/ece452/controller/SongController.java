@@ -101,7 +101,7 @@ public class SongController {
 		mapper.writeValue(response.getOutputStream(), song);
 	}
 	
-	@RequestMapping(value = "/getforplaylist{playlistId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/getforplaylist/{playlistId}", method = RequestMethod.GET)
 	public void getSongsForPlaylist(@PathVariable("playlistId") int playlistId,
 			HttpServletResponse response) throws JsonGenerationException,
 			JsonMappingException, IOException {
