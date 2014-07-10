@@ -43,7 +43,7 @@ public class FavouriteDao {
 			statement.setString(2, favourite.getAlbum());
 			statement.setString(3, favourite.getArtist());
 			statement.setString(4, favourite.getDuration());
-			statement.setInt(5, favourite.getUserId());
+			statement.setString(5, favourite.getUserId());
 
 			statement.executeUpdate();
 

@@ -19,7 +19,7 @@ public class PlayListAdapter extends BaseAdapter{
 	private Activity activity;
 	private SparseArray<PlaylistData> playlists = new SparseArray<PlaylistData>();
 	private static LayoutInflater inflater = null;
-	private boolean minimalMode = false;
+	private boolean useButtons = false;
 	
 	public PlayListAdapter(Activity a, SparseArray<PlaylistData> d)
 	{
@@ -28,13 +28,6 @@ public class PlayListAdapter extends BaseAdapter{
 		inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
-	public PlayListAdapter(Activity a, SparseArray<PlaylistData> d, boolean minimal)
-	{
-		activity = a;
-		playlists = d;
-		inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		minimalMode = minimal;
-	}
 	@Override
 	public int getCount() {
 		
@@ -67,7 +60,7 @@ public class PlayListAdapter extends BaseAdapter{
 		PlaylistName.setText(playlist.Name);
 		PlaylistGenre.setText(playlist.Genre);
 		TrackCount.setText(String.valueOf(playlist.TrackCount));
-		if(minimalMode)
+		if(!useButtons)
 		{
 			deleteButton.setVisibility(ImageView.INVISIBLE);
 		}
@@ -84,6 +77,10 @@ public class PlayListAdapter extends BaseAdapter{
 				
 		
 		return v;
+	}
+	
+	public void setButtonsEnabled(boolean enabled){
+		useButtons = enabled;
 	}
 
 }

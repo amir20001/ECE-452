@@ -3,7 +3,7 @@ package com.ece452.domain;
 public class Room extends BaseEntity {
 	private int id;
 	private String name;
-	private int ownerId;
+	private String ownerUserId;
 	private int listenerCount;
 	private int currentSongID;
 	private int playlistId;
@@ -53,12 +53,12 @@ public class Room extends BaseEntity {
 		this.playlistId = playlistId;
 	}
 
-	public int getOwnerId() {
-		return ownerId;
+	public String getOwnerId() {
+		return ownerUserId;
 	}
 
-	public void setOwnerId(int ownerId) {
-		this.ownerId = ownerId;
+	public void setOwnerId(String ownerId) {
+		this.ownerUserId = ownerId;
 	}
 
  

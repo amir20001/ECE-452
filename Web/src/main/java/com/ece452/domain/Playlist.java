@@ -5,7 +5,7 @@ public class Playlist extends BaseEntity {
 	private String name;
 	private String genre;
 	private int trackCount;
-	private int userId;
+	private String userId;
 
 	public String getName() {
 		return name;
@@ -39,11 +39,11 @@ public class Playlist extends BaseEntity {
 		this.id = id;
 	}
 
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 

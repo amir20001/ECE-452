@@ -40,7 +40,7 @@ public class RoomDao {
 			PreparedStatement statement = conn.prepareStatement(sql,
 					Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, room.getName());
-			statement.setInt(2, room.getOwnerId());
+			statement.setString(2, room.getOwnerId());
 			statement.setInt(3, room.getListenerCount());
 			statement.setInt(4, room.getCurrentSongID());
 			statement.setInt(5, room.getPlaylistId());

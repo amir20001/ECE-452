@@ -39,8 +39,8 @@ public class FollowDao {
 			conn = dataSource.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql,
 					Statement.RETURN_GENERATED_KEYS);
-			statement.setInt(1, follow.getFollowing());
-			statement.setInt(2, follow.getFollowed());
+			statement.setString(1, follow.getFollowing());
+			statement.setString(2, follow.getFollowed());
 
 			statement.executeUpdate();
 			generatedKeys = statement.getGeneratedKeys();

@@ -42,7 +42,7 @@ public class PlaylistDao {
 			statement.setString(1, playlist.getName());
 			statement.setString(2, playlist.getGenre());
 			statement.setInt(3, playlist.getTrackCount());
-			statement.setInt(4, playlist.getUserId());
+			statement.setString(4, playlist.getUserId());
 			statement.executeUpdate();
 
 			generatedKeys = statement.getGeneratedKeys();
