@@ -5,8 +5,10 @@ import java.util.concurrent.TimeUnit;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -152,6 +154,7 @@ public class NewPlaylistFragment extends Fragment implements
 		}
 		EditText playlistName = (EditText)this.getActivity().findViewById(R.id.newplaylist_name_input);
 		Spinner playlistGenre = (Spinner)this.getActivity().findViewById(R.id.newplaylist_genre_spinner);
+	    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 		
 		returnPlaylist.Name = playlistName.getText().toString();
 		returnPlaylist.Genre = playlistGenre.getSelectedItem().toString();
@@ -162,6 +165,7 @@ public class NewPlaylistFragment extends Fragment implements
         	jplaylist.put("name", returnPlaylist.Name);
         	jplaylist.put("genre", returnPlaylist.Genre);
         	jplaylist.put("trackCount", returnPlaylist.TrackCount);
+        	jplaylist.put("userId", prefs.getString("UserID", "0"));
         	ServicePostHelper post = new ServicePostHelper();
         	post.execute("http://instadj.amir20001.cloudbees.net/playlist/insert",jplaylist.toString());
         }catch (Exception e){

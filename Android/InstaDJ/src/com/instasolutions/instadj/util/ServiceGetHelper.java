@@ -45,5 +45,5 @@ public class ServiceGetHelper extends AsyncTask<String, Void, String> {
 		}
 
 	}
-
+	
 }

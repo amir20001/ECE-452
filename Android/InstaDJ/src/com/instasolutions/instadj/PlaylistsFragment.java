@@ -1,6 +1,15 @@
 package com.instasolutions.instadj;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.instasolutions.instadj.util.ServiceGetHelper;
+
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +29,7 @@ import android.widget.TextView;
 
 public class PlaylistsFragment extends Fragment implements OnClickListener, OnItemClickListener, OnItemLongClickListener{
 	
+	Activity activity;
 	SparseArray<PlaylistData> playlists = new SparseArray<PlaylistData>();
 	ListView lv = null;
 	int activeItem = 0;
@@ -30,6 +40,7 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
 	            ViewGroup container, 
 	            Bundle savedInstanceState) {
 	        View view = inflater.inflate(R.layout.fragment_playlists, container, false);
+	        activity = this.getActivity();
 	        return view;
 	    }
 	
@@ -38,17 +49,41 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
     {
     	super.onActivityCreated(savedInstanceState);
     	
-    	Button NewPlaylistButton = (Button)this.getActivity().findViewById(R.id.playlists_new_button);
+    	Button NewPlaylistButton = (Button)activity.findViewById(R.id.playlists_new_button);
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
     	NewPlaylistButton.setOnClickListener(this);
-    	
-        playlists.append(0, new PlaylistData("Playlist1", "Pop", 10));
-        playlists.append(1, new PlaylistData("Playlist2", "Mix", 50));
-        PlayListAdapter adapter = new PlayListAdapter(this.getActivity(), playlists );
-        adapter.setButtonsEnabled(true);
-        lv = (ListView)this.getActivity().findViewById(R.id.playlists_list);
+        lv = (ListView)activity.findViewById(R.id.playlists_list);
         lv.setOnItemClickListener(this);
         lv.setOnItemLongClickListener(this);
-        lv.setAdapter(adapter);
+    	
+    	ServiceGetHelper getHelper = new ServiceGetHelper(){
+    		@Override
+    		 protected void onPostExecute(String result) {
+    			try {
+					JSONArray jPlaylistsArray = new JSONArray(result);
+					for(int i = 0; i <jPlaylistsArray.length(); i++){
+						JSONObject jPlaylist = jPlaylistsArray.getJSONObject(i);
+
+						playlists.append(i, new PlaylistData(jPlaylist.getInt("id"),
+								jPlaylist.getString("name"),
+								jPlaylist.getString("genre"),
+								jPlaylist.getInt("trackCount"),
+								new SparseArray<SongData>()));
+						
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+    	        PlayListAdapter adapter = new PlayListAdapter(activity, playlists );
+    	        adapter.setButtonsEnabled(true);;
+    	        lv.setAdapter(adapter);
+    	        
+    	    }
+
+    	};
+
+        getHelper.execute("http://instadj.amir20001.cloudbees.net/playlist/getbyuser/" + prefs.getString("UserID", "0"));
+
 		
     }
 	@Override

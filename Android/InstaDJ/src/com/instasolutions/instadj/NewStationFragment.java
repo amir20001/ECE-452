@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import com.instasolutions.instadj.util.ServicePostHelper;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +21,7 @@ import android.graphics.drawable.PaintDrawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -102,10 +104,10 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 	{
 		StationData returnStation = new StationData();
 		EditText stationName = (EditText)this.getActivity().findViewById(R.id.newstation_name_input);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
 		
 		returnStation.Name = stationName.getText().toString();
-		//TODO: Change to current user
-		returnStation.Owner = new UserData("FIRSTNAME", "LASTNAME", "USERID");
+		returnStation.Owner = new UserData(prefs.getString("FirstName", "FName"), prefs.getString("LastName", "LName"), prefs.getString("UserID", "0"));
 		ListView lv = ((ListeningRoom)getActivity()).getPlaylistsFragment().getPlaylistsListView();
 		PlayListAdapter playlistAdapter = (PlayListAdapter)lv.getAdapter();
 		returnStation.Playlist = (PlaylistData)playlistAdapter.getItem(selectedPlaylistPos);
@@ -114,10 +116,9 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 		try{
         	JSONObject jstation = new JSONObject();
         	jstation.put("name", returnStation.Name);
-        	jstation.put("ownerUserName", "Amir Behnam");
-        	//TODO change this to a real id later 
-        	jstation.put("playlistId", 1);
-        	jstation.put("currentSongID", 1);
+        	jstation.put("ownerUserId", prefs.getString("UserID", "0"));
+        	//TODO uncomment once pulling playlists from server
+        	//jstation.put("playlistId", returnStation.Playlist.id);
         	jstation.put("listenerCount", returnStation.ListenerCount);
         	
         	ServicePostHelper post = new ServicePostHelper();

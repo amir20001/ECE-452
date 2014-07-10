@@ -7,6 +7,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.os.AsyncTask;
+import android.os.Handler.Callback;
 import android.util.Log;
 
 public class ServicePostHelper extends AsyncTask<String, Void, Void> {
@@ -32,5 +33,6 @@ public class ServicePostHelper extends AsyncTask<String, Void, Void> {
 		}
 
 	}
+	
 
 }
