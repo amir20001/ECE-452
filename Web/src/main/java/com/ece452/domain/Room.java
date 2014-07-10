@@ -53,13 +53,15 @@ public class Room extends BaseEntity {
 		this.playlistId = playlistId;
 	}
 
-	public String getOwnerId() {
+	public String getOwnerUserId() {
 		return ownerUserId;
 	}
 
-	public void setOwnerId(String ownerId) {
-		this.ownerUserId = ownerId;
+	public void setOwnerUserId(String ownerUserId) {
+		this.ownerUserId = ownerUserId;
 	}
+
+
 
  
 
