@@ -23,7 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ece452.dao.PlaylistDao;
 import com.ece452.domain.Playlist;
-import com.ece452.domain.Room;
 
 @Controller
 @RequestMapping("/playlist")
@@ -50,9 +49,9 @@ public class PlaylistController {
 		// return room info with id
 		mapper.writeValue(response.getOutputStream(), playlist);
 	}
-	
+
 	@RequestMapping(value = "/get/{playlistId}", method = RequestMethod.GET)
-	public void getPlayList(@PathVariable("playlistId") String playlistId,
+	public void getPlayList(@PathVariable("playlistId") int playlistId,
 			HttpServletResponse response) throws JsonGenerationException,
 			JsonMappingException, IOException {
 
@@ -61,49 +60,41 @@ public class PlaylistController {
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), playlist);
 	}
-	
+
 	@RequestMapping(value = "/getbyuser/{userId}", method = RequestMethod.GET)
-	public void getPlayListByUser(@PathVariable("userId") int userId,
+	public void getPlayListByUser(@PathVariable("userId") String userId,
 			HttpServletResponse response) throws JsonGenerationException,
 			JsonMappingException, IOException {
 
-		  List<Playlist> playlistsByUser = playlistDao.getPlaylistsByUser(userId);
+		List<Playlist> playlistsByUser = playlistDao.getPlaylistsByUser(userId);
 		ObjectMapper mapper = new ObjectMapper();
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), playlistsByUser);
 	}
-	
-	
-	
+
 	@RequestMapping(value = "/getall", method = RequestMethod.GET)
 	public void getAllPlaylists(@PathVariable("playlistId") String playlistId,
 			HttpServletResponse response) throws JsonGenerationException,
 			JsonMappingException, IOException {
 
 		List<Playlist> playlists = playlistDao.getAllPlaylist();
-		
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), playlists);
 	}
-	
-	@RequestMapping(value ="/view", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/view", method = RequestMethod.GET)
 	public ModelAndView showLoginPage(HttpSession session, Model model) {
-		  List<Playlist> playlists = playlistDao.getAllPlaylist();
+		List<Playlist> playlists = playlistDao.getAllPlaylist();
 		model.addAttribute("playlists", playlists);
 		return new ModelAndView("playlistView");
 	}
-	
-	
-	@RequestMapping(value ="/delete", method = RequestMethod.POST)
-	public void delete (HttpSession session, Model model) {
-		
-		 
-		
- 	}
-	
-	
-	
+
+	@RequestMapping(value = "/delete/{playlistId}", method = RequestMethod.POST)
+	public void delete(@PathVariable("playlistId") int playlistId,
+			HttpServletResponse response) {
+		playlistDao.delete(playlistId);
+	}
 
 }

@@ -30,7 +30,7 @@ public class UserDao {
 
 	public User inset(User user) {
 
-		String sql = "INSERT INTO user (user_id,first_name, last_name, score,room_id) VALUES (?,?,?,?,?)";
+		String sql = "INSERT INTO user (user_id,first_name, last_name, score,room_id) VALUES (?,?,?,?,?);";
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
@@ -40,7 +40,7 @@ public class UserDao {
 			statement.setString(3, user.getLastName());
 			statement.setInt(4, user.getScore());
 			statement.setInt(5, user.getRoomId());
-
+			statement.executeUpdate();
 			statement.close();
 			return user;
 		} catch (SQLException e) {

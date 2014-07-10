@@ -69,7 +69,7 @@ public class PlaylistDao {
 
 	}
 
-	public Playlist getPlaylist(String id) {
+	public Playlist getPlaylist(int id) {
 		Playlist playlist = null;
 		String sql = "SELECT * FROM playlist WHERE id = ?";
 		try {
@@ -82,7 +82,7 @@ public class PlaylistDao {
 		return playlist;
 	}
 
-	public List<Playlist> getPlaylistsByUser(int userId ) {
+	public List<Playlist> getPlaylistsByUser(String userId) {
 		String sql = "SELECT * FROM playlist where user_id = ?;";
 		List<Playlist> playlists = new ArrayList<Playlist>();
 		try {
@@ -102,6 +102,27 @@ public class PlaylistDao {
 			return playlists;
 		} catch (Exception e) {
 			return playlists;
+		}
+	}
+
+	public void delete(int playlistId) {
+		String sql = "DELETE FROM playlist WHERE id  = ?;";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, playlistId);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
 	}
 
