@@ -108,16 +108,6 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
 		}
 		
 	}
-	
-	public void addPlaylist(PlaylistData playlist)
-	{
-		playlists.append(playlists.size(), playlist);
-	}
-	
-	public ListView getPlaylistsListView()
-	{
-		return lv;
-	}
 
 	@Override
 	public void onItemClick(AdapterView<?> av, View v, int i, long l) {

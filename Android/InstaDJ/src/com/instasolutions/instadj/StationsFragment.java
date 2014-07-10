@@ -1,5 +1,11 @@
 package com.instasolutions.instadj;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.instasolutions.instadj.util.ServiceGetHelper;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,11 +21,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 public class StationsFragment extends Fragment implements OnClickListener, OnItemClickListener {
 	
 	Activity activity = null;
+	ListView stationListView = null;
 	SparseArray<StationData> stations = new SparseArray<StationData>();
 	/** Called when the activity is first created. */
 	@Override
@@ -36,24 +45,51 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 	public void onActivityCreated(Bundle savedInstanceState)
     {
     	super.onActivityCreated(savedInstanceState);
-    	
+    	final ProgressBar pbar = (ProgressBar)activity.findViewById(R.id.stations_progressbar);
     	Button NewStationButton = (Button)this.getActivity().findViewById(R.id.stations_new_button);
     	NewStationButton.setOnClickListener(this);
+        stationListView = (ListView)this.getActivity().findViewById(R.id.stations_list);
+        stationListView.setOnItemClickListener(this);
+        
+        pbar.setVisibility(ImageView.VISIBLE);
     	
-	        stations.append(0, new StationData("Station 1", 
-	        		new UserData("FirstName1", "LastName1", "USERID1"), 
-	        		new PlaylistData(1, "Playlist1", "Pop", 10), 
-	        		new SongData("SongName1", "Artist1", "Album1", "2:00", "", "http://artsorigin.com/blog/wp-content/uploads/2009/05/graduation-album-cover.jpg"), 
-	        		2));
-	        stations.append(1, new StationData("Station 2", 
-	        		new UserData("FirstName2", "LastName2", "USERID2"), 
-	        		new PlaylistData(2, "Playlist1", "Pop", 10), 
-	        		new SongData("SongName2", "Artist2", "Album2", "1:00", "", ""), 
-	        		5));
-        StationListAdapter adapter = new StationListAdapter(this.getActivity(), stations );
-        ListView lv = (ListView)this.getActivity().findViewById(R.id.stations_list);
-        lv.setOnItemClickListener(this);
-        lv.setAdapter(adapter);
+    	ServiceGetHelper getHelper = new ServiceGetHelper(){
+    		@Override
+    		 protected void onPostExecute(String result) {
+    			try {
+					JSONArray jStationsArray = new JSONArray(result);
+					for(int i = 0; i <jStationsArray.length(); i++){
+						JSONObject jStation = jStationsArray.getJSONObject(i);
+						JSONObject jPlaylist = jStation.getJSONObject("playlist");
+						JSONObject jUser = jStation.getJSONObject("user");
+						PlaylistData playlist = new PlaylistData(jPlaylist.getInt("id"),
+										jPlaylist.getString("name"),
+										jPlaylist.getString("genre"),
+										jPlaylist.getInt("trackCount"),
+										new SparseArray<SongData>());
+						UserData owner = new UserData(jUser.getString("firstName"),
+										jUser.getString("lastName"),
+										jUser.getString("userId"));
+						stations.append(i, new StationData(jStation.getInt("id"),
+												jStation.getString("name"),
+												owner,
+												playlist,
+												new SongData(),
+												jStation.getInt("listenerCount")));
+						
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+    	        StationListAdapter adapter = new StationListAdapter(activity, stations );
+    	        stationListView.setAdapter(adapter);
+    	        pbar.setVisibility(ImageView.INVISIBLE);
+    	        
+    	    }
+
+    	};
+
+        getHelper.execute("http://instadj.amir20001.cloudbees.net/room/getall");
 		
     }
 	
