@@ -6,7 +6,9 @@
     <string name="title_section2">Stations</string>
     <string name="title_section3">Favorites</string>
     <string name="title_section4">Playlists</string>
-    <string name="title_section5">Profile</string>
+    <string name="title_section5">Following</string>
+    <string name="title_section6">Followers</string>
+    <string name="title_section7">Profile</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_listeners">Currently Listening</string>

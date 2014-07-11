@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONException;
 import com.ece452.dao.SongDao;
-import com.ece452.domain.Playlist;
 import com.ece452.domain.Song;
 
 @Controller
@@ -87,7 +86,6 @@ public class SongController {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
 
 	}
 

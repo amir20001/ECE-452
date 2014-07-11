@@ -46,6 +46,8 @@ public class ListeningRoom extends FragmentActivity
     private StationsFragment stationsFrag;
     private FavoritesFragment favoritesFrag;
     private PlaylistsFragment playlistsFrag;
+    private FollowingFragment followingFragment;
+    private FollowersFragment followersFragment;
     private ProfileFragment profileFrag;
     
     @Override
@@ -55,6 +57,8 @@ public class ListeningRoom extends FragmentActivity
         stationsFrag = new StationsFragment();
         favoritesFrag = new FavoritesFragment();
         playlistsFrag = new PlaylistsFragment();
+        followingFragment = new FollowingFragment();
+        followersFragment = new FollowersFragment();
         profileFrag = new ProfileFragment();
         setContentView(R.layout.activity_listening_room);
         mNavigationDrawerFragment_left = (NavigationDrawerFragment)
@@ -95,6 +99,12 @@ public class ListeningRoom extends FragmentActivity
         	selectedFragment = playlistsFrag;
         	break;
         case 4:
+            selectedFragment = followingFragment;
+            break;
+        case 5:
+            selectedFragment = followersFragment;
+            break;
+        case 6:
         	selectedFragment = profileFrag;
         	break;
         default: 

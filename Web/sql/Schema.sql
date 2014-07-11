@@ -51,7 +51,7 @@ CREATE TABLE song(
 	artist VARCHAR(225),
 	duration VARCHAR(225),
 	playlist_id INT,
-	netScore INT,
+	net_score INT,
 	PRIMARY KEY (id),
 	CONSTRAINT fk_song_playlist_id FOREIGN KEY (playlist_id) REFERENCES `playlist`(id)
 );
