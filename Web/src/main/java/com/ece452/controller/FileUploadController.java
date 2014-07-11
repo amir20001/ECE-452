@@ -28,6 +28,8 @@ public class FileUploadController {
 	@Autowired
 	SongDao songDao;
 
+	@Autowired 
+	FileHelper fileHelper;
 	@RequestMapping(value = "/show", method = RequestMethod.GET)
 	public String displayForm() {
 		return "file_upload_form";
@@ -52,10 +54,13 @@ public class FileUploadController {
 					Song song = new Song();
 					song.setFileName(fileName);
 					song.setUuid(UUID.randomUUID().toString());
-					String fullPath = path + File.separator + song.getUuid()
-							+ "." + ext;
-					File dest = new File(fullPath);
+
+					File dest = File.createTempFile(song.getUuid(), ".mp3");
+					dest.deleteOnExit();
 					multipartFile.transferTo(dest);
+					fileHelper.upload(dest, song.getUuid());
+					song.setPlaylistId(2);//TODO hook this up to something
+					
 					songDao.insert(song);
 				}
 			}
