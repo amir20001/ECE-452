@@ -37,8 +37,7 @@ public class FavouriteDao {
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement statement = conn.prepareStatement(sql,
-					Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, favourite.getTitle());
 			statement.setString(2, favourite.getAlbum());
 			statement.setString(3, favourite.getArtist());
@@ -52,8 +51,7 @@ public class FavouriteDao {
 				// get auto increment key
 				favourite.setId(generatedKeys.getInt(1));
 			} else {
-				throw new SQLException(
-						"Creating room failed, no generated key obtained.");
+				throw new SQLException("Creating room failed, no generated key obtained.");
 			}
 			generatedKeys.close();
 			statement.close();
@@ -75,11 +73,31 @@ public class FavouriteDao {
 		String sql = "select * from favourite where user_id = ?";
 		List<Favourite> favourite = new ArrayList<Favourite>();
 		try {
-			favourite = jdbcTemplate.query(sql, new Object[] { userId },
-					new FavouriteMapper());
+			favourite = jdbcTemplate.query(sql, new Object[] { userId }, new FavouriteMapper());
 			return favourite;
 		} catch (Exception e) {
 			return favourite;
+		}
+	}
+
+	public void delete(int favouriteId) {
+		String sql = "DELETE FROM favourite WHERE id  = ?;";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, favouriteId);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
 	}
 
