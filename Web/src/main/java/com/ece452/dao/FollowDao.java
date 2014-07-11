@@ -65,22 +65,22 @@ public class FollowDao {
 		}
 	}
 
-	public List<User> getAllFollowing(User user) {
+	public List<User> getAllFollowing(String userId) {
 		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.following AND follow.followed = ?;";
 		List<User> users = new ArrayList<User>();
 		try {
-			users = jdbcTemplate.query(sql, new Object[] { user.getUserId() }, new UserMapper());
+			users = jdbcTemplate.query(sql, new Object[] { userId }, new UserMapper());
 			return users;
 		} catch (Exception e) {
 			return users;
 		}
 	}
 
-	public List<User> getAllFollowed(User user) {
+	public List<User> getAllFollowed(String userId) {
 		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.followed AND follow.following = ?;";
 		List<User> users = new ArrayList<User>();
 		try {
-			users = jdbcTemplate.query(sql, new Object[] { user.getUserId() }, new UserMapper());
+			users = jdbcTemplate.query(sql, new Object[] { userId }, new UserMapper());
 			return users;
 		} catch (Exception e) {
 			return users;

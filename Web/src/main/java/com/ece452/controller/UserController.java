@@ -43,7 +43,7 @@ public class UserController {
 		User user = mapper.readValue(json, User.class);
 		if (userDao.getUser(user.getUserId()) == null) {
 			// make sure user does not already exist
-			userDao.inset(user);
+			userDao.insert(user);
 		}
 
 		mapper.writeValue(response.getOutputStream(), user);

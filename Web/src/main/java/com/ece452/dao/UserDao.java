@@ -28,7 +28,7 @@ public class UserDao {
 		this.dataSource = dataSource;
 	}
 
-	public User inset(User user) {
+	public User insert(User user) {
 
 		String sql = "INSERT INTO user (user_id,first_name, last_name, score,room_id) VALUES (?,?,?,?,?);";
 		Connection conn = null;
