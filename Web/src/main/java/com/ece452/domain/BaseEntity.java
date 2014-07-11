@@ -23,7 +23,7 @@ public abstract class BaseEntity {
 			}else if (fields[i].getDeclaredAnnotations().length > 0){
 				Annotation[] declaredAnnotations = fields[i].getDeclaredAnnotations();
 				for (int j = 0; j < declaredAnnotations.length; j++) {
-					Annotation annotation = declaredAnnotations[i];
+					Annotation annotation = declaredAnnotations[j];
 					if(annotation instanceof MapperIgnore){
 						continue;
 					}
