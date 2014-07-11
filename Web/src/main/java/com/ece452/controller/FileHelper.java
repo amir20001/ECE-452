@@ -4,12 +4,11 @@ import java.io.File;
 
 import org.springframework.stereotype.Repository;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+
 @Repository
 public class FileHelper {
 
@@ -21,15 +20,14 @@ public class FileHelper {
 				"CbQk+Yq1OHTpmN6bgtF0ewrgZKfxW+ayJh6HlM7S"));
 	}
 
-	public void upload(File file, String key) {
+	public String upload(File file, String key) {
 		try {
 			s3.putObject(new PutObjectRequest(bucket, key, file));
-		} catch (AmazonServiceException e) {
-			// TODO Auto-generated catch block
+			return "https://s3.amazonaws.com/instadj/" + key;
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (AmazonClientException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "";
+
 		}
 	}
 

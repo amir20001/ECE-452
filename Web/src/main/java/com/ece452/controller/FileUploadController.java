@@ -28,15 +28,17 @@ public class FileUploadController {
 	@Autowired
 	SongDao songDao;
 
-	@Autowired 
+	@Autowired
 	FileHelper fileHelper;
+
 	@RequestMapping(value = "/show", method = RequestMethod.GET)
 	public String displayForm() {
 		return "file_upload_form";
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public String save(@ModelAttribute("uploadForm") MultiFileUploadForm uploadForm,
+	public String save(
+			@ModelAttribute("uploadForm") MultiFileUploadForm uploadForm,
 			Model map, HttpServletRequest request)
 			throws IllegalStateException, IOException {
 		List<MultipartFile> files = uploadForm.getFiles();
@@ -58,9 +60,10 @@ public class FileUploadController {
 					File dest = File.createTempFile(song.getUuid(), ".mp3");
 					dest.deleteOnExit();
 					multipartFile.transferTo(dest);
-					fileHelper.upload(dest, song.getUuid());
-					song.setPlaylistId(2);//TODO hook this up to something
-					
+					String url = fileHelper.upload(dest, song.getUuid());
+					song.setUrl(url);
+					song.setPlaylistId(2);// TODO hook this up to something
+
 					songDao.insert(song);
 				}
 			}

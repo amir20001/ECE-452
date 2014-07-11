@@ -26,7 +26,6 @@ import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONException;
 import com.ece452.dao.SongDao;
 import com.ece452.domain.FileUploadForm;
-import com.ece452.domain.MultiFileUploadForm;
 import com.ece452.domain.Song;
 
 @Controller
@@ -132,8 +131,8 @@ public class SongController {
 		File dest = File.createTempFile(uuid, ".mp3");
 		dest.deleteOnExit();
 		file.getFile().transferTo(dest);
-		fileHelper.upload(dest, uuid);
-
+		String url = fileHelper.upload(dest, uuid);
+		song.setUrl(url);
 		song.setUuid(uuid);
 		songDao.update(song);
 		dest.delete();
