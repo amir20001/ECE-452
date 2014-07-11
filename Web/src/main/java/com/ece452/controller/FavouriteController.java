@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.ece452.dao.FavouriteDao;
 import com.ece452.domain.Favourite;
-import com.ece452.domain.Playlist;
 
 @Controller
 @RequestMapping("/favourite")

@@ -91,6 +91,7 @@ public class SongDao {
 				statement.setString(6, song.getAlbum());
 				statement.setString(7, song.getDuration());
 				statement.setInt(8, song.getNetScore());
+				statement.addBatch();
 			}
 			statement.executeBatch();
 			generatedKeys = statement.getGeneratedKeys();
@@ -100,6 +101,7 @@ public class SongDao {
 				Song song = songs.get(i);
 				song.setId(generatedKeys.getInt(1));
 				songs.set(i, song);
+				i++;
 			}
 				
 			if(i != songs.size()) {
