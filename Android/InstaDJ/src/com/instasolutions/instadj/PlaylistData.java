@@ -50,7 +50,6 @@ public class PlaylistData {
 	//Only populate songs when a playlits is selected for use to prevent excess server calls 
 	public void populateSongs()
 	{
-		final PlaylistData thisPlaylist = this;
     	ServiceGetHelper getHelper = new ServiceGetHelper();
     	String result = "";
     	getHelper.execute("http://instadj.amir20001.cloudbees.net/song/getforplaylist/" + String.valueOf(this.id));
@@ -75,8 +74,8 @@ public class PlaylistData {
 									jSong.getString("artist"),
 									jSong.getString("album"),
 									jSong.getString("duration"),
-									jSong.getString("url"),
-									"");
+									jSong.getString("songUri"),
+									jSong.getString("artUrl"));
 
 				this.Songs.append(i, song);
 				

@@ -2,6 +2,7 @@ package com.instasolutions.instadj;
 
 import java.util.concurrent.TimeUnit;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -158,18 +159,39 @@ public class NewPlaylistFragment extends Fragment implements
 		returnPlaylist.Name = playlistName.getText().toString();
 		returnPlaylist.Genre = playlistGenre.getSelectedItem().toString();
 		returnPlaylist.TrackCount = returnPlaylist.Songs.size();
-		
+    	JSONObject jplaylist = new JSONObject();
 		try{
-        	JSONObject jplaylist = new JSONObject();
         	jplaylist.put("name", returnPlaylist.Name);
         	jplaylist.put("genre", returnPlaylist.Genre);
         	jplaylist.put("trackCount", returnPlaylist.TrackCount);
         	jplaylist.put("userId", prefs.getString("UserID", "0"));
         	ServicePostHelper post = new ServicePostHelper();
         	post.execute("http://instadj.amir20001.cloudbees.net/playlist/insert",jplaylist.toString());
+        	String result = post.get(5, TimeUnit.SECONDS);
+        	jplaylist = new JSONObject(result);
         }catch (Exception e){
         	Log.e("instaDJ", "JSONException", e);
         }
+		
+		try{
+			JSONArray jSongsArray = new JSONArray();
+			for(int i = 0; i < returnPlaylist.Songs.size(); i++){
+				SongData song = returnPlaylist.Songs.get(i);
+				JSONObject jSong = new JSONObject();
+				jSong.put("title", song.Title);
+				jSong.put("artist", song.Artist);
+				jSong.put("album", song.Album);
+				jSong.put("duration", song.Duration);
+				jSong.put("playlistId",jplaylist.getInt("id"));
+				jSong.put("songUri", song.LocalPath);
+				jSongsArray.put(jSong.toString());
+			}
+	    	ServicePostHelper post = new ServicePostHelper();
+			post.execute("http://instadj.amir20001.cloudbees.net/song/insertmultiple", jSongsArray.toString());
+		}catch (Exception e){
+        	Log.e("instaDJ", "JSONException", e);
+        }
+		
        
 		
 		return returnPlaylist;
