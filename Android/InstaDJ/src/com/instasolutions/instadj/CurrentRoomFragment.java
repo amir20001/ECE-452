@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -12,6 +13,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -49,6 +51,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private StationData station = null;
     private int playlistPosition = 0;
     private static Boolean initialized = false;
+    private Boolean userIsHost = false;
     
     @Override
     public View onCreateView(LayoutInflater inflater, 
@@ -115,6 +118,11 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     
     public void setStation(StationData s)
     {
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+    	if(s.Owner.UserID.compareTo(prefs.getString("UserID", "0")) == 0)
+    	{
+    		userIsHost = true;
+    	}
     	this.station = s;
     	if(text_stationName != null)
     	{

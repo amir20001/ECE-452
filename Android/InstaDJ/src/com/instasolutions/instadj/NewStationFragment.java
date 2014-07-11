@@ -27,6 +27,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.util.SparseArray;
@@ -121,9 +123,13 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 				getFragmentManager().popBackStack();
 				break;
 			case R.id.newstation_save_button:
-				StationsFragment fragment = ((ListeningRoom)activity).getStationsFragment();
-				fragment.addStation(createStation());
-				getFragmentManager().popBackStack();
+				CurrentRoomFragment fragment = ((ListeningRoom)activity).getCurrentRoomFragment();
+				fragment.setStation(createStation());
+				FragmentManager fragmentManager = this.getFragmentManager();
+				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+				fragmentTransaction.replace(R.id.container, fragment);
+		       	fragmentTransaction.addToBackStack(null);
+		       	fragmentTransaction.commit();
 				break;
 			default:
 				break;

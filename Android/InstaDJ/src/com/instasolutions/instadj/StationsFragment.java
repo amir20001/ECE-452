@@ -123,12 +123,4 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 		
 	}
 	
-	
-	//TEMPORARY METHODS FOR LOCAL DATA TRANSFER
-	//WILL JUST GRAB FROM SERVER WHEN IMPLEMENTED
-	public void addStation(StationData station)
-	{
-		stations.append(stations.size(), station);
-	}
-	
 }
