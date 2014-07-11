@@ -52,7 +52,6 @@ public class FileUploadController {
 				if (multipartFile.getSize() != 0) {
 					// file size is greater than 0
 					Song song = new Song();
-					song.setFileName(fileName);
 					song.setUuid(UUID.randomUUID().toString());
 
 					File dest = File.createTempFile(song.getUuid(), ".mp3");

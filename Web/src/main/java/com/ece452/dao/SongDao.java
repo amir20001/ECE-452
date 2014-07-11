@@ -30,8 +30,8 @@ public class SongDao {
 	}
 
 	public Song insert(Song song) {
-		String sql = "INSERT INTO song (file_name,uuid,playlist_id,title,artist"
-				+ ",album,duration,net_score,song_url,song_uri,art_url) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO song (uuid,playlist_id,title,artist"
+				+ ",album,duration,net_score,song_url,song_uri,art_url) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
 		ResultSet generatedKeys = null;
 		Connection conn = null;
@@ -39,17 +39,16 @@ public class SongDao {
 			conn = dataSource.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql,
 					Statement.RETURN_GENERATED_KEYS);
-			statement.setString(1, song.getFileName());
-			statement.setString(2, song.getUuid());
-			statement.setInt(3, song.getPlaylistId());
-			statement.setString(4, song.getTitle());
-			statement.setString(5, song.getArtist());
-			statement.setString(6, song.getAlbum());
-			statement.setString(7, song.getDuration());
-			statement.setInt(8, song.getNetScore());
-			statement.setString(9, song.getSongUrl());
-			statement.setString(10, song.getSongUri());
-			statement.setString(11, song.getArtUrl());
+			statement.setString(1, song.getUuid());
+			statement.setInt(2, song.getPlaylistId());
+			statement.setString(3, song.getTitle());
+			statement.setString(4, song.getArtist());
+			statement.setString(5, song.getAlbum());
+			statement.setString(6, song.getDuration());
+			statement.setInt(7, song.getNetScore());
+			statement.setString(8, song.getSongUrl());
+			statement.setString(9, song.getSongUri());
+			statement.setString(10, song.getArtUrl());
 
 			statement.executeUpdate();
 
@@ -77,7 +76,7 @@ public class SongDao {
 	}
 
 	public List<Song> insertMultiple(List<Song> songs) {
-		String sql = "INSERT INTO song (file_name,uuid,playlist_id,title,artist,album,duration,net_score,song_url,song_uri,art_url) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO song (uuid,playlist_id,title,artist,album,duration,net_score,song_url,song_uri,art_url) VALUES (?,?,?,?,?,?,?,?,?,?)";
 		ResultSet generatedKeys = null;
 		Connection conn = null;
 		try {
@@ -86,17 +85,16 @@ public class SongDao {
 					Statement.RETURN_GENERATED_KEYS);
 			for (int i = 0; i < songs.size(); i++) {
 				Song song = songs.get(i);
-				statement.setString(1, song.getFileName());
-				statement.setString(2, song.getUuid());
-				statement.setInt(3, song.getPlaylistId());
-				statement.setString(4, song.getTitle());
-				statement.setString(5, song.getArtist());
-				statement.setString(6, song.getAlbum());
-				statement.setString(7, song.getDuration());
-				statement.setInt(8, song.getNetScore());
-				statement.setString(9, song.getSongUrl());
-				statement.setString(10, song.getSongUri());
-				statement.setString(11, song.getArtUrl());
+				statement.setString(1, song.getUuid());
+				statement.setInt(2, song.getPlaylistId());
+				statement.setString(3, song.getTitle());
+				statement.setString(4, song.getArtist());
+				statement.setString(5, song.getAlbum());
+				statement.setString(6, song.getDuration());
+				statement.setInt(7, song.getNetScore());
+				statement.setString(8, song.getSongUrl());
+				statement.setString(9, song.getSongUri());
+				statement.setString(10, song.getArtUrl());
 				
 				statement.addBatch();
 			}
@@ -157,7 +155,7 @@ public class SongDao {
 	}
 
 	public Song update(Song song) {
-		String sql = "UPDATE song SET file_name = ?, `uuid` = ?, title = ?, album = ?, artist = ?,"
+		String sql = "UPDATE song SET  `uuid` = ?, title = ?, album = ?, artist = ?,"
 				+ " duration = ?, playlist_id = ?, net_score = ? ,song_url = ?, song_uri = ?, art_url = ?"
 				+ " WHERE id = ?;";
 		Connection conn = null;
@@ -165,18 +163,18 @@ public class SongDao {
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, song.getFileName());
-			statement.setString(2, song.getUuid());
-			statement.setString(3, song.getTitle());
-			statement.setString(4, song.getAlbum());
-			statement.setString(5, song.getArtist());
-			statement.setString(6, song.getDuration());
-			statement.setInt(7, song.getPlaylistId());
-			statement.setInt(8, song.getNetScore());
-			statement.setString(9, song.getSongUrl());
-			statement.setString(10, song.getSongUri());
-			statement.setString(11, song.getArtUrl());
-			statement.setInt(12, song.getId());
+
+			statement.setString(1, song.getUuid());
+			statement.setString(2, song.getTitle());
+			statement.setString(3, song.getAlbum());
+			statement.setString(4, song.getArtist());
+			statement.setString(5, song.getDuration());
+			statement.setInt(6, song.getPlaylistId());
+			statement.setInt(7, song.getNetScore());
+			statement.setString(8, song.getSongUrl());
+			statement.setString(9, song.getSongUri());
+			statement.setString(10, song.getArtUrl());
+			statement.setInt(11, song.getId());
 
 			statement.executeUpdate();
 			statement.close();

@@ -3,7 +3,6 @@ package com.ece452.domain;
 public class Song extends BaseEntity {
 
 	private String title;
-	private String fileName;
 	private String artist;
 	private String album;
 	private String duration;
@@ -46,14 +45,6 @@ public class Song extends BaseEntity {
 
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
 	}
 
 	public String getAlbum() {
