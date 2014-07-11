@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.ece452.domain.Playlist;
 import com.ece452.domain.Song;
-import com.ece452.mapper.PlaylistMapper;
 import com.ece452.mapper.SongMapper;
 import com.mysql.jdbc.Statement;
 
@@ -71,7 +69,7 @@ public class SongDao {
 			}
 		}
 	}
-	
+
 	public List<Song> insertMultiple(List<Song> songs) {
 		String sql = "INSERT INTO song (file_name,uuid,playlist_id,title,artist,album,duration,net_score) VALUES (?,?,?,?,?,?,?,?)";
 		ResultSet generatedKeys = null;
@@ -80,8 +78,7 @@ public class SongDao {
 			conn = dataSource.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql,
 					Statement.RETURN_GENERATED_KEYS);
-			for(int i = 0; i < songs.size(); i++)
-			{
+			for (int i = 0; i < songs.size(); i++) {
 				Song song = songs.get(i);
 				statement.setString(1, song.getFileName());
 				statement.setString(2, song.getUuid());
@@ -103,12 +100,12 @@ public class SongDao {
 				songs.set(i, song);
 				i++;
 			}
-				
-			if(i != songs.size()) {
+
+			if (i != songs.size()) {
 				throw new SQLException(
 						"Creating songs failed, not all keys generated.");
 			}
-			
+
 			generatedKeys.close();
 			statement.close();
 			return songs;
@@ -124,7 +121,7 @@ public class SongDao {
 		}
 	}
 
-	public Song getSong(String id) {
+	public Song getSong(int id) {
 		Song song = null;
 		String sql = "SELECT * FROM song WHERE id= ?";
 		try {
@@ -136,16 +133,48 @@ public class SongDao {
 		}
 		return song;
 	}
-	
+
 	public List<Song> getAllByPlaylist(int id) {
 		String sql = "SELECT * FROM song WHERE playlist_id= ?;";
 		List<Song> songs = new ArrayList<Song>();
 		try {
-			songs = jdbcTemplate.query(sql, new Object[]{ id }, 
+			songs = jdbcTemplate.query(sql, new Object[] { id },
 					new SongMapper());
 			return songs;
 		} catch (Exception e) {
 			return songs;
+		}
+	}
+
+	public Song update(Song song) {
+		String sql = "UPDATE song SET file_name = ?, `uuid` = ?, title = ?, album = ?, artist = ?,"
+				+ " duration = ?, playlist_id = ?, net_score = ? WHERE id = ?;";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, song.getFileName());
+			statement.setString(2, song.getUuid());
+			statement.setString(3, song.getTitle());
+			statement.setString(4, song.getAlbum());
+			statement.setString(5, song.getArtist());
+			statement.setString(6, song.getDuration());
+			statement.setInt(7, song.getPlaylistId());
+			statement.setInt(8, song.getNetScore());
+			statement.setInt(9, song.getId());
+			
+			statement.executeUpdate();
+			statement.close();
+			return song;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
 	}
 

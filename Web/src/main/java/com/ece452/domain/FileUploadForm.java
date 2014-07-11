@@ -1,22 +1,16 @@
 package com.ece452.domain;
 
-
-import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
 
-public class FileUploadForm  {
+public class FileUploadForm {
+	private MultipartFile file;
 
-	private List<MultipartFile> files;
-	// getter and setter methods
-
-	public List<MultipartFile> getFiles() {
-		return files;
+	public MultipartFile getFile() {
+		return file;
 	}
 
-	public void setFiles(List<MultipartFile> files) {
-		this.files = files;
+	public void setFile(MultipartFile file) {
+		this.file = file;
 	}
-
 
 }
