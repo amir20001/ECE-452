@@ -27,6 +27,7 @@ import com.amazonaws.util.json.JSONException;
 import com.ece452.dao.SongDao;
 import com.ece452.domain.FileUploadForm;
 import com.ece452.domain.Song;
+import com.mpatric.mp3agic.Mp3File;
 
 @Controller
 @RequestMapping("/song")
@@ -34,7 +35,7 @@ public class SongController {
 
 	@Autowired
 	SongDao songDao;
-	
+
 	@Autowired
 	FileHelper fileHelper;
 
@@ -57,10 +58,10 @@ public class SongController {
 		mapper.writeValue(response.getOutputStream(), song);
 
 	}
-	
+
 	@RequestMapping(value = "/insertmultiple", method = RequestMethod.POST)
-	public void createMultiple(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void createMultiple(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				request.getInputStream()));
@@ -75,21 +76,19 @@ public class SongController {
 			JSONArray songs = new JSONArray(json);
 			Song song = null;
 			List<Song> songList = new ArrayList<Song>();
-			for(int i = 0; i < songs.length(); i++)
-			{
+			for (int i = 0; i < songs.length(); i++) {
 				song = mapper.readValue(songs.getString(i), Song.class);
 				songList.add(song);
 			}
-			
+
 			response.setContentType("application/json");
 			songList = songDao.insertMultiple(songList);
-			
-			for(int i = 0; i < songList.size(); i++)
-			{
+
+			for (int i = 0; i < songList.size(); i++) {
 				song = songList.get(i);
 				mapper.writeValue(response.getOutputStream(), song);
 			}
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -105,7 +104,7 @@ public class SongController {
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), song);
 	}
-	
+
 	@RequestMapping(value = "/getforplaylist/{playlistId}", method = RequestMethod.GET)
 	public void getSongsForPlaylist(@PathVariable("playlistId") int playlistId,
 			HttpServletResponse response) throws JsonGenerationException,
@@ -117,9 +116,7 @@ public class SongController {
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), songs);
 	}
-	
-	
-	
+
 	@RequestMapping(value = "upload/{songId}", method = RequestMethod.POST)
 	public void upload(@PathVariable("songId") int songId,
 			HttpServletResponse response, HttpServletRequest request,
@@ -129,15 +126,29 @@ public class SongController {
 
 		String uuid = UUID.randomUUID().toString();
 		File dest = File.createTempFile(uuid, ".mp3");
-		dest.deleteOnExit();
 		file.getFile().transferTo(dest);
 		String url = fileHelper.upload(dest, uuid);
 		song.setUrl(url);
 		song.setUuid(uuid);
+		
+		try {
+			Mp3File mp3file = new Mp3File(dest.getAbsolutePath());
+			song.setTitle(FileHelper.getTitle(mp3file));
+			song.setAlbum(FileHelper.getAlbum(mp3file));
+			song.setArtist(FileHelper.getArtist(mp3file));
+			song.setDuration(FileHelper.secToMin(mp3file.getLengthInSeconds()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}  
+			
 		songDao.update(song);
+		
 		dest.delete();
 
 	}
+
 	
 	
+	
+
 }

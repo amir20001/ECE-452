@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.ece452.domain.Playlist;
 import com.ece452.domain.Song;
-import com.ece452.mapper.PlaylistMapper;
 import com.ece452.mapper.SongMapper;
 import com.mysql.jdbc.Statement;
 
