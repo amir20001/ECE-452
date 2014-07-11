@@ -27,6 +27,7 @@ CREATE TABLE favourite (
 	artist VARCHAR(255),
 	user_id VARCHAR(255),
 	duration VARCHAR(255),
+	art_url  VARCHAR(2083),
 	PRIMARY KEY (id),
 	CONSTRAINT fk_favourite_user FOREIGN KEY (user_id) REFERENCES `user`(user_id)
 );
@@ -52,6 +53,9 @@ CREATE TABLE song(
 	duration VARCHAR(225),
 	playlist_id INT,
 	net_score INT,
+	song_url  VARCHAR(2083),
+	song_uri  VARCHAR(2083),
+	art_url  VARCHAR(2083),
 	PRIMARY KEY (id),
 	CONSTRAINT fk_song_playlist_id FOREIGN KEY (playlist_id) REFERENCES `playlist`(id)
 );

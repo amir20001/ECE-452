@@ -121,7 +121,7 @@ public class SongController {
 		File dest = File.createTempFile(uuid, ".mp3");
 		file.getFile().transferTo(dest);
 		String url = fileHelper.upload(dest, uuid);
-		song.setUrl(url);
+		song.setSongUrl(url);
 		song.setUuid(uuid);
 
 		try {

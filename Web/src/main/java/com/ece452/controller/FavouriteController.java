@@ -72,6 +72,7 @@ public class FavouriteController {
 		favourite.setTitle(song.getTitle());
 		favourite.setDuration(song.getDuration());
 		favourite.setUserId(userId);
+		favourite.setArtUrl(song.getArtUrl());
 		favourite = favouriteDao.insert(favourite);
 
 		response.setContentType("application/json");

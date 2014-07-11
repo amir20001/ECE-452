@@ -32,7 +32,7 @@ public class FavouriteDao {
 
 	public Favourite insert(Favourite favourite) {
 
-		String sql = "INSERT INTO favourite (title,album,artist,duration,user_id ) VALUES (?,?,?,?,?)";
+		String sql = "INSERT INTO favourite (title,album,artist,duration,user_id,art_url ) VALUES (?,?,?,?,?,?)";
 		ResultSet generatedKeys = null;
 		Connection conn = null;
 		try {
@@ -43,6 +43,7 @@ public class FavouriteDao {
 			statement.setString(3, favourite.getArtist());
 			statement.setString(4, favourite.getDuration());
 			statement.setString(5, favourite.getUserId());
+			statement.setString(6, favourite.getArtUrl());
 
 			statement.executeUpdate();
 

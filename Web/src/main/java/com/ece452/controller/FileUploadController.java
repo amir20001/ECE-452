@@ -58,7 +58,7 @@ public class FileUploadController {
 					File dest = File.createTempFile(song.getUuid(), ".mp3");
 					multipartFile.transferTo(dest);
 					String url = fileHelper.upload(dest, song.getUuid());
-					song.setUrl(url);
+					song.setSongUrl(url);
 					song.setPlaylistId(2);// TODO hook this up to something
 
 					try {
