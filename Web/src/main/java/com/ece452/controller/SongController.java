@@ -1,24 +1,15 @@
 package com.ece452.controller;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.Parser;
-import org.apache.tika.parser.mp3.Mp3Parser;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -27,14 +18,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONException;
 import com.ece452.dao.SongDao;
-import com.ece452.domain.FileUploadForm;
 import com.ece452.domain.Song;
 
 @Controller
@@ -44,12 +31,6 @@ public class SongController {
 	@Autowired
 	SongDao songDao;
 
-	@Autowired
-	FileHelper fileHelper;
-
-    private static Logger logger = Logger.getLogger(SongController.class);
-
-    
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	public void create(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -69,10 +50,10 @@ public class SongController {
 		mapper.writeValue(response.getOutputStream(), song);
 
 	}
-
+	
 	@RequestMapping(value = "/insertmultiple", method = RequestMethod.POST)
-	public void createMultiple(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	public void createMultiple(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(
 				request.getInputStream()));
@@ -87,19 +68,21 @@ public class SongController {
 			JSONArray songs = new JSONArray(json);
 			Song song = null;
 			List<Song> songList = new ArrayList<Song>();
-			for (int i = 0; i < songs.length(); i++) {
+			for(int i = 0; i < songs.length(); i++)
+			{
 				song = mapper.readValue(songs.getString(i), Song.class);
 				songList.add(song);
 			}
-
+			
 			response.setContentType("application/json");
 			songList = songDao.insertMultiple(songList);
-
-			for (int i = 0; i < songList.size(); i++) {
+			
+			for(int i = 0; i < songList.size(); i++)
+			{
 				song = songList.get(i);
 				mapper.writeValue(response.getOutputStream(), song);
 			}
-
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -107,7 +90,7 @@ public class SongController {
 	}
 
 	@RequestMapping(value = "/get/{songId}", method = RequestMethod.GET)
-	public void getSong(@PathVariable("songId") int songId,
+	public void getSong(@PathVariable("songId") String songId,
 			HttpServletResponse response) throws JsonGenerationException,
 			JsonMappingException, IOException {
 		Song song = songDao.getSong(songId);
@@ -115,7 +98,7 @@ public class SongController {
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), song);
 	}
-
+	
 	@RequestMapping(value = "/getforplaylist/{playlistId}", method = RequestMethod.GET)
 	public void getSongsForPlaylist(@PathVariable("playlistId") int playlistId,
 			HttpServletResponse response) throws JsonGenerationException,
@@ -127,35 +110,4 @@ public class SongController {
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), songs);
 	}
-
-	@RequestMapping(value = "upload/{songId}", method = RequestMethod.POST)
-	public void upload(@PathVariable("songId") int songId,
-			HttpServletResponse response, HttpServletRequest request,
-			@RequestParam("file") FileUploadForm file) throws IOException {
-		Song song = songDao.getSong(songId);
-		Metadata metadata = new Metadata();
-		ContentHandler handler = new DefaultHandler();
-		Parser parser = new Mp3Parser();
-		ParseContext parseCtx = new ParseContext();
-		
-		String uuid = UUID.randomUUID().toString();
-		File dest = File.createTempFile(uuid, ".mp3");
-		dest.deleteOnExit();
-		file.getFile().transferTo(dest);
-		fileHelper.upload(dest, uuid);
-		try {
-			InputStream inputStream = new FileInputStream(dest);
-			parser.parse(inputStream, handler, metadata, parseCtx);
-			song.setTitle(metadata.get("title"));
-			song.setArtist(metadata.get("xmpDM:artist"));
-			song.setAlbum(metadata.get("xmpDM:genre"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		song.setUuid(uuid);
-		songDao.update(song);
-		dest.delete();
-
-	}
-
 }
