@@ -111,8 +111,9 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
 
 	@Override
 	public void onItemClick(AdapterView<?> av, View v, int i, long l) {
+		PlaylistData playlist = (PlaylistData)av.getAdapter().getItem(i);
 		PlaylistViewFragment fragment = new PlaylistViewFragment();
-		fragment.setPlaylist((PlaylistData)av.getAdapter().getItem(i));
+		fragment.setPlaylist(playlist);
 		FragmentManager fragmentManager = this.getFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, fragment);
