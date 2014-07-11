@@ -32,10 +32,9 @@ public class UserController {
 	UserDao userDao;
 
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
-	public void insertUser(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-				request.getInputStream()));
+	public void insertUser(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		String json = "";
 		if (br != null) {
 			json = br.readLine();
@@ -44,16 +43,15 @@ public class UserController {
 		User user = mapper.readValue(json, User.class);
 		if (userDao.getUser(user.getUserId()) == null) {
 			// make sure user does not already exist
-			userDao.inset(user);
+			userDao.insert(user);
 		}
 
 		mapper.writeValue(response.getOutputStream(), user);
 	}
 
 	@RequestMapping(value = "/get/{username}", method = RequestMethod.GET)
-	public void getSong(@PathVariable("username") String username,
-			HttpServletResponse response) throws JsonGenerationException,
-			JsonMappingException, IOException {
+	public void getSong(@PathVariable("username") String username, HttpServletResponse response)
+			throws JsonGenerationException, JsonMappingException, IOException {
 
 		User user = userDao.getUser(username);
 		ObjectMapper mapper = new ObjectMapper();

@@ -17,6 +17,7 @@ import com.ece452.domain.Follow;
 import com.ece452.domain.User;
 import com.ece452.mapper.UserMapper;
 import com.mysql.jdbc.Statement;
+
 @Repository
 public class FollowDao {
 
@@ -37,8 +38,7 @@ public class FollowDao {
 
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement statement = conn.prepareStatement(sql,
-					Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, follow.getFollowing());
 			statement.setString(2, follow.getFollowed());
 
@@ -48,8 +48,7 @@ public class FollowDao {
 				// get auto increment key
 				follow.setId(generatedKeys.getInt(1));
 			} else {
-				throw new SQLException(
-						"Creating follow failed, no generated key obtained.");
+				throw new SQLException("Creating follow failed, no generated key obtained.");
 			}
 			generatedKeys.close();
 			statement.close();
@@ -66,22 +65,22 @@ public class FollowDao {
 		}
 	}
 
-	public List<User> getAllFollowing(User user) {
+	public List<User> getAllFollowing(String userId) {
 		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.following AND follow.followed = ?;";
 		List<User> users = new ArrayList<User>();
 		try {
-			users = jdbcTemplate.query(sql,new Object[] { user.getUserId()} ,new UserMapper());
+			users = jdbcTemplate.query(sql, new Object[] { userId }, new UserMapper());
 			return users;
 		} catch (Exception e) {
 			return users;
 		}
 	}
 
-	public List<User> getAllFollowed(User user) {
+	public List<User> getAllFollowed(String userId) {
 		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.followed AND follow.following = ?;";
 		List<User> users = new ArrayList<User>();
 		try {
-			users = jdbcTemplate.query(sql,new Object[] { user.getUserId()} ,new UserMapper());
+			users = jdbcTemplate.query(sql, new Object[] { userId }, new UserMapper());
 			return users;
 		} catch (Exception e) {
 			return users;

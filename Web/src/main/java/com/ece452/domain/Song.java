@@ -1,7 +1,5 @@
 package com.ece452.domain;
 
-import org.apache.tika.metadata.Metadata;
-
 public class Song extends BaseEntity {
 
 	private String title;
@@ -12,8 +10,8 @@ public class Song extends BaseEntity {
 	private String uuid;
 	private int id;
 	private int playlistId;
-	private transient Metadata metadata;
 	private int netScore;
+	private transient String url;
 
 	public int getId() {
 		return id;
@@ -21,14 +19,6 @@ public class Song extends BaseEntity {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public Metadata getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(Metadata metadata) {
-		this.metadata = metadata;
 	}
 
 	public String getTitle() {
@@ -93,6 +83,14 @@ public class Song extends BaseEntity {
 
 	public void setNetScore(int netScore) {
 		this.netScore = netScore;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 }

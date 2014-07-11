@@ -32,11 +32,9 @@ public class RoomController {
 	RoomDao roomDao;
 
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
-	public void create(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-				request.getInputStream()));
+		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		String json = "";
 		if (br != null) {
 			json = br.readLine();
@@ -51,9 +49,8 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/get/{roomId}", method = RequestMethod.GET)
-	public void getRoom(@PathVariable("roomId") String roomID,
-			HttpServletResponse response) throws JsonGenerationException,
-			JsonMappingException, IOException {
+	public void getRoom(@PathVariable("roomId") String roomID, HttpServletResponse response)
+			throws JsonGenerationException, JsonMappingException, IOException {
 
 		Room room = roomDao.getRoom(roomID);
 		ObjectMapper mapper = new ObjectMapper();
@@ -62,8 +59,8 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/getall", method = RequestMethod.GET)
-	public void getAllRooms(HttpServletResponse response)
-			throws JsonGenerationException, JsonMappingException, IOException {
+	public void getAllRooms(HttpServletResponse response) throws JsonGenerationException, JsonMappingException,
+			IOException {
 		List<Room> allRooms = roomDao.getAllRooms();
 
 		ObjectMapper mapper = new ObjectMapper();

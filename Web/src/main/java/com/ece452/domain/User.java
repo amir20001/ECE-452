@@ -22,7 +22,7 @@ public class User extends BaseEntity {
 	public void setLastName(String lastname) {
 		this.lastName = lastname;
 	}
-	
+
 	public int getScore() {
 		return score;
 	}
@@ -46,6 +46,5 @@ public class User extends BaseEntity {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-
 
 }

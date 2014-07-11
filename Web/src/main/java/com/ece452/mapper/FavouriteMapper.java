@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.ece452.domain.Favourite;
 
-public class FavouriteMapper implements RowMapper<Favourite>{
+public class FavouriteMapper implements RowMapper<Favourite> {
 	@Override
 	public Favourite mapRow(ResultSet resultSet, int line) throws SQLException {
 		Favourite favourite = new Favourite();

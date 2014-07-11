@@ -28,7 +28,7 @@ public class UserDao {
 		this.dataSource = dataSource;
 	}
 
-	public User inset(User user) {
+	public User insert(User user) {
 
 		String sql = "INSERT INTO user (user_id,first_name, last_name, score,room_id) VALUES (?,?,?,?,?);";
 		Connection conn = null;
@@ -56,14 +56,12 @@ public class UserDao {
 
 	}
 
-
 	public User getUser(String userid) {
 		User user = null;
 		String sql = "SELECT * FROM user WHERE user_id = ?";
 
 		try {
-			user = jdbcTemplate.queryForObject(sql, new Object[] { userid },
-					new UserMapper());
+			user = jdbcTemplate.queryForObject(sql, new Object[] { userid }, new UserMapper());
 		} catch (Exception e) {
 			// No user was found with the specified id, return null
 			return null;
