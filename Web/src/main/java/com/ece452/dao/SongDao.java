@@ -124,7 +124,7 @@ public class SongDao {
 		}
 	}
 
-	public Song getSong(String id) {
+	public Song getSong(int id) {
 		Song song = null;
 		String sql = "SELECT * FROM song WHERE id= ?";
 		try {
@@ -146,6 +146,38 @@ public class SongDao {
 			return songs;
 		} catch (Exception e) {
 			return songs;
+		}
+	}
+	
+	public Song update(Song song) {
+		String sql = "UPDATE song SET file_name = ?, `uuid` = ?, title = ?, album = ?, artist = ?,"
+				+ " duration = ?, playlist_id = ?, net_score = ? WHERE id = ?;";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, song.getFileName());
+			statement.setString(2, song.getUuid());
+			statement.setString(3, song.getTitle());
+			statement.setString(4, song.getAlbum());
+			statement.setString(5, song.getArtist());
+			statement.setString(6, song.getDuration());
+			statement.setInt(7, song.getPlaylistId());
+			statement.setInt(8, song.getNetScore());
+			statement.setInt(9, song.getId());
+			
+			statement.executeUpdate();
+			statement.close();
+			return song;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
 	}
 

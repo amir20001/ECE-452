@@ -1,10 +1,12 @@
 package com.ece452.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,10 +20,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONException;
 import com.ece452.dao.SongDao;
+import com.ece452.domain.FileUploadForm;
+import com.ece452.domain.MultiFileUploadForm;
 import com.ece452.domain.Song;
 
 @Controller
@@ -30,6 +35,9 @@ public class SongController {
 
 	@Autowired
 	SongDao songDao;
+	
+	@Autowired
+	FileHelper fileHelper;
 
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	public void create(HttpServletRequest request, HttpServletResponse response)
@@ -90,7 +98,7 @@ public class SongController {
 	}
 
 	@RequestMapping(value = "/get/{songId}", method = RequestMethod.GET)
-	public void getSong(@PathVariable("songId") String songId,
+	public void getSong(@PathVariable("songId") int songId,
 			HttpServletResponse response) throws JsonGenerationException,
 			JsonMappingException, IOException {
 		Song song = songDao.getSong(songId);
@@ -110,4 +118,27 @@ public class SongController {
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), songs);
 	}
+	
+	
+	
+	@RequestMapping(value = "upload/{songId}", method = RequestMethod.POST)
+	public void upload(@PathVariable("songId") int songId,
+			HttpServletResponse response, HttpServletRequest request,
+			@RequestParam("file") FileUploadForm file) throws IOException {
+		Song song = songDao.getSong(songId);
+
+
+		String uuid = UUID.randomUUID().toString();
+		File dest = File.createTempFile(uuid, ".mp3");
+		dest.deleteOnExit();
+		file.getFile().transferTo(dest);
+		fileHelper.upload(dest, uuid);
+
+		song.setUuid(uuid);
+		songDao.update(song);
+		dest.delete();
+
+	}
+	
+	
 }

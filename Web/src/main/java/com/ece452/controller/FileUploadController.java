@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ece452.dao.SongDao;
-import com.ece452.domain.FileUploadForm;
+import com.ece452.domain.MultiFileUploadForm;
 import com.ece452.domain.Song;
 
 @Controller
@@ -34,7 +34,7 @@ public class FileUploadController {
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public String save(@ModelAttribute("uploadForm") FileUploadForm uploadForm,
+	public String save(@ModelAttribute("uploadForm") MultiFileUploadForm uploadForm,
 			Model map, HttpServletRequest request)
 			throws IllegalStateException, IOException {
 		List<MultipartFile> files = uploadForm.getFiles();
