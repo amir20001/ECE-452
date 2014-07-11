@@ -1,6 +1,5 @@
 package com.ece452.domain;
 
-
 public class Song extends BaseEntity {
 
 	private String title;

@@ -37,10 +37,8 @@ public class FileUploadController {
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public String save(
-			@ModelAttribute("uploadForm") MultiFileUploadForm uploadForm,
-			Model map, HttpServletRequest request)
-			throws IllegalStateException, IOException {
+	public String save(@ModelAttribute("uploadForm") MultiFileUploadForm uploadForm, Model map,
+			HttpServletRequest request) throws IllegalStateException, IOException {
 		List<MultipartFile> files = uploadForm.getFiles();
 		List<String> fileNames = new ArrayList<String>();
 		// String ext;
@@ -68,8 +66,7 @@ public class FileUploadController {
 						song.setTitle(FileHelper.getTitle(mp3file));
 						song.setAlbum(FileHelper.getAlbum(mp3file));
 						song.setArtist(FileHelper.getArtist(mp3file));
-						song.setDuration(FileHelper.secToMin(mp3file
-								.getLengthInSeconds()));
+						song.setDuration(FileHelper.secToMin(mp3file.getLengthInSeconds()));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

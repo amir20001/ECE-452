@@ -37,8 +37,7 @@ public class PlaylistDao {
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement statement = conn.prepareStatement(sql,
-					Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, playlist.getName());
 			statement.setString(2, playlist.getGenre());
 			statement.setInt(3, playlist.getTrackCount());
@@ -50,8 +49,7 @@ public class PlaylistDao {
 				// get auto increment key
 				playlist.setId(generatedKeys.getInt(1));
 			} else {
-				throw new SQLException(
-						"Creating playlist failed, no generated key obtained.");
+				throw new SQLException("Creating playlist failed, no generated key obtained.");
 			}
 			generatedKeys.close();
 			statement.close();
@@ -73,8 +71,7 @@ public class PlaylistDao {
 		Playlist playlist = null;
 		String sql = "SELECT * FROM playlist WHERE id = ?";
 		try {
-			playlist = jdbcTemplate.queryForObject(sql, new Object[] { id },
-					new PlaylistMapper());
+			playlist = jdbcTemplate.queryForObject(sql, new Object[] { id }, new PlaylistMapper());
 		} catch (Exception e) {
 			// No room was found with the specified id, return null
 			return null;
@@ -86,8 +83,7 @@ public class PlaylistDao {
 		String sql = "SELECT * FROM playlist where user_id = ?;";
 		List<Playlist> playlists = new ArrayList<Playlist>();
 		try {
-			playlists = jdbcTemplate.query(sql, new Object[] { userId },
-					new PlaylistMapper());
+			playlists = jdbcTemplate.query(sql, new Object[] { userId }, new PlaylistMapper());
 			return playlists;
 		} catch (Exception e) {
 			return playlists;

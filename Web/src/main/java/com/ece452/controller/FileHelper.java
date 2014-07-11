@@ -31,9 +31,7 @@ public class FileHelper {
 
 		}
 	}
-	
-	
-	
+
 	public static String getTitle(Mp3File mp3file) {
 		if (mp3file.hasId3v1Tag()) {
 			return mp3file.getId3v1Tag().getTitle();
@@ -42,7 +40,7 @@ public class FileHelper {
 		} else
 			return "";
 	}
-	
+
 	public static String getAlbum(Mp3File mp3file) {
 		if (mp3file.hasId3v1Tag()) {
 			return mp3file.getId3v1Tag().getAlbum();
@@ -51,7 +49,7 @@ public class FileHelper {
 		} else
 			return "";
 	}
-	
+
 	public static String getArtist(Mp3File mp3file) {
 		if (mp3file.hasId3v1Tag()) {
 			return mp3file.getId3v1Tag().getArtist();
@@ -60,12 +58,12 @@ public class FileHelper {
 		} else
 			return "";
 	}
-	
-	public static String secToMin(long sec){
-		long min = sec/60;
-		sec = sec- min* 60;
-		
-		return min+":"+sec;
+
+	public static String secToMin(long sec) {
+		long min = sec / 60;
+		sec = sec - min * 60;
+
+		return min + ":" + sec;
 	}
 
 }

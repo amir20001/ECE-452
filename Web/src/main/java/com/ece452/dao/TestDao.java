@@ -21,7 +21,7 @@ public class TestDao {
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
-		this.dataSource=dataSource;
+		this.dataSource = dataSource;
 	}
 
 	public void test() {
@@ -36,8 +36,7 @@ public class TestDao {
 
 			while (rs.next()) {
 				try {
-					System.out.println(rs.getInt(1)+" " + rs.getString(2) +" "
-							+ rs.getString(3));
+					System.out.println(rs.getInt(1) + " " + rs.getString(2) + " " + rs.getString(3));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -32,11 +32,9 @@ public class PlaylistController {
 	PlaylistDao playlistDao;
 
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
-	public void insert(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public void insert(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-				request.getInputStream()));
+		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		String json = "";
 		if (br != null) {
 			json = br.readLine();
@@ -51,9 +49,8 @@ public class PlaylistController {
 	}
 
 	@RequestMapping(value = "/get/{playlistId}", method = RequestMethod.GET)
-	public void getPlayList(@PathVariable("playlistId") int playlistId,
-			HttpServletResponse response) throws JsonGenerationException,
-			JsonMappingException, IOException {
+	public void getPlayList(@PathVariable("playlistId") int playlistId, HttpServletResponse response)
+			throws JsonGenerationException, JsonMappingException, IOException {
 
 		Playlist playlist = playlistDao.getPlaylist(playlistId);
 		ObjectMapper mapper = new ObjectMapper();
@@ -62,9 +59,8 @@ public class PlaylistController {
 	}
 
 	@RequestMapping(value = "/getbyuser/{userId}", method = RequestMethod.GET)
-	public void getPlayListByUser(@PathVariable("userId") String userId,
-			HttpServletResponse response) throws JsonGenerationException,
-			JsonMappingException, IOException {
+	public void getPlayListByUser(@PathVariable("userId") String userId, HttpServletResponse response)
+			throws JsonGenerationException, JsonMappingException, IOException {
 
 		List<Playlist> playlistsByUser = playlistDao.getPlaylistsByUser(userId);
 		ObjectMapper mapper = new ObjectMapper();
@@ -73,9 +69,8 @@ public class PlaylistController {
 	}
 
 	@RequestMapping(value = "/getall", method = RequestMethod.GET)
-	public void getAllPlaylists(@PathVariable("playlistId") String playlistId,
-			HttpServletResponse response) throws JsonGenerationException,
-			JsonMappingException, IOException {
+	public void getAllPlaylists(@PathVariable("playlistId") String playlistId, HttpServletResponse response)
+			throws JsonGenerationException, JsonMappingException, IOException {
 
 		List<Playlist> playlists = playlistDao.getAllPlaylist();
 
@@ -92,8 +87,7 @@ public class PlaylistController {
 	}
 
 	@RequestMapping(value = "/delete/{playlistId}", method = RequestMethod.POST)
-	public void delete(@PathVariable("playlistId") int playlistId,
-			HttpServletResponse response) {
+	public void delete(@PathVariable("playlistId") int playlistId, HttpServletResponse response) {
 		playlistDao.delete(playlistId);
 	}
 

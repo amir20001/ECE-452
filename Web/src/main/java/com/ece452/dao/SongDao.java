@@ -35,8 +35,7 @@ public class SongDao {
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement statement = conn.prepareStatement(sql,
-					Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, song.getFileName());
 			statement.setString(2, song.getUuid());
 			statement.setInt(3, song.getPlaylistId());
@@ -52,8 +51,7 @@ public class SongDao {
 				// get auto increment key
 				song.setId(generatedKeys.getInt(1));
 			} else {
-				throw new SQLException(
-						"Creating song failed, no generated key obtained.");
+				throw new SQLException("Creating song failed, no generated key obtained.");
 			}
 			generatedKeys.close();
 			statement.close();
@@ -69,17 +67,15 @@ public class SongDao {
 			}
 		}
 	}
-	
+
 	public List<Song> insertMultiple(List<Song> songs) {
 		String sql = "INSERT INTO song (file_name,uuid,playlist_id,title,artist,album,duration,net_score) VALUES (?,?,?,?,?,?,?,?)";
 		ResultSet generatedKeys = null;
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement statement = conn.prepareStatement(sql,
-					Statement.RETURN_GENERATED_KEYS);
-			for(int i = 0; i < songs.size(); i++)
-			{
+			PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			for (int i = 0; i < songs.size(); i++) {
 				Song song = songs.get(i);
 				statement.setString(1, song.getFileName());
 				statement.setString(2, song.getUuid());
@@ -101,12 +97,11 @@ public class SongDao {
 				songs.set(i, song);
 				i++;
 			}
-				
-			if(i != songs.size()) {
-				throw new SQLException(
-						"Creating songs failed, not all keys generated.");
+
+			if (i != songs.size()) {
+				throw new SQLException("Creating songs failed, not all keys generated.");
 			}
-			
+
 			generatedKeys.close();
 			statement.close();
 			return songs;
@@ -126,27 +121,25 @@ public class SongDao {
 		Song song = null;
 		String sql = "SELECT * FROM song WHERE id= ?";
 		try {
-			song = jdbcTemplate.queryForObject(sql, new Object[] { id },
-					new SongMapper());
+			song = jdbcTemplate.queryForObject(sql, new Object[] { id }, new SongMapper());
 		} catch (Exception e) {
 			// No user was found with the specified id, return null
 			return null;
 		}
 		return song;
 	}
-	
+
 	public List<Song> getAllByPlaylist(int id) {
 		String sql = "SELECT * FROM song WHERE playlist_id= ?;";
 		List<Song> songs = new ArrayList<Song>();
 		try {
-			songs = jdbcTemplate.query(sql, new Object[]{ id }, 
-					new SongMapper());
+			songs = jdbcTemplate.query(sql, new Object[] { id }, new SongMapper());
 			return songs;
 		} catch (Exception e) {
 			return songs;
 		}
 	}
-	
+
 	public Song update(Song song) {
 		String sql = "UPDATE song SET file_name = ?, `uuid` = ?, title = ?, album = ?, artist = ?,"
 				+ " duration = ?, playlist_id = ?, net_score = ? WHERE id = ?;";
@@ -163,7 +156,7 @@ public class SongDao {
 			statement.setInt(7, song.getPlaylistId());
 			statement.setInt(8, song.getNetScore());
 			statement.setInt(9, song.getId());
-			
+
 			statement.executeUpdate();
 			statement.close();
 			return song;
