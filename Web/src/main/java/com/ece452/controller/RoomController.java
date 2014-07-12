@@ -77,7 +77,7 @@ public class RoomController {
 	}
 		
 		
-	@RequestMapping(value = "/addroom", method = RequestMethod.GET)
+	@RequestMapping(value = "/createaroom", method = RequestMethod.GET)
 	public ModelAndView showAddRoomPage(HttpSession session, Model model) {
 			List<Room> rooms = roomDao.getAllRooms();
 			model.addAttribute("rooms", rooms);

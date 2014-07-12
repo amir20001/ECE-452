@@ -27,7 +27,6 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 	rel="stylesheet" />
 	
 <body>
-<body bgcolor="#E6E6FA">
  	<div class="panel panel-default">
 		<display:table class="table table-striped table-condensed"
 			name="rooms">
