@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,11 +39,16 @@ public class RoomDao {
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement statement = conn.prepareStatement(sql,
+					Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, room.getName());
 			statement.setString(2, room.getOwnerUserId());
 			statement.setInt(3, room.getListenerCount());
-			statement.setInt(4, room.getCurrentSongId());
+			if (room.getCurrentSongId() == 0) {
+				statement.setNull(4, Types.INTEGER);
+			} else {
+				statement.setInt(4, room.getCurrentSongId());
+			}
 			statement.setInt(5, room.getPlaylistId());
 			System.out.println(statement.toString());
 			statement.executeUpdate();
@@ -52,7 +58,8 @@ public class RoomDao {
 				// get auto increment key
 				room.setId(generatedKeys.getInt(1));
 			} else {
-				throw new SQLException("Creating room failed, no generated key obtained.");
+				throw new SQLException(
+						"Creating room failed, no generated key obtained.");
 			}
 			generatedKeys.close();
 			statement.close();
@@ -75,7 +82,8 @@ public class RoomDao {
 		String sql = "SELECT * FROM room WHERE id = ?";
 
 		try {
-			room = jdbcTemplate.queryForObject(sql, new Object[] { id }, new RoomMapper());
+			room = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new RoomMapper());
 		} catch (Exception e) {
 			// No room was found with the specified id, return null
 			return null;
