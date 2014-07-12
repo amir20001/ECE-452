@@ -7,6 +7,7 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -166,6 +167,19 @@ public class ListeningRoom extends FragmentActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    protected void onDestroy()
+    {
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	if(prefs.getBoolean("userIsHosting", false)){
+    		//TODO: Add close room code here as well
+    		Editor prefEdit = prefs.edit();
+    		prefEdit.putBoolean("userIsHosting", false);
+    		prefEdit.commit();
+    	}
+    	super.onDestroy();
     }
     
     public PlaylistsFragment getPlaylistsFragment()
