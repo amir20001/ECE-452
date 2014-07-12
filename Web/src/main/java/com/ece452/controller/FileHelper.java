@@ -1,6 +1,11 @@
 package com.ece452.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
 
 import org.springframework.stereotype.Repository;
 
@@ -8,6 +13,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 
 @Repository
@@ -64,6 +70,22 @@ public class FileHelper {
 		sec = sec - min * 60;
 
 		return min + ":" + sec;
+	}
+
+	public static File getAlbumArt(Mp3File mp3file) throws MimeTypeParseException, IOException {
+		if (mp3file.hasId3v2Tag()) {
+			ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+			byte[] imageData = mp3file.getId3v2Tag().getAlbumImage();
+			if (imageData != null) {
+				String albumImageMimeType = id3v2Tag.getAlbumImageMimeType();
+				MimeType mime = new MimeType(albumImageMimeType);
+				String uuid = UUID.randomUUID().toString();
+				File file = File.createTempFile(uuid, mime.getSubType());
+				return file;
+			}
+			return null;
+		} else
+			return null;
 	}
 
 }
