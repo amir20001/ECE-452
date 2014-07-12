@@ -4,7 +4,10 @@ import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -13,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -84,13 +88,24 @@ public class ListeningRoom extends FragmentActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment selectedFragment = new Fragment();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         switch(position)
         {
         case 0: 
         	selectedFragment = curRoomFrag;
         	break;
         case 1:
-        	selectedFragment = stationsFrag;
+        	if(!prefs.getBoolean("userIsHosting", false)){
+        		selectedFragment = stationsFrag;
+        	}
+        	else
+        	{
+        		AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Holo_Dialog);
+       	       builder.setMessage("Close your room before selecting a new station.").setTitle("Currenty Hosting");
+       	       AlertDialog dialog = builder.create();
+       	       dialog.show();
+       	       return;
+        	}
         	break;
         case 2:
         	selectedFragment = favoritesFrag;
@@ -152,6 +167,19 @@ public class ListeningRoom extends FragmentActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         return super.onOptionsItemSelected(item);
+    }
+    
+    @Override
+    protected void onDestroy()
+    {
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	if(prefs.getBoolean("userIsHosting", false)){
+    		//TODO: Add close room code here as well
+    		Editor prefEdit = prefs.edit();
+    		prefEdit.putBoolean("userIsHosting", false);
+    		prefEdit.commit();
+    	}
+    	super.onDestroy();
     }
     
     public PlaylistsFragment getPlaylistsFragment()

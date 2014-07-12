@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Save" />
+        android:text="Create" />
 
     <Button
         android:id="@+id/newstation_cancel_button"
