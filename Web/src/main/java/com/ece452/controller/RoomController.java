@@ -75,5 +75,13 @@ public class RoomController {
 		model.addAttribute("rooms", rooms);
 		return new ModelAndView("roomView");
 	}
+		
+		
+	@RequestMapping(value = "/addroom", method = RequestMethod.GET)
+	public ModelAndView showAddRoomPage(HttpSession session, Model model) {
+			List<Room> rooms = roomDao.getAllRooms();
+			model.addAttribute("rooms", rooms);
+			return new ModelAndView("createRoom");	
+	}
 
 }

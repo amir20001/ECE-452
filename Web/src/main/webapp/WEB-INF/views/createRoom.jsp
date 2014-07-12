@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
-    <title>View Room</title>
+    <title>Create Rooms</title>
     
         <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -24,18 +24,18 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 	rel="stylesheet">
 <link
 	href="<%=request.getContextPath()%>/resources/css/bootstrap.min.css"
-	rel="stylesheet" />
-	
-<body>
-<body bgcolor="#E6E6FA">
- 	<div class="panel panel-default">
-		<display:table class="table table-striped table-condensed"
-			name="rooms">
-			<display:column property="id" title="roomID" />
-			<display:column property="name" />
-			<display:column property="genre" />
-			<display:column property="owner_id" />
-		</display:table>
-		
+	rel="stylesheet" />	
+
+<h1>Add a music room.</h1>
+ 		
+<form:form method="post" action="createaroom.html"
+        modelAttribute="uploadForm" enctype="multipart/form-data">
+Room Name: <input type="text" name="roomID">
+<br />
+Room Genre: <input type="text" name="room_genre" />
+<br />
+<input type="submit" value="Submit" />
+
+</form:form>
 </body>
 </html>
