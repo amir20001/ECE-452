@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -62,7 +63,6 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private StationData station = null;
     private int playlistPosition = 0;
     private static Boolean initialized = false;
-    private Boolean userIsHost = false;
     
     @Override
     public View onCreateView(LayoutInflater inflater, 
@@ -105,15 +105,18 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     	}
     	
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+    	Editor editPrefs = prefs.edit();
     	
     	if(station.Owner.getUserID().compareTo(prefs.getString("UserID", "0")) == 0)
     	{
-    		userIsHost = true;
+    		editPrefs.putBoolean("userIsHosting", true);
     	}
     	else
     	{
-    		userIsHost = false;
+    		editPrefs.putBoolean("userIsHosting", false);
     	}
+    	
+    	editPrefs.commit();
     	
     	station.Song = station.Playlist.Songs.get(playlistPosition);
 		btn_play = (ImageButton)activity.findViewById(R.id.Button_Play);
@@ -138,7 +141,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         	text_artist.setText(station.Song.Artist);
         	
         }
-        if(userIsHost)
+        if(prefs.getBoolean("userIsHosting", false))
         {
         	prepareRoom();
         }
