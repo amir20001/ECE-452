@@ -5,16 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.SimpleCursorAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FollowersFragment extends Fragment{
 
@@ -38,13 +33,15 @@ public class FollowersFragment extends Fragment{
 
         followersView = (ListView) activity.findViewById(R.id.followers_list);
 
-        List<ProfileData> followersList = new ArrayList<ProfileData>();
+        SparseArray<UserData> followersList = new SparseArray<UserData>();
 
         // Junk data for testing purposes
         // TODO: Get followers from database
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        followersList.add(new ProfileData(prefs.getString("UserID", ""), prefs.getString("FirstName", "Fname") + " " + prefs.getString("LastName", "Lname"), ""));
+        UserData user = new UserData(prefs.getString("FirstName", "Fname"), prefs.getString("LastName", "Lname"), prefs.getString("UserID", ""));
+        followersList.append(0, user);
+        // End of junk data
 
-        followersView.setAdapter(new FollowListAdapter(activity.getApplicationContext(), followersList));
+        followersView.setAdapter(new UserListAdapter(activity, followersList));
     }
 }

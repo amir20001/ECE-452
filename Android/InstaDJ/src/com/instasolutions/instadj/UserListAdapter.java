@@ -23,6 +23,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.widget.ProfilePictureView;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 public class UserListAdapter extends BaseAdapter{
 
 	private Activity activity;
@@ -59,14 +67,14 @@ public class UserListAdapter extends BaseAdapter{
 		
 		TextView UserName = (TextView)v.findViewById(R.id.user_name);
 		ImageView Picture = (ImageView)v.findViewById(R.id.list_user_picture);
-			
-		UserData user = users.get(pos);
+
+        UserData user = users.get(pos);
 		
-		UserName.setText(user.FirstName + " " + user.LastName);
+		UserName.setText(user.getFirstName() + " " + user.getLastName());
 		Picture.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.com_facebook_profile_picture_blank_square));
 		
 		final DownloadPictureTask task = new DownloadPictureTask(Picture);
-		task.execute("http://graph.facebook.com/" + user.UserID + "/picture?type=square");
+		task.execute("https://graph.facebook.com/" + user.getUserID() + "/picture?type=square");
 		
 		return v;
 	}
@@ -83,7 +91,8 @@ public class UserListAdapter extends BaseAdapter{
 		
 		@Override
 		protected Bitmap doInBackground(String... Picture_URLs) {
-			try {
+
+            try {
 		        URL url = new URL(Picture_URLs[0]);
 		        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		        connection.setDoInput(true);

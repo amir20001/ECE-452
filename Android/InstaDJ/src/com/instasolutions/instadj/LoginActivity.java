@@ -140,9 +140,9 @@ public class LoginActivity extends Activity implements OnClickListener,
                         
                         try{
                         	JSONObject jud = new JSONObject();
-                        	jud.put("userId", ud.UserID);
-                        	jud.put("firstName", ud.FirstName);
-                        	jud.put("lastName", ud.LastName);
+                        	jud.put("userId", ud.getUserID());
+                        	jud.put("firstName", ud.getFirstName());
+                        	jud.put("lastName", ud.getLastName());
                         	ServicePostHelper post = new ServicePostHelper();
                         	post.execute("http://instadj.amir20001.cloudbees.net/user/insert",jud.toString());
                         }catch (Exception e){

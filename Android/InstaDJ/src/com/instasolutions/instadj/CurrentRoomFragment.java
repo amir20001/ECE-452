@@ -106,7 +106,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     	
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
     	
-    	if(station.Owner.UserID.compareTo(prefs.getString("UserID", "0")) == 0)
+    	if(station.Owner.getUserID().compareTo(prefs.getString("UserID", "0")) == 0)
     	{
     		userIsHost = true;
     	}

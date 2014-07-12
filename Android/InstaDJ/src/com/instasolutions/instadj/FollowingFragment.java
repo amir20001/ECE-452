@@ -48,14 +48,15 @@ public class FollowingFragment extends Fragment{
 
         followingView = (ListView) activity.findViewById(R.id.following_list);
 
-        List<ProfileData> followersList = new ArrayList<ProfileData>();
+        SparseArray<UserData> followingList = new SparseArray<UserData>();
 
         // Junk data for testing purposes
         // TODO: Get followers from database
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        followersList.add(new ProfileData(prefs.getString("UserID", ""), prefs.getString("FirstName", "Fname") + " " + prefs.getString("LastName", "Lname"), ""));
+        UserData user = new UserData(prefs.getString("FirstName", "Fname"), prefs.getString("LastName", "Lname"), prefs.getString("UserID", ""));
+        followingList.append(0, user);
         // End of junk data
 
-        followingView.setAdapter(new FollowListAdapter(activity.getApplicationContext(), followersList));
+        followingView.setAdapter(new UserListAdapter(activity, followingList));
     }
 }
