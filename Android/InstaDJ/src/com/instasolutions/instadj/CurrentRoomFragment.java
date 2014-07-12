@@ -80,6 +80,8 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     	super.onActivityCreated(savedInstanceState);
     	if(initialized == false)
     		initialize();
+    	else
+    		reinitialize();
     }
     
     @Override
@@ -150,6 +152,57 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         	nextSong();
         }
 
+    }
+    
+    public void reinitialize()
+    {
+
+    	
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+    	Editor editPrefs = prefs.edit();
+    	btn_play = (ImageButton)activity.findViewById(R.id.Button_Play);
+		btn_next = (ImageButton)activity.findViewById(R.id.button_next);
+        seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
+        text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
+        text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
+        text_songName = (TextView)activity.findViewById(R.id.text_song);
+        text_artist = (TextView)activity.findViewById(R.id.text_artist);
+        text_stationName = (TextView)activity.findViewById(R.id.currentroom_stationname_text);
+        large_art = (ImageView)activity.findViewById(R.id.image_art);
+        small_art = (ImageView)activity.findViewById(R.id.album_art);
+        
+        btn_play.setOnClickListener(this);
+        btn_next.setOnClickListener(this);
+        seekbar.setOnSeekBarChangeListener(this);
+        text_endTime.setText(String.valueOf(endTime));
+        
+        if(station != null)
+        {
+        	text_stationName.setText(station.Name);
+        	text_songName.setText(station.Song.Title);
+        	text_artist.setText(station.Song.Artist);
+        	
+        }
+
+        if(mediaplayer.isPlaying())
+    	{
+    		btn_play.setImageResource(R.drawable.ic_action_pause);
+    	}
+    	else
+    	{
+	    	btn_play.setImageResource(R.drawable.ic_action_play);
+    	}
+        MediaMetadataRetriever media = new MediaMetadataRetriever();
+        media.setDataSource(station.Song.LocalPath);
+        byte[] data = media.getEmbeddedPicture();
+        if(data != null)
+        {
+        	Bitmap art_bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        	large_art.setImageBitmap(art_bitmap);	
+        	small_art.setImageBitmap(art_bitmap);
+        }
+        
+        seekbar.setMax((int)endTime);
     }
     
     public void setStation(StationData s)
