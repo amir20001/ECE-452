@@ -4,16 +4,24 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
 
 import com.instasolutions.instadj.SongData;
 
@@ -29,7 +37,7 @@ public class ServiceUploadHelper extends AsyncTask<SongData, Void, Integer> {
 		 
 		SongData song = songs[0];
 		final String fileName = song.LocalPath;
-  	    String serverURL = "http://instadj.amir20001.cloudbees.net/song/upload2/" + song.id;
+  	    String serverURL = "http://instadj.amir20001.cloudbees.net/song/upload/" + song.id;
         HttpURLConnection conn = null;
         DataOutputStream dos = null;  
         String lineEnd = "\r\n";
@@ -49,74 +57,30 @@ public class ServiceUploadHelper extends AsyncTask<SongData, Void, Integer> {
         }
         else
         {
-             try { 
-                  
-                   // open a URL connection to the Servlet
-                 FileInputStream fileInputStream = new FileInputStream(sourceFile);
-                 URL url = new URL(serverURL);
-                   
-                 // Open a HTTP  connection to  the URL
-                 conn = (HttpURLConnection) url.openConnection(); 
-                 conn.setDoInput(true); // Allow Inputs
-                 conn.setDoOutput(true); // Allow Outputs
-                 conn.setUseCaches(false); // Don't use a Cached Copy
-                 conn.setRequestMethod("POST");
-                 conn.setRequestProperty("Connection", "Keep-Alive");
-                 conn.setRequestProperty("ENCTYPE", "multipart/form-data");
-                 conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                 conn.setRequestProperty("file", fileName); 
-                   
-                 dos = new DataOutputStream(conn.getOutputStream());
-         
-                 dos.writeBytes(twoHyphens + boundary + lineEnd); 
-                   dos.writeBytes("Content-Disposition: form-data; name=file;filename="+ fileName + ""+ lineEnd);
-                 dos.writeBytes(lineEnd);
-         
-                 // create a buffer of  maximum size
-                 bytesAvailable = fileInputStream.available(); 
-        
-                 bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                 buffer = new byte[bufferSize];
-         
-                 // read file and write it into form...
-                 bytesRead = fileInputStream.read(buffer, 0, bufferSize);  
-                     
-                 while (bytesRead > 0) {
-                       
-                   dos.write(buffer, 0, bufferSize);
-                   bytesAvailable = fileInputStream.available();
-                   bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                   bytesRead = fileInputStream.read(buffer, 0, bufferSize);   
-                     
-                   }
-         
-                 // send multipart form data necesssary after file data...
-                 dos.writeBytes(lineEnd);
-                 dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-         
-                 // Responses from the server (code and message)
-                 int serverResponseCode = conn.getResponseCode();
-                 String serverResponseMessage = conn.getResponseMessage();
-                    
-                 Log.i("uploadFile", "HTTP Response is : "
-                         + serverResponseMessage + ": " + serverResponseCode);         
-                  
-                   
-                 //close the streams //
-                 fileInputStream.close();
-                 dos.flush();
-                 dos.close();
-                 return serverResponseCode;
-                    
-            } catch (Exception e) {
-                  
-                e.printStackTrace();
-                  
-                Log.e("Upload file to server Exception", "Exception : "
-                                                  + e.getMessage(), e);  
-                return -1;
-            } 
+        	try {
+        	 HttpClient httpclient = new DefaultHttpClient();
+             httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+             HttpPost httppost = new HttpPost(serverURL);
+             File file = new File(fileName);
+             MultipartEntity  mpEntity = new MultipartEntity();
+             ContentBody cbFile = new FileBody(file);
+             mpEntity.addPart("file", cbFile); 
+             httppost.setEntity(mpEntity);
+             System.out.println("executing request " + httppost.getRequestLine());
+             HttpResponse response;
+			
+			 response = httpclient.execute(httppost);
+             HttpEntity resEntity = response.getEntity();
+             return 1;
+        	} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
+		return 0;
 
 	}
 	

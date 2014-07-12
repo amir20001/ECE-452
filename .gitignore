@@ -2,7 +2,6 @@
 *.cache
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
