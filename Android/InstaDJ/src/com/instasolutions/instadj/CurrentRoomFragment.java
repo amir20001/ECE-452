@@ -1,10 +1,17 @@
 package com.instasolutions.instadj;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +24,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +37,9 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.instasolutions.instadj.util.ServiceUploadHelper;
 
 public class CurrentRoomFragment extends Fragment implements OnClickListener, OnSeekBarChangeListener {
 
@@ -92,6 +103,18 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     	       dialog.show();
     	       return;
     	}
+    	
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+    	
+    	if(station.Owner.UserID.compareTo(prefs.getString("UserID", "0")) == 0)
+    	{
+    		userIsHost = true;
+    	}
+    	else
+    	{
+    		userIsHost = false;
+    	}
+    	
     	station.Song = station.Playlist.Songs.get(playlistPosition);
 		btn_play = (ImageButton)activity.findViewById(R.id.Button_Play);
 		btn_next = (ImageButton)activity.findViewById(R.id.button_next);
@@ -111,19 +134,25 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         if(station != null)
         {
         	text_stationName.setText(station.Name);
+        	text_songName.setText(station.Song.Title);
+        	text_artist.setText(station.Song.Artist);
+        	
         }
-        
-        nextSong();
+        if(userIsHost)
+        {
+        	prepareRoom();
+        }
+        else
+        {
+        	nextSong();
+        }
+
     }
     
     public void setStation(StationData s)
     {
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-    	if(s.Owner.UserID.compareTo(prefs.getString("UserID", "0")) == 0)
-    	{
-    		userIsHost = true;
-    	}
     	this.station = s;
+    	this.station.Playlist.populateSongs();
     	if(text_stationName != null)
     	{
         	text_stationName.setText(station.Name);
@@ -208,6 +237,25 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	        play();
 	    	playlistPosition++;
 	    }
+	    
+	    private void prepareRoom()
+	    {
+	    	final ProgressDialog dialog = ProgressDialog.show(this.activity, "Preparing Room", "Please Wait...", true);
+	    	final CurrentRoomFragment room = this;
+	    	dialog.show();
+	    	ServiceUploadHelper upload = new ServiceUploadHelper(){
+	    		@Override
+	    		 protected void onPostExecute(Integer i) {
+	    	    	dialog.dismiss();
+	    	    	room.nextSong();
+	    		}
+	    	};
+	    	upload.execute(station.Song);
+
+	    	
+	    }
+	          
+	    
 
 		@Override
 		public void onClick(View v) {

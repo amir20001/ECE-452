@@ -57,7 +57,8 @@ public class FavoritesFragment extends Fragment {
 						for(int i = 0; i < jSongArray.length(); i++){
 							JSONObject jSong = jSongArray.getJSONObject(i);
 
-							songs.append(i, new SongData(jSong.getString("title"),
+							songs.append(i, new SongData(jSong.getInt("id"),
+											jSong.getString("title"),
 											jSong.getString("artist"),
 											jSong.getString("album"),
 											jSong.getString("duration"),

@@ -160,6 +160,7 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
         	jstation.put("ownerUserId", prefs.getString("UserID", "0"));
         	jstation.put("playlistId", returnStation.Playlist.id);
         	jstation.put("listenerCount", returnStation.ListenerCount);
+        	jstation.put("currentSongId", returnStation.Playlist.Songs.get(0).id);
         	
         	ServicePostHelper post = new ServicePostHelper();
         	post.execute("http://instadj.amir20001.cloudbees.net/room/insert",jstation.toString());

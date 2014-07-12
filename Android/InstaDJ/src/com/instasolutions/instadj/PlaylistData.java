@@ -70,12 +70,14 @@ public class PlaylistData {
 			JSONArray jSongArray = new JSONArray(result);
 			for(int i = 0; i <jSongArray.length(); i++){
 				JSONObject jSong = jSongArray.getJSONObject(i);
-				SongData song = new SongData(jSong.getString("title"),
+				SongData song = new SongData(jSong.getInt("id"),
+									jSong.getString("title"),
 									jSong.getString("artist"),
 									jSong.getString("album"),
 									jSong.getString("duration"),
 									jSong.getString("songUri"),
-									jSong.getString("artUrl"));
+									jSong.getString("artUrl"),
+									jSong.getString("songUrl"));
 
 				this.Songs.append(i, song);
 				
