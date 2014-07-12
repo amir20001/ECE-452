@@ -33,7 +33,7 @@ public class RoomDao {
 
 	public Room insert(Room room) {
 
-		String sql = "INSERT INTO room (name,owner_id,listener_count,current_song_id,playlist_id) VALUES (?,?,?,?,?)";
+		String sql = "INSERT INTO room (name,owner_user_id,listener_count,current_song_id,playlist_id) VALUES (?,?,?,?,?)";
 		ResultSet generatedKeys = null;
 		Connection conn = null;
 		try {
