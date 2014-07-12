@@ -42,8 +42,9 @@ public class RoomDao {
 			statement.setString(1, room.getName());
 			statement.setString(2, room.getOwnerUserId());
 			statement.setInt(3, room.getListenerCount());
-			statement.setInt(4, room.getCurrentSongID());
+			statement.setInt(4, room.getCurrentSongId());
 			statement.setInt(5, room.getPlaylistId());
+			System.out.println(statement.toString());
 			statement.executeUpdate();
 
 			generatedKeys = statement.getGeneratedKeys();

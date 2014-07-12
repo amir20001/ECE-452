@@ -2,13 +2,16 @@ package com.ece452.controller;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -137,6 +140,39 @@ public class SongController {
 		songDao.update(song);
 
 		dest.delete();
+
+	}
+
+	@RequestMapping(value = "upload2/{songId}", method = RequestMethod.POST)
+	public void upload2(@PathVariable("songId") int songId, HttpServletResponse response, HttpServletRequest request)
+			throws IOException {
+		Song song = songDao.getSong(songId);
+		ServletInputStream inputStream = request.getInputStream();
+		OutputStream outputStream = null;
+		System.out.println("in upload 2");
+		try {
+			int read = 0;
+			byte[] bytes = new byte[1024];
+			String uuid = UUID.randomUUID().toString();
+			File dest = File.createTempFile(uuid, ".mp3");
+			outputStream = new FileOutputStream(dest);
+
+			while ((read = inputStream.read(bytes)) != -1) {
+				outputStream.write(bytes, 0, read);
+			}
+
+			String url = fileHelper.upload(dest, uuid);
+			song.setSongUrl(url);
+			song.setUuid(uuid);
+			// clean up
+			outputStream.close();
+			inputStream.close();
+			dest.delete();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		songDao.update(song);
 
 	}
 
