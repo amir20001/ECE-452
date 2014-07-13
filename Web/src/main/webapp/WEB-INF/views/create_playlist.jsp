@@ -27,7 +27,6 @@
  		
 <form:form method="post" action="/playlist/createlist.html"
         modelAttribute="uploadForm" enctype="multipart/form-data">
-    <input id="addFile" type="button" value="Add another song" />
 <br />
 Playlist Name: <input type="text" name="name">
 <br />
