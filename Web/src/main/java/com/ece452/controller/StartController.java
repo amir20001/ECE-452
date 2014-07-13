@@ -33,7 +33,7 @@ public class StartController {
 	public ModelAndView showLoginPage(HttpSession session, Model model) {
 		List<Room> allRooms = roomDao.getAllRooms();
 		model.addAttribute("rooms", allRooms);
-		return new ModelAndView("createRoom");
+		return new ModelAndView("create_playlist");
 	}
 
 	@RequestMapping(value = "logout", method = RequestMethod.GET)

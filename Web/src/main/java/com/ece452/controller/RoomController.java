@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ece452.dao.RoomDao;
@@ -84,11 +85,17 @@ public class RoomController {
 		return new ModelAndView("roomView");
 	}
 
-	@RequestMapping(value = "/createaroom", method = RequestMethod.GET)
-	public ModelAndView showAddRoomPage(HttpSession session, Model model) {
-		List<Room> rooms = roomDao.getAllRooms();
-		model.addAttribute("rooms", rooms);
-		return new ModelAndView("createRoom");
+	@RequestMapping(value = "createaroom", method = RequestMethod.POST)
+	public ModelAndView posttome(HttpSession session, Model model,
+			@RequestParam("roomID") String roomId,
+			@RequestParam("room_genre") String valueOne) {
+
+		System.out.println(roomId);
+		System.out.println(valueOne);
+		
+		List<Room> allRooms = roomDao.getAllRooms();
+		model.addAttribute("rooms", allRooms);
+		return new ModelAndView("create_room_success");
 	}
 
 	@RequestMapping(value = "/join/{roomId}/{userId}", method = RequestMethod.POST)

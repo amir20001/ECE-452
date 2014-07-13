@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ece452.dao.PlaylistDao;
@@ -85,6 +86,19 @@ public class PlaylistController {
 		model.addAttribute("playlists", playlists);
 		return new ModelAndView("playlistView");
 	}
+	
+	@RequestMapping(value = "/createlist", method = RequestMethod.GET)
+	public ModelAndView makePlaylistPage(HttpSession session, Model model,
+			@RequestParam("name") String name,
+			@RequestParam("genre") String valueOne
+			) {
+		System.out.println(name);
+		System.out.println(valueOne);
+		List<Playlist> playlists = playlistDao.getAllPlaylist();
+		model.addAttribute("playlists", playlists);
+		return new ModelAndView("create_playlist_success");
+	}
+
 
 	@RequestMapping(value = "/delete/{playlistId}", method = RequestMethod.POST)
 	public void delete(@PathVariable("playlistId") int playlistId, HttpServletResponse response) {
