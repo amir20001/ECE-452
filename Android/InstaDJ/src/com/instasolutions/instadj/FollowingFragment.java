@@ -23,6 +23,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,7 @@ public class FollowingFragment extends Fragment{
 
     Activity activity = null;
     ListView followingView = null;
+    SparseArray<UserData> followingList = new SparseArray<UserData>();
 
     /** Called when the activity is first created. */
     @Override
@@ -49,16 +54,34 @@ public class FollowingFragment extends Fragment{
         super.onCreate(savedInstanceState);
 
         followingView = (ListView) activity.findViewById(R.id.following_list);
+        final ProgressBar pbar = (ProgressBar)activity.findViewById(R.id.following_progress);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 
-        SparseArray<UserData> followingList = new SparseArray<UserData>();
+        pbar.setVisibility(ProgressBar.VISIBLE);
 
-        // Junk data for testing purposes
-        // TODO: Get followers from database
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        UserData user = new UserData(prefs.getString("FirstName", "Fname"), prefs.getString("LastName", "Lname"), prefs.getString("UserID", ""));
-        followingList.append(0, user);
-        // End of junk data
+        ServiceGetHelper getHelper = new ServiceGetHelper(){
+            @Override
+            protected void onPostExecute(String result) {
+                try {
+                    JSONArray jFollowingArray = new JSONArray(result);
+                    for(int i = 0; i < jFollowingArray.length(); i++){
+                        JSONObject jPlaylist =  jFollowingArray.getJSONObject(i);
 
-        followingView.setAdapter(new UserListAdapter(activity, followingList));
+                        UserData user = new UserData(jPlaylist.getString("firstName"), jPlaylist.getString("lastName"), jPlaylist.getString("userId"));
+
+                        followingList.append(i, user);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                followingView.setAdapter(new UserListAdapter(activity, followingList));
+                pbar.setVisibility(ProgressBar.INVISIBLE);
+
+            }
+
+        };
+
+        getHelper.execute("http://instadj.amir20001.cloudbees.net/follow/get/followees/" + prefs.getString("UserID", "0"));
     }
 }
