@@ -6,11 +6,13 @@
     android:weightSum="1"
     android:background="@color/transparent_black">
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/editText"
-        android:text="@string/title_section5" />
+        android:text="@string/title_section5"
+        android:layout_gravity="center_horizontal" />
 
     <ListView
         android:layout_width="match_parent"

@@ -80,7 +80,7 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
 					e.printStackTrace();
 				}
     	        PlayListAdapter adapter = new PlayListAdapter(activity, playlists );
-    	        adapter.setButtonsEnabled(true);;
+    	        adapter.setButtonsEnabled(true);
     	        lv.setAdapter(adapter);
     	        pbar.setVisibility(ImageView.INVISIBLE);
     	        

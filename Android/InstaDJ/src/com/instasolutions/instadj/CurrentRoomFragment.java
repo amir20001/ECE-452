@@ -440,7 +440,6 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    {
 	    	
 	    }
-	          
 	    
 
 		@Override
