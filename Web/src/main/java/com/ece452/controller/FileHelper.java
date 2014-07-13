@@ -1,9 +1,7 @@
 package com.ece452.controller;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -84,9 +82,9 @@ public class FileHelper {
 				String albumImageMimeType = id3v2Tag.getAlbumImageMimeType();
 				MimeType mime = new MimeType(albumImageMimeType);
 				String uuid = UUID.randomUUID().toString();
-				File file = File.createTempFile(uuid, mime.getSubType());
+				File file = File.createTempFile(uuid, "."+mime.getSubType());
 				file.deleteOnExit();
-				FileOutputStream output = new FileOutputStream(new File("target-file"));
+				FileOutputStream output = new FileOutputStream(file);
 				IOUtils.write(imageData, output);
 				output.close();
 				return file;

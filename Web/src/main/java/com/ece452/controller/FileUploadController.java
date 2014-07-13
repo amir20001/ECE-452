@@ -68,7 +68,8 @@ public class FileUploadController {
 						song.setDuration(FileHelper.secToMin(mp3file.getLengthInSeconds()));
 						File albumArt = FileHelper.getAlbumArt(mp3file);
 						if (albumArt != null) {
-							String upload = fileHelper.upload(albumArt, albumArt.getName());
+							String artUrl = fileHelper.upload(albumArt, albumArt.getName());
+							song.setArtUrl(artUrl);
 							albumArt.delete();
 						}
 					} catch (Exception e) {

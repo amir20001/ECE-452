@@ -2,19 +2,13 @@ package com.ece452.controller;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONException;
 import com.ece452.dao.SongDao;
-import com.ece452.domain.FileUploadForm;
 import com.ece452.domain.Song;
 import com.mpatric.mp3agic.Mp3File;
 
@@ -139,10 +132,12 @@ public class SongController {
 
 		try {
 			Mp3File mp3file = new Mp3File(dest.getAbsolutePath());
-			song.setTitle(FileHelper.getTitle(mp3file));
-			song.setAlbum(FileHelper.getAlbum(mp3file));
-			song.setArtist(FileHelper.getArtist(mp3file));
-			song.setDuration(FileHelper.secToMin(mp3file.getLengthInSeconds()));
+			File albumArt = FileHelper.getAlbumArt(mp3file);
+			if (albumArt != null) {
+				String artUrl = fileHelper.upload(albumArt, albumArt.getName());
+				song.setArtUrl(artUrl);
+				albumArt.delete();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
