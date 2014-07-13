@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import com.ece452.util.MapperIgnore;
+
 public abstract class BaseEntity {
 
 	public void map(ResultSet rs) throws UnexpectedInputException, NoSuchMethodException, SecurityException,

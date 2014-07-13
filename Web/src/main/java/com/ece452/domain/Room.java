@@ -1,5 +1,7 @@
 package com.ece452.domain;
 
+import com.ece452.util.MapperIgnore;
+
 public class Room extends BaseEntity {
 	private int id;
 	private String name;

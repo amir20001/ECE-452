@@ -1,4 +1,4 @@
-package com.ece452.domain;
+package com.ece452.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
