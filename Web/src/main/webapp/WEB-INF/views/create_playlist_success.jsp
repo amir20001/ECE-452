@@ -7,9 +7,9 @@
 	<h1>Created Room</h1>
 	<p>The following rooms have been successfully created</p>
 	<ol>
-		<c:forEach items="${rooms}" var ="room">
+		<c:forEach items="${playlists}" var ="playlist">
 		
-		<c:out value="${room.name}"/><p>
+		<c:out value="${playlist.name}"/><p>
  		</c:forEach>
 	</ol>
 </body>
