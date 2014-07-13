@@ -55,6 +55,30 @@ public class UserDao {
 		}
 
 	}
+	
+	public String updateGCMId(String id, String userid){
+		String sql = "UPDATE user SET gcm_id=? WHERE user_id=?;";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, id);
+			statement.setString(2, userid);
+			statement.executeUpdate();
+			statement.close();
+			return userid;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+	}
 
 	public User getUser(String userid) {
 		User user = null;
