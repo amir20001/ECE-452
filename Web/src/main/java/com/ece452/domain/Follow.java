@@ -2,8 +2,8 @@ package com.ece452.domain;
 
 public class Follow extends BaseEntity {
 	private int id;
-	private String followingId;
-	private String followedId;
+	private String followerId;
+	private String followeeId;
 
 	public int getId() {
 		return id;
@@ -13,19 +13,20 @@ public class Follow extends BaseEntity {
 		this.id = id;
 	}
 
-	public String getFollowing() {
-		return followingId;
+	public String getFollowerId() {
+		return followerId;
 	}
 
-	public void setFollowing(String following) {
-		this.followingId = following;
+	public void setFollowerId(String followerId) {
+		this.followerId = followerId;
 	}
 
-	public String getFollowed() {
-		return followedId;
+	public String getFolloweeId() {
+		return followeeId;
 	}
 
-	public void setFollowed(String followed) {
-		this.followedId = followed;
+	public void setFolloweeId(String followeeId) {
+		this.followeeId = followeeId;
 	}
+
 }

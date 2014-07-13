@@ -32,15 +32,15 @@ public class FollowDao {
 	}
 
 	public Follow insert(Follow follow) {
-		String sql = "INSERT INTO follow (follwing,followed) VALUES (?,?)";
+		String sql = "INSERT INTO follow (follower,followee) VALUES (?,?)";
 		ResultSet generatedKeys = null;
 		Connection conn = null;
 
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			statement.setString(1, follow.getFollowing());
-			statement.setString(2, follow.getFollowed());
+			statement.setString(1, follow.getFollowerId());
+			statement.setString(2, follow.getFolloweeId());
 
 			statement.executeUpdate();
 			generatedKeys = statement.getGeneratedKeys();
@@ -65,8 +65,8 @@ public class FollowDao {
 		}
 	}
 
-	public List<User> getAllFollowing(String userId) {
-		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.following AND follow.followed = ?;";
+	public List<User> getAllFollowers(String userId) {
+		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.follower AND follow.followee = ?;";
 		List<User> users = new ArrayList<User>();
 		try {
 			users = jdbcTemplate.query(sql, new Object[] { userId }, new UserMapper());
@@ -76,8 +76,8 @@ public class FollowDao {
 		}
 	}
 
-	public List<User> getAllFollowed(String userId) {
-		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.followed AND follow.following = ?;";
+	public List<User> getAllFollowees(String userId) {
+		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.followee AND follow.follower = ?;";
 		List<User> users = new ArrayList<User>();
 		try {
 			users = jdbcTemplate.query(sql, new Object[] { userId }, new UserMapper());

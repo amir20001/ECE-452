@@ -14,11 +14,11 @@ CREATE TABLE `user` (
 
 CREATE TABLE follow (
 	id INT AUTO_INCREMENT,
-	following VARCHAR(255),
-	followed VARCHAR(255),
+	follower VARCHAR(255),
+	followee VARCHAR(255),
 	PRIMARY KEY (id),
-	CONSTRAINT fk_following_following FOREIGN KEY (following) REFERENCES `user`(user_id),
-	CONSTRAINT fk_following_followed FOREIGN KEY (followed) REFERENCES `user`(user_id)
+	CONSTRAINT fk_following_following FOREIGN KEY (follower) REFERENCES `user`(user_id),
+	CONSTRAINT fk_following_followed FOREIGN KEY (followee) REFERENCES `user`(user_id)
 );
 
 CREATE TABLE favourite (
