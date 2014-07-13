@@ -95,7 +95,7 @@ public class SongDao {
 				statement.setString(8, song.getSongUrl());
 				statement.setString(9, song.getSongUri());
 				statement.setString(10, song.getArtUrl());
-				
+
 				statement.addBatch();
 			}
 			statement.executeBatch();
@@ -159,7 +159,7 @@ public class SongDao {
 				+ " duration = ?, playlist_id = ?, net_score = ? ,song_url = ?, song_uri = ?, art_url = ?"
 				+ " WHERE id = ?;";
 		Connection conn = null;
-		
+
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);
@@ -190,7 +190,7 @@ public class SongDao {
 			}
 		}
 	}
-	
+
 	public void delete(int songId) {
 		String sql = "DELETE FROM song WHERE id  = ?;";
 		Connection conn = null;
@@ -210,6 +210,34 @@ public class SongDao {
 				}
 			}
 		}
+	}
+
+	public void vote(boolean upvote, int songId) {
+		String upvoteSql = "UPDATE song SET net_score=net_score+1 WHERE id =1";
+		String downvoteSql = "UPDATE song SET net_score=net_score-1 WHERE id =1";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement;
+			if (upvote) {
+				statement = conn.prepareStatement(upvoteSql);
+			} else {
+				statement = conn.prepareStatement(downvoteSql);
+			}
+			statement.setInt(1, songId);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
 	}
 
 }

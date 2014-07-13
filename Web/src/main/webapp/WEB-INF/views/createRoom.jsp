@@ -28,8 +28,7 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 
 <h1>Add a music room.</h1>
  		
-<form:form method="post" action="createaroom.html"
-        modelAttribute="uploadForm" enctype="multipart/form-data">
+<form:form method="post" action="/test/postjsp">
 Room Name: <input type="text" name="roomID">
 <br />
 Room Genre: <input type="text" name="room_genre" />

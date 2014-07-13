@@ -7,9 +7,10 @@
 	<h1>Created Room</h1>
 	<p>The following rooms have been succesfully created</p>
 	<ol>
-		<c:forEach items="${rooms}" var=roomDao.getAllRooms()>
-			<li>${rooms}</li>
-		</c:forEach>
+		<c:forEach items="${rooms}" var ="room">
+		
+		<c:out value="${room.name}"/><p>
+ 		</c:forEach>
 	</ol>
 </body>
 </html>

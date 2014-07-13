@@ -92,23 +92,32 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/join/{roomId}/{userId}", method = RequestMethod.POST)
-	public void joinRoom(HttpSession session, Model model,
+	public void join(HttpServletResponse response,
 			@PathVariable("userId") String userId,
-			@PathVariable("roomId") int roomId) {
-
+			@PathVariable("roomId") int roomId) throws JsonGenerationException,
+			JsonMappingException, IOException {
 		User user = userDao.getUser(userId);
 		user.setRoomId(roomId);
+		if (user.getRoomId() > 0) {
+			// already in a room we need to leave that first
+			roomDao.updateListenerCount(false, user.getRoomId());
+		}
+		// update new room
 		roomDao.updateListenerCount(true, roomId);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.writeValue(response.getOutputStream(), user);
 	}
 
 	@RequestMapping(value = "/leave/{roomId}/{userId}", method = RequestMethod.POST)
-	public void leaveRoom(HttpSession session, Model model,
+	public void leave(HttpServletResponse response,
 			@PathVariable("userId") String userId,
-			@PathVariable("roomId") int roomId) {
-
+			@PathVariable("roomId") int roomId) throws JsonGenerationException,
+			JsonMappingException, IOException {
 		User user = userDao.getUser(userId);
-		user.setRoomId(0);
-		roomDao.updateListenerCount(false, roomId);
-	}
+		if (user.getRoomId() > 0) {
+			user.setRoomId(0);
+			roomDao.updateListenerCount(false, roomId);
+		}
 
+	}
 }
