@@ -61,7 +61,8 @@ public class UserDao {
 		String sql = "SELECT * FROM user WHERE user_id = ?";
 
 		try {
-			user = jdbcTemplate.queryForObject(sql, new Object[] { userid }, new UserMapper());
+			user = jdbcTemplate.queryForObject(sql, new Object[] { userid },
+					new UserMapper());
 		} catch (Exception e) {
 			// No user was found with the specified id, return null
 			return null;
@@ -78,6 +79,30 @@ public class UserDao {
 		} catch (Exception e) {
 			return user;
 		}
+	}
+
+	public void updateScore(String userId, int delta) {
+		String sql = "UPDATE user SET score=score+ ? WHERE user_id =?";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement;
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1, delta);
+			statement.setString(2, userId);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
 	}
 
 }

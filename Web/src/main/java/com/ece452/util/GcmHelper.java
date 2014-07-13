@@ -9,8 +9,8 @@ import java.net.URL;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class GcmHelper {
-	public static final String serverKey = "AIzaSyBp0BHGUodig8fjXlJhZhr0uJFVnX7IZus";
-
+	//public static final String serverKey = "AIzaSyBp0BHGUodig8fjXlJhZhr0uJFVnX7IZus";
+	public static final String serverKey = "AIzaSyAqX7jbGycSTtHXBHcRdHaCitX5yB9_iQc";
 	public static void post(Content content) {
 
 		try {

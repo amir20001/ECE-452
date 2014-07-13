@@ -26,7 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONException;
+import com.ece452.dao.PlaylistDao;
 import com.ece452.dao.SongDao;
+import com.ece452.dao.UserDao;
+import com.ece452.domain.Playlist;
 import com.ece452.domain.Song;
 import com.ece452.util.FileHelper;
 import com.mpatric.mp3agic.Mp3File;
@@ -37,6 +40,12 @@ public class SongController {
 
 	@Autowired
 	SongDao songDao;
+
+	@Autowired
+	PlaylistDao playlistDao;
+
+	@Autowired
+	UserDao userDao;
 
 	@Autowired
 	FileHelper fileHelper;
@@ -159,6 +168,24 @@ public class SongController {
 			if (!StringUtils.isEmpty(uuid)) {
 				fileHelper.delete(uuid);
 			}
+			int playlistId = song.getPlaylistId();
+			Playlist playlist = playlistDao.getPlaylist(playlistId);
+			if (playlist != null) {
+				String userId = playlist.getUserId();
+				if (!StringUtils.isEmpty(userId)) {
+					userDao.updateScore(userId, song.getNetScore());
+				}
+			}
+		}
+	}
+
+	@RequestMapping(value = "/song/vote/{songid}/{value}", method = RequestMethod.POST)
+	public void vote(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("songId") int songId, @PathVariable("value") int value) {
+		if (value > 0) {
+			songDao.vote(true, songId);
+		} else {
+			songDao.vote(false, songId);
 		}
 	}
 }
