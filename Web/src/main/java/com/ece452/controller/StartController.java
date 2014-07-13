@@ -1,7 +1,13 @@
 package com.ece452.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ece452.dao.RoomDao;
 import com.ece452.domain.Room;
+import com.ece452.util.Content;
+import com.ece452.util.GcmHelper;
 
 @Controller
 @RequestMapping("/")
@@ -33,5 +41,48 @@ public class StartController {
 		session.invalidate();
 		return new ModelAndView("redirect:/");
 	}
+	
+	@RequestMapping(value = "ip", method = RequestMethod.GET)
+	public void ip(HttpSession session,HttpServletResponse response) throws IOException {
+		session.invalidate();
+		
+		response.getOutputStream().write(getHTML("http://instance-data/latest/meta-data/public-hostname").getBytes());
+	}
+	
+	
+	@RequestMapping(value = "gcmTest", method = RequestMethod.GET)
+	public void gcmtest(HttpSession session,HttpServletResponse response) throws IOException {
+		Content content = new Content();
+		content.addRegId("1");
+		content.createData("Test Title", "Test Message");
+		content.createData("dry_run", "true");
+		GcmHelper.post(content);
+	}
+	
+	
+	
+	
+	  public String getHTML(String urlToRead) {
+	      URL url;
+	      HttpURLConnection conn;
+	      BufferedReader rd;
+	      String line;
+	      String result = "";
+	      try {
+	         url = new URL(urlToRead);
+	         conn = (HttpURLConnection) url.openConnection();
+	         conn.setRequestMethod("GET");
+	         rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	         while ((line = rd.readLine()) != null) {
+	            result += line;
+	         }
+	         rd.close();
+	      } catch (IOException e) {
+	         e.printStackTrace();
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+	      return result;
+	   }
 
 }

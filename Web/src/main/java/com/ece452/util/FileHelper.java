@@ -1,4 +1,4 @@
-package com.ece452.controller;
+package com.ece452.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
