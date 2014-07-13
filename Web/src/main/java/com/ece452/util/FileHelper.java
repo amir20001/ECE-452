@@ -40,6 +40,10 @@ public class FileHelper {
 		}
 	}
 
+	public void delete(String key) {
+		s3.deleteObject(bucket, key);
+	}
+
 	public static String getTitle(Mp3File mp3file) {
 		if (mp3file.hasId3v1Tag()) {
 			return mp3file.getId3v1Tag().getTitle();
@@ -74,7 +78,8 @@ public class FileHelper {
 		return min + ":" + sec;
 	}
 
-	public static File getAlbumArt(Mp3File mp3file) throws MimeTypeParseException, IOException {
+	public static File getAlbumArt(Mp3File mp3file)
+			throws MimeTypeParseException, IOException {
 		if (mp3file.hasId3v2Tag()) {
 			ID3v2 id3v2Tag = mp3file.getId3v2Tag();
 			byte[] imageData = mp3file.getId3v2Tag().getAlbumImage();
@@ -82,7 +87,7 @@ public class FileHelper {
 				String albumImageMimeType = id3v2Tag.getAlbumImageMimeType();
 				MimeType mime = new MimeType(albumImageMimeType);
 				String uuid = UUID.randomUUID().toString();
-				File file = File.createTempFile(uuid, "."+mime.getSubType());
+				File file = File.createTempFile(uuid, "." + mime.getSubType());
 				file.deleteOnExit();
 				FileOutputStream output = new FileOutputStream(file);
 				IOUtils.write(imageData, output);

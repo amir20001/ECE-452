@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -117,7 +118,7 @@ public class SongController {
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), songs);
 	}
-	
+
 	@RequestMapping(value = "upload/{songId}", method = RequestMethod.POST)
 	public void upload3(@PathVariable("songId") int songId,
 			HttpServletResponse response, HttpServletRequest request,
@@ -149,4 +150,15 @@ public class SongController {
 
 	}
 
+	@RequestMapping(value = "/delete/{songId}", method = RequestMethod.POST)
+	public void delete(HttpServletRequest request,
+			HttpServletResponse response, @PathVariable("songId") int songId) {
+		Song song = songDao.getSong(songId);
+		if (song != null) {
+			String uuid = song.getUuid();
+			if (!StringUtils.isEmpty(uuid)) {
+				fileHelper.delete(uuid);
+			}
+		}
+	}
 }

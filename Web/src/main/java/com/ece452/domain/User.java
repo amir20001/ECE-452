@@ -6,6 +6,7 @@ public class User extends BaseEntity {
 	private String lastName;
 	private int score;
 	private int roomId;
+	private String gcmId;
 
 	public String getFirstName() {
 		return firstName;
@@ -45,6 +46,14 @@ public class User extends BaseEntity {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getGcmId() {
+		return gcmId;
+	}
+
+	public void setGcmId(String gcmId) {
+		this.gcmId = gcmId;
 	}
 
 }

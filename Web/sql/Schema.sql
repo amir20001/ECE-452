@@ -8,6 +8,7 @@ CREATE TABLE `user` (
 	user_id VARCHAR(255),
 	score INT,
 	room_id INT NULL,
+	gcm_id VARCHAR(255) NULL,
 	PRIMARY KEY (user_id)
 );
 

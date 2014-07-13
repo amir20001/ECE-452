@@ -190,5 +190,26 @@ public class SongDao {
 			}
 		}
 	}
+	
+	public void delete(int songId) {
+		String sql = "DELETE FROM song WHERE id  = ?;";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, songId);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
 
 }
