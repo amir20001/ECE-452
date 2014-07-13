@@ -77,7 +77,7 @@ public class RoomDao {
 
 	}
 
-	public Room getRoom(String id) {
+	public Room getRoom(int id) {
 		Room room = null;
 		String sql = "SELECT * FROM room WHERE id = ?";
 
@@ -100,6 +100,34 @@ public class RoomDao {
 		} catch (Exception e) {
 			return rooms;
 		}
+	}
+
+	public void updateListenerCount(boolean increase, int roomId) {
+		String incSql = "UPDATE room SET listener_count=listener_count+1 WHERE id =?";
+		String decSql = "UPDATE room SET listener_count=listener_count-1 WHERE id =?";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement;
+			if (increase) {
+				statement = conn.prepareStatement(incSql);
+			} else {
+				statement = conn.prepareStatement(decSql);
+			}
+			statement.setInt(1, roomId);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
 	}
 
 }

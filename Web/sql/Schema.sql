@@ -57,9 +57,8 @@ CREATE TABLE song(
 	song_url  VARCHAR(2083),
 	song_uri  VARCHAR(2083),
 	art_url  VARCHAR(2083),
-	PRIMARY KEY (id),
-	CONSTRAINT fk_song_playlist_id FOREIGN KEY (playlist_id) REFERENCES `playlist`(id)
-);
+	PRIMARY KEY (id)
+	);
 
 CREATE TABLE room (
 	 id INT AUTO_INCREMENT,

@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ece452.dao.RoomDao;
+import com.ece452.dao.UserDao;
 import com.ece452.domain.Room;
+import com.ece452.domain.User;
 
 @Controller
 @RequestMapping("/room")
@@ -31,10 +33,15 @@ public class RoomController {
 	@Autowired
 	RoomDao roomDao;
 
-	@RequestMapping(value = "/insert", method = RequestMethod.POST)
-	public void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Autowired
+	UserDao userDao;
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+	@RequestMapping(value = "/insert", method = RequestMethod.POST)
+	public void create(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				request.getInputStream()));
 		String json = "";
 		if (br != null) {
 			json = br.readLine();
@@ -49,8 +56,9 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/get/{roomId}", method = RequestMethod.GET)
-	public void getRoom(@PathVariable("roomId") String roomID, HttpServletResponse response)
-			throws JsonGenerationException, JsonMappingException, IOException {
+	public void getRoom(@PathVariable("roomId") int roomID,
+			HttpServletResponse response) throws JsonGenerationException,
+			JsonMappingException, IOException {
 
 		Room room = roomDao.getRoom(roomID);
 		ObjectMapper mapper = new ObjectMapper();
@@ -59,8 +67,8 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/getall", method = RequestMethod.GET)
-	public void getAllRooms(HttpServletResponse response) throws JsonGenerationException, JsonMappingException,
-			IOException {
+	public void getAllRooms(HttpServletResponse response)
+			throws JsonGenerationException, JsonMappingException, IOException {
 		List<Room> allRooms = roomDao.getAllRooms();
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -75,13 +83,32 @@ public class RoomController {
 		model.addAttribute("rooms", rooms);
 		return new ModelAndView("roomView");
 	}
-		
-		
+
 	@RequestMapping(value = "/createaroom", method = RequestMethod.GET)
 	public ModelAndView showAddRoomPage(HttpSession session, Model model) {
-			List<Room> rooms = roomDao.getAllRooms();
-			model.addAttribute("rooms", rooms);
-			return new ModelAndView("createRoom");	
+		List<Room> rooms = roomDao.getAllRooms();
+		model.addAttribute("rooms", rooms);
+		return new ModelAndView("createRoom");
+	}
+
+	@RequestMapping(value = "/join/{roomId}/{userId}", method = RequestMethod.POST)
+	public void joinRoom(HttpSession session, Model model,
+			@PathVariable("userId") String userId,
+			@PathVariable("roomId") int roomId) {
+
+		User user = userDao.getUser(userId);
+		user.setRoomId(roomId);
+		roomDao.updateListenerCount(true, roomId);
+	}
+
+	@RequestMapping(value = "/leave/{roomId}/{userId}", method = RequestMethod.POST)
+	public void leaveRoom(HttpSession session, Model model,
+			@PathVariable("userId") String userId,
+			@PathVariable("roomId") int roomId) {
+
+		User user = userDao.getUser(userId);
+		user.setRoomId(0);
+		roomDao.updateListenerCount(false, roomId);
 	}
 
 }
