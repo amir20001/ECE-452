@@ -88,15 +88,18 @@ public class ListeningRoom extends FragmentActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment selectedFragment = new Fragment();
+        String fragmentTag = "";
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         switch(position)
         {
         case 0: 
         	selectedFragment = curRoomFrag;
+        	fragmentTag = "CurrentRoomFragment";
         	break;
         case 1:
         	if(!prefs.getBoolean("userIsHosting", false)){
         		selectedFragment = stationsFrag;
+        		fragmentTag = "StationsFragment";
         	}
         	else
         	{
@@ -109,25 +112,31 @@ public class ListeningRoom extends FragmentActivity
         	break;
         case 2:
         	selectedFragment = favoritesFrag;
+        	fragmentTag = "FavoritesFragment";
         	break;
         case 3:
         	selectedFragment = playlistsFrag;
+        	fragmentTag = "PlaylistsFragment";
         	break;
         case 4:
             selectedFragment = followingFragment;
+            fragmentTag = "FollowingFragment";
             break;
         case 5:
             selectedFragment = followersFragment;
+            fragmentTag = "FollowersFragment";
             break;
         case 6:
         	selectedFragment = profileFrag;
+        	fragmentTag = "ProfileFragment";
         	break;
         default: 
         	selectedFragment = stationsFrag;
+        	fragmentTag = "StationsFragment";
         	break;
         }
         fragmentManager.beginTransaction()
-                .replace(R.id.container, selectedFragment)
+                .replace(R.id.container, selectedFragment, fragmentTag)
                 .commit();
         
     }
@@ -194,6 +203,11 @@ public class ListeningRoom extends FragmentActivity
     public StationsFragment getStationsFragment()
     {
     	return stationsFrag;
+    }
+    
+    public FavoritesFragment getFavoritesFragment()
+    {
+    	return favoritesFrag;
     }
     
     

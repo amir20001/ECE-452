@@ -1,6 +1,8 @@
 package com.instasolutions.instadj;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -13,6 +15,7 @@ import com.instasolutions.instadj.util.ServiceGetHelper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.SparseArray;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -52,7 +55,8 @@ public class PlaylistData {
 	{
     	ServiceGetHelper getHelper = new ServiceGetHelper();
     	String result = "";
-    	getHelper.execute("http://instadj.amir20001.cloudbees.net/song/getforplaylist/" + String.valueOf(this.id));
+    	getHelper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+				"http://instadj.amir20001.cloudbees.net/song/getforplaylist/" + String.valueOf(this.id));
     	try {
 			result = getHelper.get(5, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {

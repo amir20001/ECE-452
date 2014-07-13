@@ -1,5 +1,8 @@
 package com.instasolutions.instadj;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,6 +11,7 @@ import com.instasolutions.instadj.util.ServiceGetHelper;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -51,7 +55,7 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
 	public void onActivityCreated(Bundle savedInstanceState)
     {
     	super.onActivityCreated(savedInstanceState);
-    	
+    	playlists.clear();
     	Button NewPlaylistButton = (Button)activity.findViewById(R.id.playlists_new_button);
     	final ProgressBar pbar = (ProgressBar)activity.findViewById(R.id.playlists_progressbar);
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -89,7 +93,8 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
 
     	};
 
-        getHelper.execute("http://instadj.amir20001.cloudbees.net/playlist/getbyuser/" + prefs.getString("UserID", "0"));
+        getHelper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+				"http://instadj.amir20001.cloudbees.net/playlist/getbyuser/" + prefs.getString("UserID", "0"));
 
 		
     }
@@ -100,7 +105,7 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
 			case R.id.playlists_new_button:
 				FragmentManager fragmentManager = this.getFragmentManager();
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container, new NewPlaylistFragment());
+                fragmentTransaction.replace(R.id.container, new NewPlaylistFragment(), "NewPlaylistFragment");
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 				break;
@@ -117,7 +122,7 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
 		fragment.setPlaylist(playlist);
 		FragmentManager fragmentManager = this.getFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.replace(R.id.container, fragment, "PlaylistViewFragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 		

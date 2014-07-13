@@ -1,5 +1,7 @@
 package com.instasolutions.instadj;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,6 +9,7 @@ import org.json.JSONObject;
 import com.instasolutions.instadj.util.ServiceGetHelper;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -91,7 +94,8 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 
     	};
 
-        getHelper.execute("http://instadj.amir20001.cloudbees.net/room/getall");
+        getHelper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+				"http://instadj.amir20001.cloudbees.net/room/getall");
 		
     }
 	
@@ -102,7 +106,7 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 			case R.id.stations_new_button:
 				FragmentManager fragmentManager = this.getFragmentManager();
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container, new NewStationFragment());
+                fragmentTransaction.replace(R.id.container, new NewStationFragment(), "NewStationFragment");
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 				break;
@@ -119,7 +123,7 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 	   fragment.setStation((StationData)av.getAdapter().getItem(i));
 	   FragmentManager fragmentManager = this.getFragmentManager();
 	   FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-       fragmentTransaction.replace(R.id.container, fragment);
+       fragmentTransaction.replace(R.id.container, fragment, "CurrentRoomFragment");
        fragmentTransaction.addToBackStack(null);
        fragmentTransaction.commit();
 		

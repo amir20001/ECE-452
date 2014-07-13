@@ -1,5 +1,8 @@
 package com.instasolutions.instadj;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
@@ -8,6 +11,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -166,13 +170,13 @@ public class NewPlaylistFragment extends Fragment implements
         	jplaylist.put("trackCount", returnPlaylist.TrackCount);
         	jplaylist.put("userId", prefs.getString("UserID", "0"));
         	ServicePostHelper post = new ServicePostHelper();
-        	post.execute("http://instadj.amir20001.cloudbees.net/playlist/insert",jplaylist.toString());
-        	String result = post.get(5, TimeUnit.SECONDS);
+        	post.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+    				"http://instadj.amir20001.cloudbees.net/playlist/insert",jplaylist.toString());
+        	String result = post.get();
         	jplaylist = new JSONObject(result);
         }catch (Exception e){
         	Log.e("instaDJ", "JSONException", e);
         }
-		
 		try{
 			JSONArray jSongsArray = new JSONArray();
 			for(int i = 0; i < returnPlaylist.Songs.size(); i++){
@@ -187,7 +191,8 @@ public class NewPlaylistFragment extends Fragment implements
 				jSongsArray.put(jSong.toString());
 			}
 	    	ServicePostHelper post = new ServicePostHelper();
-			post.execute("http://instadj.amir20001.cloudbees.net/song/insertmultiple", jSongsArray.toString());
+			post.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+    				"http://instadj.amir20001.cloudbees.net/song/insertmultiple", jSongsArray.toString());
 		}catch (Exception e){
         	Log.e("instaDJ", "JSONException", e);
         }

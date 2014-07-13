@@ -2,8 +2,18 @@ package com.instasolutions.instadj;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import com.instasolutions.instadj.util.ServicePostHelper;
+
 import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.app.Fragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +65,7 @@ public class PlayListAdapter extends BaseAdapter{
 		TextView TrackCount = (TextView)v.findViewById(R.id.playlsit_tracks);
 		ImageButton deleteButton = (ImageButton)v.findViewById(R.id.playlist_delete_button);
 			
-		PlaylistData playlist = playlists.get(pos);
+		final PlaylistData playlist = playlists.get(pos);
 		
 		PlaylistName.setText(playlist.Name);
 		PlaylistGenre.setText(playlist.Genre);
@@ -69,8 +79,23 @@ public class PlayListAdapter extends BaseAdapter{
 			deleteButton.setOnClickListener(new OnClickListener() { 
 		        @Override 
 		        public void onClick(View v) { 
-		        	//Call to delete playlist from server
-		            PlaylistName.setText("Deleted");
+		        	ServicePostHelper helper = new ServicePostHelper();
+		        	helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+		        			"http://instadj.amir20001.cloudbees.net/playlist/delete/" + playlist.id);
+		        	try {
+						helper.get();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						e.printStackTrace();
+					}
+		        	
+		        	PlaylistsFragment currentFragment = ((ListeningRoom)activity).getPlaylistsFragment();
+		        	FragmentActivity fragActivity = (FragmentActivity)activity;
+		            FragmentTransaction fragTransaction = fragActivity.getSupportFragmentManager().beginTransaction();
+		            fragTransaction.detach(currentFragment);
+		            fragTransaction.attach(currentFragment);
+		            fragTransaction.commit();
 		        } 
 		    }); 
 		}

@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -111,7 +112,8 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 
     	};
 
-        getHelper.execute("http://instadj.amir20001.cloudbees.net/playlist/getbyuser/" + prefs.getString("UserID", "0"));
+        getHelper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+				"http://instadj.amir20001.cloudbees.net/playlist/getbyuser/" + prefs.getString("UserID", "0"));
     	playlistsListView.setOnItemClickListener(this);
     }
 
@@ -127,7 +129,7 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 				fragment.setStation(createStation());
 				FragmentManager fragmentManager = this.getFragmentManager();
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.replace(R.id.container, fragment);
+				fragmentTransaction.replace(R.id.container, fragment, "CurrentRoomFragment");
 		       	fragmentTransaction.addToBackStack(null);
 		       	fragmentTransaction.commit();
 				break;
@@ -163,7 +165,8 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 
         	
         	ServicePostHelper post = new ServicePostHelper();
-        	post.execute("http://instadj.amir20001.cloudbees.net/room/insert",jstation.toString());
+        	post.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+    				"http://instadj.amir20001.cloudbees.net/room/insert",jstation.toString());
         }catch (Exception e){
         	Log.e("instaDJ", "JSONException", e);
         }

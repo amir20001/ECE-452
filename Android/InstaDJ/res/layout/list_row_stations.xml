@@ -124,5 +124,14 @@
          android:text="SongArtist"
          android:textAppearance="?android:attr/textAppearanceSmall"
          android:textColor="@color/platinum" />
+
+     <TextView
+         android:id="@+id/station_id"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_above="@+id/station_now_playing"
+         android:layout_toRightOf="@+id/station_now_playing"
+         android:text="TextView"
+         android:visibility="invisible" />
  
 </RelativeLayout>

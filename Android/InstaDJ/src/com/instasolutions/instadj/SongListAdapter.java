@@ -5,8 +5,13 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import com.instasolutions.instadj.util.ServicePostHelper;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +21,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
@@ -27,6 +34,8 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.CompoundButton;
 
@@ -38,6 +47,7 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 	private static LayoutInflater inflater = null;
 	private Boolean UseSelect = false;
 	private Boolean UseButtons = false;
+	private ListView lv = null;
 	
 	public SongListAdapter(Activity a, SparseArray<SongData> d)
 	{
@@ -88,13 +98,13 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 				v = inflater.inflate(R.layout.list_row_songs, null);
 		}
 		
-		final TextView title = (TextView)v.findViewById(R.id.song_title);
+		TextView title = (TextView)v.findViewById(R.id.song_title);
 		TextView artist = (TextView)v.findViewById(R.id.song_artist);
 		TextView album = (TextView)v.findViewById(R.id.song_album);
 		TextView duration = (TextView)v.findViewById(R.id.song_duration);
 		ImageView art = (ImageView)v.findViewById(R.id.list_album_art);
 			
-		SongData song = songs.get(pos);
+		final SongData song = songs.get(pos);
 		
 		title.setText(song.Title);
 		artist.setText(song.Artist);
@@ -130,8 +140,23 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 				deleteButton.setOnClickListener(new OnClickListener() { 
 			        @Override 
 			        public void onClick(View v) { 
-			        	//TODO: Change to remove from server and update list
-			            title.setText("Deleted");
+			        	ServicePostHelper helper = new ServicePostHelper();
+			        	helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+			        			"http://instadj.amir20001.cloudbees.net/favourite/delete/" + song.id);
+			        	try {
+							helper.get();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} catch (ExecutionException e) {
+							e.printStackTrace();
+						}
+			        	
+			        	FavoritesFragment currentFragment = ((ListeningRoom)activity).getFavoritesFragment();
+			        	FragmentActivity fragActivity = (FragmentActivity)activity;
+			            FragmentTransaction fragTransaction = fragActivity.getSupportFragmentManager().beginTransaction();
+			            fragTransaction.detach(currentFragment);
+			            fragTransaction.attach(currentFragment);
+			            fragTransaction.commit();
 			        } 
 			    }); 
 			}
@@ -146,12 +171,14 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 	    if(song.Art_URL != null && song.Art_URL != "null")
 	    {
 			final GettArtworkTask task = new GettArtworkTask(art);
-			task.execute(song.Art_URL);
+			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+    				song.Art_URL);
 	    }
 	    else if(song.LocalPath != null && song.LocalPath != "null")
 	    {
 			final GettArtworkTask task = new GettArtworkTask(art);
-			task.execute(song.LocalPath);
+			task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+    				song.LocalPath);
 	    }
 	    else if(song.Art_Bitmap != null)
 	    {

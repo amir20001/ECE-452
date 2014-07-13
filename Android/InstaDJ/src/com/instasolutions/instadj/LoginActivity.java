@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -144,7 +145,8 @@ public class LoginActivity extends Activity implements OnClickListener,
                         	jud.put("firstName", ud.getFirstName());
                         	jud.put("lastName", ud.getLastName());
                         	ServicePostHelper post = new ServicePostHelper();
-                        	post.execute("http://instadj.amir20001.cloudbees.net/user/insert",jud.toString());
+                        	post.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+            	    				"http://instadj.amir20001.cloudbees.net/user/insert",jud.toString());
                         }catch (Exception e){
                         	Log.e("instaDJ", "JSONException", e);
                         }
