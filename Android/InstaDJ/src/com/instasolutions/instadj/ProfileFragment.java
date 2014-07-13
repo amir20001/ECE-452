@@ -9,6 +9,7 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
+import com.instasolutions.instadj.util.ServiceGetHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,7 +29,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ProfileFragment extends Fragment{
 
@@ -38,6 +44,7 @@ public class ProfileFragment extends Fragment{
 	private Button btn_logout;
 	private ImageView image_profile;
 	private TextView text_name;
+    private TextView text_score;
 	private Session fb_session;
     private ProfilePictureView profile_pic;
     private SharedPreferences prefs;
@@ -59,6 +66,7 @@ public class ProfileFragment extends Fragment{
 		btn_logout = (Button) activity.findViewById(R.id.button_Logout);
 		image_profile = (ImageView) activity.findViewById(R.id.splash_image);
 		text_name = (TextView) activity.findViewById(R.id.text_name);
+        text_score = (TextView) activity.findViewById(R.id.text_score);
 		fb_session = Session.getActiveSession();
         profile_pic = (ProfilePictureView) activity.findViewById(R.id.image_profile_pic);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
@@ -68,6 +76,22 @@ public class ProfileFragment extends Fragment{
 
         // Display the profile picture
         profile_pic.setProfileId(prefs.getString("UserID", ""));
+
+        // Display the person's score
+        ServiceGetHelper getHelper = new ServiceGetHelper(){
+            @Override
+            protected void onPostExecute(String result) {
+                try {
+                    JSONObject jProfileInfo = new JSONObject(result);
+                    text_score.setText("Score: " + jProfileInfo.getString("score"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        };
+
+        getHelper.execute("http://instadj.amir20001.cloudbees.net/user/get/" + prefs.getString("UserID", "0"));
 
         // Button event handler
         btn_logout.setOnClickListener(new View.OnClickListener() {

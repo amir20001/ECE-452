@@ -65,7 +65,7 @@ public class FollowingFragment extends Fragment{
                     for(int i = 0; i < jFollowingArray.length(); i++){
                         JSONObject jPlaylist =  jFollowingArray.getJSONObject(i);
 
-                        UserData user = new UserData(jPlaylist.getString("firstName"), jPlaylist.getString("lastName"), jPlaylist.getString("userId"));
+                        UserData user = new UserData(jPlaylist.getString("firstName"), jPlaylist.getString("lastName"), jPlaylist.getString("userId"), jPlaylist.getString("score"));
 
                         followingList.append(i, user);
 

@@ -43,4 +43,13 @@
         android:layout_centerHorizontal="true"
         android:src="@drawable/com_facebook_profile_picture_blank_square" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score"
+        android:id="@+id/text_score"
+        android:textColor="@color/white"
+        android:layout_below="@+id/image_profile_pic"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
