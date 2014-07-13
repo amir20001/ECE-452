@@ -23,8 +23,7 @@ public class GettArtworkTask extends AsyncTask<String, Void, Bitmap>{
 	
 	@Override
 	protected Bitmap doInBackground(String... Art_URLs) {
-		return null;
-        /*
+        
 		if(Art_URLs == null || Art_URLs.length == 0|| Art_URLs[0].equals("") || Art_URLs[0] == null || Art_URLs[0] == "null")
 		{
 			return null;
@@ -59,7 +58,7 @@ public class GettArtworkTask extends AsyncTask<String, Void, Bitmap>{
 		    e.printStackTrace();
 		    return null;
 		}
-		*/
+		
 	}
 	
 	@Override

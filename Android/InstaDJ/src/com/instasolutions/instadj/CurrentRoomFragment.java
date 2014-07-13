@@ -49,6 +49,10 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private MediaPlayer mediaplayer;
     private ImageButton btn_play;
     private ImageButton btn_next;
+    private ImageButton btn_favourite;
+    private ImageButton btn_like;
+    private ImageButton btn_dislike;
+    private ImageButton btn_removeRoom;
     private Handler updateHandler = new Handler();
     private TextView text_curTime;
     private TextView text_endTime;
@@ -63,6 +67,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private StationData station = null;
     private int playlistPosition = 0;
     private static Boolean initialized = false;
+    private Boolean currentlyFavorited = false;
+    private Boolean currentlyLiked = false;
+    private Boolean currentlyDisliked = false;
     
     @Override
     public View onCreateView(LayoutInflater inflater, 
@@ -123,6 +130,10 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     	station.Song = station.Playlist.Songs.get(playlistPosition);
 		btn_play = (ImageButton)activity.findViewById(R.id.Button_Play);
 		btn_next = (ImageButton)activity.findViewById(R.id.button_next);
+	    btn_favourite = (ImageButton)activity.findViewById(R.id.room_favourite_button);
+	    btn_like = (ImageButton)activity.findViewById(R.id.room_like_button);
+	    btn_dislike = (ImageButton)activity.findViewById(R.id.room_dislike_button);
+	    btn_removeRoom = (ImageButton)activity.findViewById(R.id.room_remove_button);
         seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
         text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
         text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
@@ -133,8 +144,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         small_art = (ImageView)activity.findViewById(R.id.album_art);
         
         btn_play.setOnClickListener(this);
-        btn_next.setOnClickListener(this);
-        seekbar.setOnSeekBarChangeListener(this);
+        btn_favourite.setOnClickListener(this);
         
         if(station != null)
         {
@@ -145,10 +155,25 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         }
         if(prefs.getBoolean("userIsHosting", false))
         {
+            seekbar.setOnSeekBarChangeListener(this);
+            btn_next.setOnClickListener(this);
+            btn_removeRoom.setOnClickListener(this);
+        	btn_next.setVisibility(ImageView.VISIBLE);
+        	btn_removeRoom.setVisibility(ImageView.VISIBLE);
+        	
+        	btn_like.setVisibility(ImageView.INVISIBLE);
+        	btn_dislike.setVisibility(ImageView.INVISIBLE);
         	prepareRoom();
         }
         else
         {
+        	btn_next.setVisibility(ImageView.INVISIBLE);
+        	btn_removeRoom.setVisibility(ImageView.INVISIBLE);
+        	
+        	btn_like.setOnClickListener(this);
+        	btn_dislike.setOnClickListener(this);
+        	btn_like.setVisibility(ImageView.VISIBLE);
+        	btn_dislike.setVisibility(ImageView.VISIBLE);
         	nextSong();
         }
 
@@ -159,9 +184,13 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 
     	
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-    	Editor editPrefs = prefs.edit();
+
     	btn_play = (ImageButton)activity.findViewById(R.id.Button_Play);
 		btn_next = (ImageButton)activity.findViewById(R.id.button_next);
+	    btn_favourite = (ImageButton)activity.findViewById(R.id.room_favourite_button);
+	    btn_like = (ImageButton)activity.findViewById(R.id.room_like_button);
+	    btn_dislike = (ImageButton)activity.findViewById(R.id.room_dislike_button);
+	    btn_removeRoom = (ImageButton)activity.findViewById(R.id.room_remove_button);
         seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
         text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
         text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
@@ -172,8 +201,28 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         small_art = (ImageView)activity.findViewById(R.id.album_art);
         
         btn_play.setOnClickListener(this);
-        btn_next.setOnClickListener(this);
-        seekbar.setOnSeekBarChangeListener(this);
+        btn_favourite.setOnClickListener(this);
+        
+        if(prefs.getBoolean("userIsHosting", false))
+        {
+            seekbar.setOnSeekBarChangeListener(this);
+            btn_next.setOnClickListener(this);
+        	btn_next.setVisibility(ImageView.VISIBLE);
+        	btn_removeRoom.setVisibility(ImageView.VISIBLE);
+        	
+        	btn_like.setVisibility(ImageView.INVISIBLE);
+        	btn_dislike.setVisibility(ImageView.INVISIBLE);
+        }
+        else
+        {
+        	btn_next.setVisibility(ImageView.INVISIBLE);
+        	btn_removeRoom.setVisibility(ImageView.INVISIBLE);
+        	
+        	btn_like.setVisibility(ImageView.VISIBLE);
+        	btn_dislike.setVisibility(ImageView.VISIBLE);
+        }
+        
+
         text_endTime.setText(String.valueOf(endTime));
         
         if(station != null)
@@ -209,10 +258,15 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     {
     	this.station = s;
     	this.station.Playlist.populateSongs();
+    	if(mediaplayer != null)
+    		mediaplayer.release();
+    	if(updateHandler != null)
+    		updateHandler.removeCallbacks(UpdateSeekBar);
     	if(text_stationName != null)
     	{
         	text_stationName.setText(station.Name);
     	}
+    	initialized = false;
 
     }
 	
@@ -252,6 +306,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    		updateHandler.postDelayed(this, 100);
 	    		if(curTime >= endTime)
 	    		{
+	    	    	if(mediaplayer != null)
+	    	    		mediaplayer.release();
+	    	    	//TODO Add delete song from server here 
 	    			nextSong();
 	    		}
 	    	}
@@ -259,6 +316,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    
 	    private void nextSong()
 	    {
+	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 	    	if(!initialized)
 	    	{
 	    		initialized = true;
@@ -273,23 +331,43 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    		playlistPosition = 0;
 	    	}
 	    	station.Song = station.Playlist.Songs.get(playlistPosition);
-	    	if(mediaplayer != null)
-	    		mediaplayer.release();
-    	    Uri.Builder uri_b = new Uri.Builder();
-            mediaplayer = MediaPlayer.create(activity, uri_b.path(station.Song.LocalPath).build());
+	    	//Upload next song
+	    	ServiceUploadHelper upload = new ServiceUploadHelper();
+	    	upload.execute(station.Playlist.Songs.get(playlistPosition+1));
+
+	    	if(prefs.getBoolean("userIsHosting", false)){
+	    	    Uri.Builder uri_b = new Uri.Builder();
+	            mediaplayer = MediaPlayer.create(activity, uri_b.path(station.Song.LocalPath).build());
+		        MediaMetadataRetriever media = new MediaMetadataRetriever();
+		        media.setDataSource(station.Song.LocalPath);
+		        byte[] data = media.getEmbeddedPicture();
+		        if(data != null)
+		        {
+		        	Bitmap art_bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+		        	large_art.setImageBitmap(art_bitmap);	
+		        	small_art.setImageBitmap(art_bitmap);
+		        }
+	    	}
+	    	else
+	    	{
+	    		Uri.Builder uri_b = new Uri.Builder();
+	    		mediaplayer = MediaPlayer.create(activity, uri_b.path(station.Song.Song_URL).build());
+	    	}
+	    	final GettArtworkTask task1 = new GettArtworkTask(large_art);
+			task1.execute(station.Song.Art_URL);
+			final GettArtworkTask task2 = new GettArtworkTask(small_art);
+			task2.execute(station.Song.Art_URL);
+	    	text_songName.setText(station.Song.Title);
+	        text_artist.setText(station.Song.Artist);
     		endTime = mediaplayer.getDuration();
     		seekbar.setMax((int)endTime);
-	        MediaMetadataRetriever media = new MediaMetadataRetriever();
-	        media.setDataSource(station.Song.LocalPath);
-	        text_songName.setText(media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
-	        text_artist.setText(media.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
-	        byte[] data = media.getEmbeddedPicture();
-	        if(data != null)
-	        {
-	        	Bitmap art_bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-	        	large_art.setImageBitmap(art_bitmap);	
-	        	small_art.setImageBitmap(art_bitmap);
-	        }
+    		
+    		currentlyFavorited = false;
+    		currentlyDisliked = false;
+    		currentlyLiked = false;
+    		btn_like.setImageResource(R.drawable.ic_action_good);
+    		btn_dislike.setImageResource(R.drawable.ic_action_bad);
+    		btn_favourite.setImageResource(R.drawable.ic_action_favorite);
 	        play();
 	    	playlistPosition++;
 	    }
@@ -310,6 +388,58 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 
 	    	
 	    }
+	    
+	    private void updateLikes(Boolean like)
+	    {
+	    	if(like)
+	    	{
+	    		if(currentlyLiked)
+	    		{
+	    			currentlyLiked = false;
+	    			btn_like.setImageResource(R.drawable.ic_action_good);
+	    		}
+	    		else
+	    		{
+	    			currentlyLiked = true;
+		    		btn_like.setImageResource(R.drawable.ic_action_good_green);
+		    		btn_dislike.setImageResource(R.drawable.ic_action_bad);
+	    		}
+	    	}
+	    	else
+	    	{
+	    		if(currentlyDisliked)
+	    		{
+	    			currentlyDisliked = false;
+	    			btn_dislike.setImageResource(R.drawable.ic_action_bad);
+	    		}
+	    		else
+	    		{
+	    			currentlyDisliked = true;
+	    			btn_like.setImageResource(R.drawable.ic_action_good);
+	    			btn_dislike.setImageResource(R.drawable.ic_action_bad_red);
+	    		}
+	    		
+	    	}
+	    }
+	    
+	    private void updateFavourites()
+	    {
+	    	if(currentlyFavorited)
+	    	{
+	    		btn_favourite.setImageResource(R.drawable.ic_action_favorite);
+	    		currentlyFavorited = false;
+	    	}
+	    	else
+	    	{
+	    		btn_favourite.setImageResource(R.drawable.ic_action_favorite_red);
+	    		currentlyFavorited = true;
+	    	}
+	    }
+	    
+	    private void closeRoom()
+	    {
+	    	
+	    }
 	          
 	    
 
@@ -322,6 +452,18 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 					break;
 				case R.id.button_next:
 					nextSong();
+					break;
+				case R.id.room_dislike_button:
+					updateLikes(false);
+					break;
+				case R.id.room_favourite_button:
+					updateFavourites();
+					break;
+				case R.id.room_like_button:
+					updateLikes(true);
+					break;
+				case R.id.room_remove_button:
+					closeRoom();
 					break;
 				default:
 					break;

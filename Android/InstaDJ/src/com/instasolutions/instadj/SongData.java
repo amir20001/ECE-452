@@ -34,7 +34,7 @@ public class SongData {
 		this.Duration = Duration;
 		this.LocalPath = LocalPath;
 		this.Art_URL = Art_URL;
-		this.Song_URL = "";
+		this.Song_URL = Song_URL;
 	}
 	
 	public SongData(int id, String Title, String Artist, String Album, String Duration, String LocalPath, Bitmap Art_Bitmap, String Song_URL){

@@ -62,7 +62,7 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 						JSONObject jStation = jStationsArray.getJSONObject(i);
 						JSONObject jPlaylist = jStation.getJSONObject("playlist");
 						JSONObject jUser = jStation.getJSONObject("user");
-						PlaylistData playlist = new PlaylistData(jPlaylist.getInt("id"),
+						PlaylistData playlist = new PlaylistData(jStation.getInt("playlistId"),
 										jPlaylist.getString("name"),
 										jPlaylist.getString("genre"),
 										jPlaylist.getInt("trackCount"),
