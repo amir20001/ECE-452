@@ -24,6 +24,8 @@ public class FollowersFragment extends Fragment{
         activity = this.getActivity();
         View view = inflater.inflate(R.layout.fragment_followers, container, false);
 
+        activity.getActionBar().setTitle(R.string.title_section6);
+
         return view;
     }
 

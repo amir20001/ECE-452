@@ -77,6 +77,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_current_room, container, false);
         activity = this.getActivity();
+        activity.getActionBar().setTitle(R.string.app_name);
         this.setHasOptionsMenu(true);
         return view;
     }

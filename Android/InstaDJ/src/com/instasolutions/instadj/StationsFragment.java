@@ -37,6 +37,8 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 	            Bundle savedInstanceState) {
 			activity = this.getActivity();
 	        View view = inflater.inflate(R.layout.fragment_stations, container, false);
+
+            activity.getActionBar().setTitle(R.string.title_section2);
 	       
 	        return view;
 	    }

@@ -48,6 +48,7 @@ public class ProfileFragment extends Fragment{
 	            Bundle savedInstanceState) {
 			activity = getActivity();
 	        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+            activity.getActionBar().setTitle(R.string.title_section7);
 	        return view;
 	    }
 	

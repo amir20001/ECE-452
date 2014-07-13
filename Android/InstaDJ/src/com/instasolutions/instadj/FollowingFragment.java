@@ -39,6 +39,8 @@ public class FollowingFragment extends Fragment{
         activity = this.getActivity();
         View view = inflater.inflate(R.layout.fragment_following, container, false);
 
+        activity.getActionBar().setTitle(R.string.title_section5);
+
         return view;
     }
 
