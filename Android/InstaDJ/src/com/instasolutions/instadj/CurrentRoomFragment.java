@@ -19,6 +19,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -40,6 +41,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.instasolutions.instadj.util.ServicePostHelper;
 import com.instasolutions.instadj.util.ServiceUploadHelper;
 
 public class CurrentRoomFragment extends Fragment implements OnClickListener, OnSeekBarChangeListener {
@@ -67,10 +69,10 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private StationData station = null;
     private int playlistPosition = 0;
     private static Boolean initialized = false;
-    private Boolean currentlyFavorited = false;
+    private Boolean currentlyFavourited = false;
     private Boolean currentlyLiked = false;
     private Boolean currentlyDisliked = false;
-    
+    private Boolean firstSong = false;
     @Override
     public View onCreateView(LayoutInflater inflater, 
             ViewGroup container, 
@@ -105,7 +107,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     		 StationsFragment fragment = ((ListeningRoom)activity).getStationsFragment();
     		   FragmentManager fragmentManager = this.getFragmentManager();
     		   FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-    	       fragmentTransaction.replace(R.id.container, fragment);
+    	       fragmentTransaction.replace(R.id.container, fragment, "StationsFragment");
     	       fragmentTransaction.commit();
     	       AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity(), android.R.style.Theme_Holo_Dialog);
     	       builder.setMessage("Select a station.").setTitle("No Station");
@@ -304,12 +306,10 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    		text_curTime.setText(String.format("%d:%02d", TimeUnit.MILLISECONDS.toMinutes((long) curTime),
 	    	   	         TimeUnit.MILLISECONDS.toSeconds((long) curTime) - 
 	    	   	         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) curTime))));
-	    		updateHandler.postDelayed(this, 100);
+	    		updateHandler.postDelayed(this, 900);
+	    		//Song Complete
 	    		if(curTime >= endTime)
 	    		{
-	    	    	if(mediaplayer != null)
-	    	    		mediaplayer.release();
-	    	    	//TODO Add delete song from server here 
 	    			nextSong();
 	    		}
 	    	}
@@ -318,6 +318,22 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    private void nextSong()
 	    {
 	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+	    	if(mediaplayer != null)
+	    		mediaplayer.release();
+	    	//Add favorited song to database
+	    	if(currentlyFavourited)
+	    	{
+	    		ServicePostHelper helper = new ServicePostHelper();
+	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+	    				"http://instadj.amir20001.cloudbees.net/favourite/insert/" + prefs.getString("UserID", "0") + "/" + station.Song.id);
+	    	}
+	    	//Remove previous song from storage
+	    	if(prefs.getBoolean("userIsHosting", false) && !firstSong)
+	    	{
+	    		ServicePostHelper helper = new ServicePostHelper();
+	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+	    				"http://instadj.amir20001.cloudbees.net/song/delete/" + station.Song.id);
+	    	}
 	    	if(!initialized)
 	    	{
 	    		initialized = true;
@@ -334,36 +350,35 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	station.Song = station.Playlist.Songs.get(playlistPosition);
 	    	//Upload next song
 	    	ServiceUploadHelper upload = new ServiceUploadHelper();
-	    	upload.execute(station.Playlist.Songs.get(playlistPosition+1));
+	    	upload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+    				station.Playlist.Songs.get(playlistPosition+1 > station.Playlist.Songs.size() ? 0 : playlistPosition+1 ));
 
+    	    Uri.Builder uri_b = new Uri.Builder();
+    	    
 	    	if(prefs.getBoolean("userIsHosting", false)){
-	    	    Uri.Builder uri_b = new Uri.Builder();
-	            mediaplayer = MediaPlayer.create(activity, uri_b.path(station.Song.LocalPath).build());
-		        MediaMetadataRetriever media = new MediaMetadataRetriever();
-		        media.setDataSource(station.Song.LocalPath);
-		        byte[] data = media.getEmbeddedPicture();
-		        if(data != null)
-		        {
-		        	Bitmap art_bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-		        	large_art.setImageBitmap(art_bitmap);	
-		        	small_art.setImageBitmap(art_bitmap);
-		        }
+	            uri_b.path(station.Song.LocalPath);
 	    	}
 	    	else
 	    	{
-	    		Uri.Builder uri_b = new Uri.Builder();
-	    		mediaplayer = MediaPlayer.create(activity, uri_b.path(station.Song.Song_URL).build());
+	    		uri_b.path(station.Song.Song_URL);
 	    	}
+	    	mediaplayer = MediaPlayer.create(activity, uri_b.build());
+	    	//Async task currently takes some time to fire update the art to blank until it does
+	    	large_art.setImageResource(R.drawable.blankart);
+	    	small_art.setImageResource(R.drawable.blankart);
 	    	final GettArtworkTask task1 = new GettArtworkTask(large_art);
-			task1.execute(station.Song.Art_URL);
+			task1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+    				station.Song.Art_URL);
 			final GettArtworkTask task2 = new GettArtworkTask(small_art);
-			task2.execute(station.Song.Art_URL);
+			task2.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+    				station.Song.Art_URL);
 	    	text_songName.setText(station.Song.Title);
 	        text_artist.setText(station.Song.Artist);
     		endTime = mediaplayer.getDuration();
     		seekbar.setMax((int)endTime);
+    		firstSong = false;
     		
-    		currentlyFavorited = false;
+    		currentlyFavourited = false;
     		currentlyDisliked = false;
     		currentlyLiked = false;
     		btn_like.setImageResource(R.drawable.ic_action_good);
@@ -385,7 +400,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	    	room.nextSong();
 	    		}
 	    	};
-	    	upload.execute(station.Song);
+	    	upload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+    				station.Song);
+	    	firstSong = true;
 
 	    	
 	    }
@@ -425,15 +442,15 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    
 	    private void updateFavourites()
 	    {
-	    	if(currentlyFavorited)
+	    	if(currentlyFavourited)
 	    	{
 	    		btn_favourite.setImageResource(R.drawable.ic_action_favorite);
-	    		currentlyFavorited = false;
+	    		currentlyFavourited = false;
 	    	}
 	    	else
 	    	{
 	    		btn_favourite.setImageResource(R.drawable.ic_action_favorite_red);
-	    		currentlyFavorited = true;
+	    		currentlyFavourited = true;
 	    	}
 	    }
 	    

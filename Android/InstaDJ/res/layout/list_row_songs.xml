@@ -83,5 +83,14 @@
          android:layout_toLeftOf="@+id/song_duration"
          android:background="@null"
          android:src="@drawable/ic_action_discard" />
+
+     <TextView
+         android:id="@+id/song_id"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignTop="@+id/song_album"
+         android:layout_centerHorizontal="true"
+         android:text="TextView"
+         android:visibility="invisible" />
  
 </RelativeLayout>

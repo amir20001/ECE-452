@@ -2,6 +2,7 @@ package com.instasolutions.instadj;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +65,8 @@ public class StationListAdapter extends BaseAdapter{
 		StationListeningCount.setText(String.valueOf(station.ListenerCount));
 
 		final GettArtworkTask task = new GettArtworkTask(StationSongArt);
-		task.execute(station.Song.Art_URL);
+		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+				station.Song.Art_URL);
 		
 		return v;
 	}

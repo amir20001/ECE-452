@@ -1,5 +1,8 @@
 package com.instasolutions.instadj;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -89,7 +92,7 @@ public class RightDrawerFragment extends Fragment {
                     selectItem(position);
                 }
             });
-	        SparseArray<SongData> songs = new SparseArray<SongData>();
+            SparseArray<SongData> songs = new SparseArray<SongData>();
 	    	mSongHistoryList = new SongListAdapter(this.getActivity(), songs );
 	        SparseArray<UserData> users = new SparseArray<UserData>();
 	        users.append(0, new UserData("TestFirst", "TestLast", "TESTID"));

@@ -30,8 +30,8 @@ public class ServiceGetHelper extends AsyncTask<String, Void, String> {
 				HttpResponse httpResponse = httpclient.execute(httpget);
 				inputStream = httpResponse.getEntity().getContent();
 				if (inputStream != null) {
-					String jsonString = ServiceUtil.convertInputStreamToString(inputStream);
-					result = jsonString;
+					result = ServiceUtil.convertInputStreamToString(inputStream);
+
 				}
 				return result;
 			} catch (Exception e) {

@@ -19,13 +19,20 @@ public class ServicePostHelper extends AsyncTask<String, Void, String> {
 	@Override
 	protected String doInBackground(String... params) {
 		String returnString = "";
-		if (params.length < 2)
+		if(params.length < 1 || params.length > 2)
+		{
 			return returnString;
+		}
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(params[0]);
-			StringEntity se = new StringEntity(params[1]);
-			httpPost.setEntity(se);
+			HttpPost httpPost = null;
+			if(params.length == 1 || params.length == 2)
+				 httpPost = new HttpPost(params[0]);
+			if(params.length == 2)
+			{
+				StringEntity se = new StringEntity(params[1]);
+				httpPost.setEntity(se);
+			}
 			httpPost.setHeader("Accept", "application/json");
 			httpPost.setHeader("Content-type", "application/json");
 			HttpResponse httpResponse = httpclient.execute(httpPost);

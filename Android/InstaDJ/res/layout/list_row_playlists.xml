@@ -47,5 +47,15 @@
          android:layout_toLeftOf="@+id/playlsit_tracks"
          android:background="@null"
          android:src="@drawable/ic_action_discard" />
+
+     <TextView
+         android:id="@+id/playlist_id"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/playlist_name"
+         android:layout_marginLeft="20dp"
+         android:layout_toRightOf="@+id/playlist_name"
+         android:text="TextView"
+         android:visibility="invisible" />
  
 </RelativeLayout>

@@ -8,6 +8,7 @@ import com.instasolutions.instadj.util.ServiceGetHelper;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,7 @@ import android.widget.ProgressBar;
 public class FavoritesFragment extends Fragment {
 
 	/** Called when the activity is first created. */
-    SparseArray<SongData> songs = new SparseArray<SongData>();
+	SparseArray<SongData> songs = new SparseArray<SongData>();
     Activity activity = null;
     ListView favoritesListView = null;
     
@@ -43,7 +44,7 @@ public class FavoritesFragment extends Fragment {
 		public void onActivityCreated(Bundle savedInstanceState)
 	    {
 	    	super.onActivityCreated(savedInstanceState);
-	    	
+	    	songs.clear();
 	    	final ProgressBar pbar = (ProgressBar)activity.findViewById(R.id.favorites_progressbar);
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 	        favoritesListView = (ListView)activity.findViewById(R.id.favorites_list);
@@ -64,10 +65,11 @@ public class FavoritesFragment extends Fragment {
 											jSong.getString("album"),
 											jSong.getString("duration"),
 											null,
+											jSong.getString("artUrl"),
 											""));
 							
 						}
-		    	        SongListAdapter adapter = new SongListAdapter(activity, songs );
+		    	        SongListAdapter adapter = new SongListAdapter(activity, songs);
 		    	        adapter.setButtonsEnabled(true);;
 		    			favoritesListView.setAdapter(adapter);
 		    	        pbar.setVisibility(ImageView.INVISIBLE);
@@ -81,7 +83,8 @@ public class FavoritesFragment extends Fragment {
 
 	    	};
 
-	        getHelper.execute("http://instadj.amir20001.cloudbees.net/favourite/get/" + prefs.getString("UserID", "0"));	
+	        getHelper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+    				"http://instadj.amir20001.cloudbees.net/favourite/get/" + prefs.getString("UserID", "0"));	
 	    }
 
 }
