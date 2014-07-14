@@ -87,7 +87,7 @@ public class PlaylistController {
 		return new ModelAndView("playlistView");
 	}
 	
-	@RequestMapping(value = "/createlist", method = RequestMethod.GET)
+	@RequestMapping(value = "/createlist", method = RequestMethod.POST)
 	public ModelAndView makePlaylistPage(HttpSession session, Model model,
 			@RequestParam("name") String name,
 			@RequestParam("genre") String valueOne
