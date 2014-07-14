@@ -145,11 +145,13 @@ public class RoomController {
 		Sync sync = mapper.readValue(json, Sync.class);
 		List<User> usersInRoom = userDao.getUsersInRoom(sync.getRoomId());
 		Content content = new Content();
-		content = sync.addToContent(content);
+		content.setSync(sync);
 		for (User user : usersInRoom) {
 			content.addRegId(user.getGcmId());
 		}
-		GcmHelper.post(content);
+		if (usersInRoom.size() > 0) {
+			GcmHelper.post(content);
+		}
 	}
 
 	@RequestMapping(value = "/delete/{roomId}", method = RequestMethod.POST)
@@ -161,17 +163,17 @@ public class RoomController {
 		Content content = new Content();
 		sync.setAction(Sync.kick);
 		sync.setRoomId(roomId);
-		sync.addToContent(content);
-		
-		for(User user :usersInRoom){
+		content.setSync(sync);
+
+		for (User user : usersInRoom) {
 			content.addRegId(user.getGcmId());
 		}
-		
-		
+
 		userDao.updateAllRoomRefs(roomId);
 		roomDao.delete(roomId);
-		GcmHelper.post(content);
-		
+		if (usersInRoom.size() > 0) {
+			GcmHelper.post(content);
+		}
 	}
 
 }

@@ -27,6 +27,8 @@ public class GcmHelper {
 			
 			mapper.writeValue(wr, content);
 
+			System.out.println("content json");
+			System.out.println(mapper.writeValueAsString(content));
 			// 5.4 Send the request
 			wr.flush();
 
