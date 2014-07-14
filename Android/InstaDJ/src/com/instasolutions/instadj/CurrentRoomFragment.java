@@ -522,10 +522,6 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    
 	    public void forceQuitRoom()
 	    {
-    	    AlertDialog.Builder builder = new AlertDialog.Builder(activity, android.R.style.Theme_Holo_Dialog);
-   	        builder.setMessage("The host has closed the room.").setTitle("Room Closed");
-   	        AlertDialog dialog = builder.create();
-   	        dialog.show();
 	    	if(mediaplayer != null)
 	    		mediaplayer.release();
 	    	if(updateHandler != null)

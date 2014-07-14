@@ -3,6 +3,7 @@ package com.instasolutions.instadj;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import android.R;
+import android.app.AlertDialog;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -44,6 +45,10 @@ public class GcmIntentService extends IntentService {
                 {
                 	//Kick user out of room
                 	currentRoom.forceQuitRoom();
+            	    AlertDialog.Builder builder = new AlertDialog.Builder(ListeningRoom.mThis, android.R.style.Theme_Holo_Dialog);
+           	        builder.setMessage("The host has closed the room.").setTitle("Room Closed");
+           	        AlertDialog dialog = builder.create();
+           	        dialog.show();
                 	
                 }
                 else if(action.compareTo("sync") == 0)
