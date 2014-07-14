@@ -25,7 +25,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ece452.dao.RoomDao;
 import com.ece452.dao.UserDao;
 import com.ece452.domain.Room;
+import com.ece452.domain.Sync;
 import com.ece452.domain.User;
+import com.ece452.util.Content;
+import com.ece452.util.GcmHelper;
 
 @Controller
 @RequestMapping("/room")
@@ -92,7 +95,7 @@ public class RoomController {
 
 		System.out.println(roomId);
 		System.out.println(valueOne);
-		
+
 		List<Room> allRooms = roomDao.getAllRooms();
 		model.addAttribute("rooms", allRooms);
 		return new ModelAndView("create_room_success");
@@ -125,6 +128,26 @@ public class RoomController {
 			user.setRoomId(0);
 			roomDao.updateListenerCount(false, roomId);
 		}
-
 	}
+
+	@RequestMapping(value = "/sync", method = RequestMethod.POST)
+	public void sync(HttpServletResponse response, HttpServletRequest request)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				request.getInputStream()));
+		String json = "";
+		if (br != null) {
+			json = br.readLine();
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		Sync sync = mapper.readValue(json, Sync.class);
+		List<User> usersInRoom = userDao.getUsersInRoom(sync.getRoomId());
+		Content content = new Content();
+		content = sync.addToContent(content);
+		for(User user :usersInRoom ){
+			content.addRegId(user.getGcmId());
+		}
+		GcmHelper.post(content);
+	}
+
 }
