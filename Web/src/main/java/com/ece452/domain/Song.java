@@ -10,10 +10,9 @@ public class Song extends BaseEntity {
 	private int id;
 	private int playlistId;
 	private int netScore;
-	private String songUrl ;
+	private String songUrl;
 	private String songUri;
 	private String artUrl;
-	
 
 	public int getId() {
 		return id;
@@ -79,16 +78,13 @@ public class Song extends BaseEntity {
 		this.netScore = netScore;
 	}
 
-
 	public String getSongUrl() {
 		return songUrl;
 	}
 
-
 	public void setSongUrl(String songUrl) {
 		this.songUrl = songUrl;
 	}
-
 
 	public String getSongUri() {
 		return songUri;
@@ -105,8 +101,5 @@ public class Song extends BaseEntity {
 	public void setArtUrl(String artUrl) {
 		this.artUrl = artUrl;
 	}
-
-
-
 
 }
