@@ -168,24 +168,32 @@ public class SongController {
 			if (!StringUtils.isEmpty(uuid)) {
 				fileHelper.delete(uuid);
 			}
-			int playlistId = song.getPlaylistId();
-			Playlist playlist = playlistDao.getPlaylist(playlistId);
-			if (playlist != null) {
-				String userId = playlist.getUserId();
-				if (!StringUtils.isEmpty(userId)) {
-					userDao.updateScore(userId, song.getNetScore());
-				}
-			}
 		}
 	}
 
 	@RequestMapping(value = "/song/vote/{songid}/{value}", method = RequestMethod.POST)
 	public void vote(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("songId") int songId, @PathVariable("value") int value) {
+		Song song = songDao.getSong(songId);
+		String userId = null;
+		if (song != null) {
+			int playlistId = song.getPlaylistId();
+			Playlist playlist = playlistDao.getPlaylist(playlistId);
+			if (playlist != null) {
+				userId = playlist.getUserId();
+			}
+		}
+
 		if (value > 0) {
 			songDao.vote(true, songId);
+			if (userId != null) {
+				userDao.updateScore(userId, 1);
+			}
 		} else {
 			songDao.vote(false, songId);
+			if (userId != null) {
+				userDao.updateScore(userId, -1);
+			}
 		}
 	}
 }
