@@ -92,7 +92,7 @@ public class RoomDao {
 	}
 
 	public List<Room> getAllRooms() {
-		String sql = "SELECT * FROM room INNER JOIN `user` ON room.owner_user_id= `user`.user_id JOIN playlist ON room.playlist_id = playlist.id;";
+		String sql = "SELECT * FROM room INNER JOIN `user` ON room.owner_user_id= `user`.user_id JOIN playlist ON room.playlist_id = playlist.id JOIN song ON room.current_song_id = song.id;";
 		List<Room> rooms = new ArrayList<Room>();
 		try {
 			rooms = jdbcTemplate.query(sql, new RoomAndSubObjectMapper());
