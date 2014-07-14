@@ -16,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -94,7 +95,8 @@ public class ProfileFragment extends Fragment{
 
             };
 
-            getHelper.execute("http://instadj.amir20001.cloudbees.net/user/get/" + prefs.getString("UserID", "0"));
+            getHelper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+	    			"http://instadj.amir20001.cloudbees.net/user/get/" + prefs.getString("UserID", "0"));
 
             // Button event handler
             btn_logout.setOnClickListener(new View.OnClickListener() {

@@ -2,6 +2,7 @@ package com.instasolutions.instadj;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -97,6 +98,7 @@ public class FollowersFragment extends Fragment{
 
         };
 
-        getHelper.execute("http://instadj.amir20001.cloudbees.net/follow/get/followers/" + prefs.getString("UserID", "0"));
+        getHelper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+    			"http://instadj.amir20001.cloudbees.net/follow/get/followers/" + prefs.getString("UserID", "0"));
     }
 }

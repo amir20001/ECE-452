@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +62,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private ImageButton btn_like;
     private ImageButton btn_dislike;
     private ImageButton btn_closeRoom;
+    private ImageButton btn_follow;
     private Handler updateHandler = new Handler();
     private TextView text_curTime;
     private TextView text_endTime;
@@ -78,6 +80,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private Boolean currentlyFavourited = false;
     private int currentVote = 0;
     private Boolean firstSong = false;
+    private Boolean userFollowingHost = false;
     @Override
     public View onCreateView(LayoutInflater inflater, 
             ViewGroup container, 
@@ -145,6 +148,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    btn_like = (ImageButton)activity.findViewById(R.id.room_like_button);
 	    btn_dislike = (ImageButton)activity.findViewById(R.id.room_dislike_button);
 	    btn_closeRoom = (ImageButton)activity.findViewById(R.id.room_close_button);
+	    btn_follow = (ImageButton)activity.findViewById(R.id.room_follow_button);
         seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
         text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
         text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
@@ -177,16 +181,22 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         	btn_next.setVisibility(ImageView.INVISIBLE);
         	btn_like.setVisibility(ImageView.INVISIBLE);
         	btn_dislike.setVisibility(ImageView.INVISIBLE);
+        	btn_follow.setVisibility(ImageView.INVISIBLE);
         	prepareRoom();
         }
         else
         {
         	btn_next.setVisibility(ImageView.INVISIBLE);
         	
+        	btn_like.setOnClickListener(this);
+        	btn_dislike.setOnClickListener(this);
+        	btn_follow.setOnClickListener(this);
         	btn_closeRoom.setImageResource(R.drawable.insta_leave_room);
         	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	btn_like.setVisibility(ImageView.VISIBLE);
         	btn_dislike.setVisibility(ImageView.VISIBLE);
+        	btn_follow.setVisibility(ImageView.VISIBLE);
+        	initFollow();
         	nextSong();
         }
 
@@ -204,6 +214,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    btn_like = (ImageButton)activity.findViewById(R.id.room_like_button);
 	    btn_dislike = (ImageButton)activity.findViewById(R.id.room_dislike_button);
 	    btn_closeRoom = (ImageButton)activity.findViewById(R.id.room_close_button);
+	    btn_follow = (ImageButton)activity.findViewById(R.id.room_follow_button);
         seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
         text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
         text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
@@ -229,15 +240,21 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         	btn_next.setVisibility(ImageView.INVISIBLE);
         	btn_like.setVisibility(ImageView.INVISIBLE);
         	btn_dislike.setVisibility(ImageView.INVISIBLE);
+        	btn_follow.setVisibility(ImageView.INVISIBLE);
         }
         else
         {
         	btn_next.setVisibility(ImageView.INVISIBLE);
         	
+        	btn_like.setOnClickListener(this);
+        	btn_dislike.setOnClickListener(this);
+        	btn_follow.setOnClickListener(this);
         	btn_closeRoom.setImageResource(R.drawable.insta_leave_room);
         	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	btn_like.setVisibility(ImageView.VISIBLE);
         	btn_dislike.setVisibility(ImageView.VISIBLE);
+        	btn_follow.setVisibility(ImageView.VISIBLE);
+        	initFollow();
         }
         
 
@@ -272,6 +289,36 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         seekbar.setMax((int)endTime);
     }
     
+    private void initFollow()
+    {
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+    	ServiceGetHelper helper = new ServiceGetHelper(){
+    		@Override
+    		protected void onPostExecute(String result)
+    		{
+    			try {
+					JSONArray followArray = new JSONArray(result);
+					if(followArray.length() == 0)
+					{
+						btn_follow.setImageResource(R.drawable.ic_action_add_person);
+						userFollowingHost = false;
+					}
+					else
+					{
+						btn_follow.setImageResource(R.drawable.ic_action_add_person_green);
+						userFollowingHost = true;
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+    		
+    	};
+    	helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+    			"http://instadj.amir20001.cloudbees.net/follow/getid/" + prefs.getString("UserID", "UserID")+ "/" + station.Owner.getUserID());
+    }
+    
     public void setStation(StationData s, Activity a)
     {    	
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(a);  
@@ -291,6 +338,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         	text_stationName.setText(station.Name);
     	}
     	initialized = false;
+    	userFollowingHost =false;
     	
     	ServicePostHelper helper = new ServicePostHelper();
     	helper.execute("http://instadj.amir20001.cloudbees.net/room/join/" + station.id + "/" + prefs.getString("UserID", "UserID"));
@@ -381,6 +429,12 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    		playlistPosition = 0;
 	    	}
 	    	station.Song = station.Playlist.Songs.get(playlistPosition);
+	    	if(prefs.getBoolean("userIsHosting", false) && !firstSong)
+	    	{
+	    		ServicePostHelper helper = new ServicePostHelper();
+	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+	    				"http://instadj.amir20001.cloudbees.net/room/updatecurrentsong/" + station.id + "/" + station.Song.id);
+	    	}
 
     	    Uri.Builder uri_b = new Uri.Builder();
     	    
@@ -449,7 +503,8 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	        	jstation = new JSONObject(jString);
 	    	        	station.id = jstation.getInt("id");
 	    		    	ServicePostHelper helper = new ServicePostHelper();
-	    		    	helper.execute("http://instadj.amir20001.cloudbees.net/room/join/" + station.id + "/" + prefs.getString("UserID", "UserID"));
+	    		    	helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+	    		    			"http://instadj.amir20001.cloudbees.net/room/join/" + station.id + "/" + prefs.getString("UserID", "UserID"));
 	    		    	Editor prefEdit = prefs.edit();
 	    		    	prefEdit.putInt("userCurrentRoom", station.id);
 	    		    	prefEdit.commit();
@@ -525,12 +580,14 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	if(prefs.getBoolean("userIsHosting", false))
 	    	{
 		    	ServicePostHelper helper = new ServicePostHelper();
-		    	helper.execute("http://instadj.amir20001.cloudbees.net/room/delete/" + station.id);
+		    	helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+		    			"http://instadj.amir20001.cloudbees.net/room/delete/" + station.id);
 	    	}
 	    	else
 	    	{
 	    		ServicePostHelper helper = new ServicePostHelper();
-	    		helper.execute("http://instadj.amir20001.cloudbees.net/room/leave/" + station.id + "/" + prefs.getString("UserID", "UserID"));
+	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+		    			"http://instadj.amir20001.cloudbees.net/room/leave/" + station.id + "/" + prefs.getString("UserID", "UserID"));
 	    	}
 	    	station = null;
 	    	initialized = false;
@@ -561,6 +618,28 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	((ListeningRoom)activity).onNavigationDrawerItemSelected(-1);
 	    }
 	    
+	    private void updateFollowing()
+	    {
+	    	SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(activity);
+	    	String userID = prefs.getString("UserID", "UserID");
+	    	if(!userFollowingHost)
+	    	{
+	    		userFollowingHost = true;
+	    		btn_follow.setImageResource(R.drawable.ic_action_add_person_green);
+	    		ServicePostHelper helper = new ServicePostHelper();
+	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+	    				"http://instadj.amir20001.cloudbees.net/follow/insert/" + userID + "/" + station.Owner.getUserID());
+	    	}
+	    	else
+	    	{
+	    		userFollowingHost = false;
+	    		btn_follow.setImageResource(R.drawable.ic_action_add_person);
+	    		ServicePostHelper helper = new ServicePostHelper();
+	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+	    				"http://instadj.amir20001.cloudbees.net/follow/delete/" + userID + "/" + station.Owner.getUserID());
+	    	}
+	    }
+	    
 
 		@Override
 		public void onClick(View v) {
@@ -584,6 +663,8 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 				case R.id.room_close_button:
 					closeRoom();
 					break;
+				case R.id.room_follow_button:
+					updateFollowing();
 				default:
 					break;
 			}

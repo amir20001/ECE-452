@@ -75,6 +75,17 @@
             android:minWidth="48dip"
             android:src="@drawable/ic_action_discard" />
 
+        <ImageButton
+            android:id="@+id/room_follow_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/room_close_button"
+            android:background="@null"
+            android:minHeight="48dip"
+            android:minWidth="48dip"
+            android:src="@drawable/ic_action_add_person" />
+
     </RelativeLayout>
 
     <RelativeLayout

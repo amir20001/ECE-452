@@ -68,6 +68,7 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 						JSONObject jStation = jStationsArray.getJSONObject(i);
 						JSONObject jPlaylist = jStation.getJSONObject("playlist");
 						JSONObject jUser = jStation.getJSONObject("user");
+						JSONObject jSong = jStation.getJSONObject("song");
 						PlaylistData playlist = new PlaylistData(jStation.getInt("playlistId"),
 										jPlaylist.getString("name"),
 										jPlaylist.getString("genre"),
@@ -77,11 +78,20 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 										jUser.getString("lastName"),
 										jUser.getString("userId"),
                                         jUser.getString("score"));
+						SongData song = new SongData(jStation.getInt("currentSongId"),
+													jSong.getString("title"), 
+													jSong.getString("artist"),
+													jSong.getString("album"),
+													jSong.getString("duration"),
+													jSong.getString("songUri"),
+													jSong.getString("artUrl"),
+													jSong.getString("songUrl"));
+						
 						stations.append(i, new StationData(jStation.getInt("id"),
 												jStation.getString("name"),
 												owner,
 												playlist,
-												new SongData(),
+												song,
 												jStation.getInt("listenerCount")));
 						
 					}

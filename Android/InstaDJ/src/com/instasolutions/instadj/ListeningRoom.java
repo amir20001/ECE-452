@@ -246,7 +246,8 @@ public class ListeningRoom extends FragmentActivity
 		//check to see if user has a registered GCM
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		ServiceGetHelper helper = new ServiceGetHelper();
-		helper.execute("http://instadj.amir20001.cloudbees.net/user/get/" + prefs.getString("UserID", "UserID"));
+		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+    			"http://instadj.amir20001.cloudbees.net/user/get/" + prefs.getString("UserID", "UserID"));
 		JSONObject jUser = new JSONObject();
 		String GCMId = ""; 
 
@@ -293,7 +294,8 @@ public class ListeningRoom extends FragmentActivity
 	                regid = gcm.register(SENDER_ID);
 	                
 	                ServicePostHelper helper = new ServicePostHelper();
-	                helper.execute("http://instadj.amir20001.cloudbees.net/user/updategcmid/" + prefs.getString("UserID", "UserID") + "/" + regid);
+	                helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+			    			"http://instadj.amir20001.cloudbees.net/user/updategcmid/" + prefs.getString("UserID", "UserID") + "/" + regid);
 	                Editor prefEdit = prefs.edit();
 	    			prefEdit.putString("GCMID", regid);
 	    			prefEdit.commit();
