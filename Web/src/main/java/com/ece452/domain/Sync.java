@@ -6,6 +6,8 @@ public class Sync {
 
 	public static final transient String sync = "sync";
 	public static final transient String kick = "kick";
+	public static final transient String score = "score";
+
 
 	private String action;
 	private int roomId;

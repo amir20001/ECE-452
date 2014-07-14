@@ -31,7 +31,11 @@ import com.ece452.dao.SongDao;
 import com.ece452.dao.UserDao;
 import com.ece452.domain.Playlist;
 import com.ece452.domain.Song;
+import com.ece452.domain.Sync;
+import com.ece452.domain.User;
+import com.ece452.util.Content;
 import com.ece452.util.FileHelper;
+import com.ece452.util.GcmHelper;
 import com.mpatric.mp3agic.Mp3File;
 
 @Controller
@@ -169,6 +173,39 @@ public class SongController {
 				fileHelper.delete(uuid);
 			}
 		}
+
+		try {
+			Thread.sleep(5);
+			song = songDao.getSong(songId);
+
+			Sync sync = new Sync();
+			sync.setAction(Sync.score);
+			Content content = new Content();
+			sync.setSongScore(song.getNetScore());
+			sync.setSongId(songId);
+
+			int playlistId = song.getPlaylistId();
+			Playlist playlist = playlistDao.getPlaylist(playlistId);
+			if (playlist != null) {
+				if (!StringUtils.isEmpty(playlist.getUserId())) {
+					User owner = userDao.getUser(playlist.getUserId());
+					if (owner != null) {
+						int roomId = owner.getRoomId();
+						List<User> usersInRoom = userDao.getUsersInRoom(roomId);
+						for (User user : usersInRoom) {
+							content.addRegId(user.getGcmId());
+						}
+						sync.setRoomId(roomId);
+					}
+				}
+			}
+
+			content = sync.addToContent(content);
+			GcmHelper.post(content);
+		} catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+
 	}
 
 	@RequestMapping(value = "/song/vote/{songid}/{value}", method = RequestMethod.POST)
