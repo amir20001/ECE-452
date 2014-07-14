@@ -53,7 +53,7 @@ public class StartController {
 	@RequestMapping(value = "gcmTest", method = RequestMethod.GET)
 	public void gcmtest(HttpSession session,HttpServletResponse response) throws IOException {
 		Content content = new Content();
-		content.addRegId("1");
+		content.addRegId("APA91bGuIGu0gGULMopesi9VGDZUJTKzWUTtaFfNe8LMfYqBBYbiQySrRHfWk3LaNfS8PDM5T5VInMqvx7DqOAROfAHJoKJbTp9OST9l1-99WC7Vf85biwJT45WXBiHQu5tcovoaFGaFu5daeG1c9BwoeELxkoL0yHSy4AlIw7BRgrppToZtfrQ");
 		content.createData("Test Title", "Test Message");
 		content.createData("dry_run", "true");
 		GcmHelper.post(content);
