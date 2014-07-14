@@ -87,6 +87,16 @@ public class RoomController {
 		model.addAttribute("rooms", rooms);
 		return new ModelAndView("roomView");
 	}
+	
+	@RequestMapping(value = "/getCurrentUsers/{roomId}", method = RequestMethod.GET)
+	public void getUsersInRoom(@PathVariable("roomId") int roomID,
+			HttpServletResponse response) throws JsonGenerationException,
+			JsonMappingException, IOException {
+		List<User> usersInRoom = userDao.getUsersInRoom(roomID);
+		ObjectMapper mapper = new ObjectMapper();
+		response.setContentType("application/json");
+		mapper.writeValue(response.getOutputStream(), usersInRoom);
+	}
 
 	@RequestMapping(value = "createaroom", method = RequestMethod.POST)
 	public ModelAndView posttome(HttpSession session, Model model,
