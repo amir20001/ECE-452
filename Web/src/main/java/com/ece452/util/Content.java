@@ -1,14 +1,14 @@
 package com.ece452.util;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+
+import com.ece452.domain.Sync;
 
 public class Content {
 
 	private List<String> registration_ids;
-	private Map<String, String> data;
+	private  Sync data;
 
 	public void addRegId(String regId) {
 		if (registration_ids == null)
@@ -16,12 +16,8 @@ public class Content {
 		registration_ids.add(regId);
 	}
 
-	public void createData(String title, String message) {
-		if (data == null)
-			data = new HashMap<String, String>();
-
-		data.put("title", title);
-		data.put("message", message);
+	public void setSync(Sync sync) {
+		 this.setData(sync);
 	}
 
 	public List<String> getRegistration_ids() {
@@ -32,11 +28,11 @@ public class Content {
 		this.registration_ids = registration_ids;
 	}
 
-	public Map<String, String> getData() {
+	public Sync getData() {
 		return data;
 	}
 
-	public void setData(Map<String, String> data) {
+	public void setData(Sync data) {
 		this.data = data;
 	}
 }

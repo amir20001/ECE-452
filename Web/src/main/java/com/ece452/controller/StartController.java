@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ece452.dao.RoomDao;
 import com.ece452.domain.Room;
+import com.ece452.domain.Sync;
 import com.ece452.util.Content;
 import com.ece452.util.GcmHelper;
 
@@ -53,9 +54,16 @@ public class StartController {
 	@RequestMapping(value = "gcmTest", method = RequestMethod.GET)
 	public void gcmtest(HttpSession session,HttpServletResponse response) throws IOException {
 		Content content = new Content();
-		content.addRegId("APA91bGuIGu0gGULMopesi9VGDZUJTKzWUTtaFfNe8LMfYqBBYbiQySrRHfWk3LaNfS8PDM5T5VInMqvx7DqOAROfAHJoKJbTp9OST9l1-99WC7Vf85biwJT45WXBiHQu5tcovoaFGaFu5daeG1c9BwoeELxkoL0yHSy4AlIw7BRgrppToZtfrQ");
-		content.createData("Test Title", "Test Message");
-		content.createData("dry_run", "true");
+		content.addRegId("APA91bFRDg_Qfqbg3X_GeoYuXlfjwszfVOUWAgSNqjKgjiT8RQ-nu7Kds-Ax5TlZ520XsA5X8MYdHhaEDe4fJatlTLbP9qSRGOBr5hvd13sd8OZT2VSi9I2f5Cto3LHBYtoPi8G46OSsqixK3jqCh1owWJ_LB0otxnKMrL3bW9SaSNrUDldmjXE");
+		
+		Sync sync = new Sync();
+		sync.setAction("Sync");
+		sync.setRoomId(1);
+		sync.setSongId(1);
+		sync.setPosition(20);
+		
+		content.setSync(sync);
+		
 		GcmHelper.post(content);
 	}
 	

@@ -177,10 +177,9 @@ public class SongController {
 		try {
 			Thread.sleep(5);
 			song = songDao.getSong(songId);
-
+			Content content = new Content();
 			Sync sync = new Sync();
 			sync.setAction(Sync.score);
-			Content content = new Content();
 			sync.setSongScore(song.getNetScore());
 			sync.setSongId(songId);
 
@@ -200,7 +199,7 @@ public class SongController {
 				}
 			}
 
-			content = sync.addToContent(content);
+			content.setSync(sync);
 			GcmHelper.post(content);
 		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
