@@ -141,6 +141,14 @@ public class RoomController {
 			roomDao.updateListenerCount(false, roomId);
 		}
 	}
+	
+	@RequestMapping(value = "/updatecurrentsong/{roomId}/{songId}", method = RequestMethod.POST)
+	public void updateCurrentSong(HttpServletResponse response,
+			@PathVariable("roomId") int roomId,
+			@PathVariable("songId") int songId) throws JsonGenerationException,
+			JsonMappingException, IOException {
+		roomDao.updateCurrentSong(songId, roomId);
+	}
 
 	@RequestMapping(value = "/sync", method = RequestMethod.POST)
 	public void sync(HttpServletResponse response, HttpServletRequest request)

@@ -128,6 +128,29 @@ public class RoomDao {
 			}
 		}
 	}
+	
+	public void updateCurrentSong(int songId, int roomId) {
+		String sql = "UPDATE room SET current_song_id=? WHERE id =?";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement;
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1, songId);
+			statement.setInt(2, roomId);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
 
 	public void delete(int roomId) {
 		String sql = "DELETE FROM room WHERE id  = ?;";
