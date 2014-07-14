@@ -106,7 +106,7 @@ public class RoomController {
 			@PathVariable("userId") String userId,
 			@PathVariable("roomId") int roomId) throws JsonGenerationException,
 			JsonMappingException, IOException {
-		
+
 		User user = userDao.getUser(userId);
 		userDao.updateRoom(userId, roomId);
 		if (user.getRoomId() > 0) {
@@ -150,6 +150,28 @@ public class RoomController {
 			content.addRegId(user.getGcmId());
 		}
 		GcmHelper.post(content);
+	}
+
+	@RequestMapping(value = "/delete/{roomId}", method = RequestMethod.POST)
+	public void delete(HttpServletResponse response,
+			@PathVariable("roomId") int roomId) throws JsonGenerationException,
+			JsonMappingException, IOException {
+		List<User> usersInRoom = userDao.getUsersInRoom(roomId);
+		Sync sync = new Sync();
+		Content content = new Content();
+		sync.setAction(Sync.kick);
+		sync.setRoomId(roomId);
+		sync.addToContent(content);
+		
+		for(User user :usersInRoom){
+			content.addRegId(user.getGcmId());
+		}
+		
+		
+		userDao.updateAllRoomRefs(roomId);
+		roomDao.delete(roomId);
+		GcmHelper.post(content);
+		
 	}
 
 }
