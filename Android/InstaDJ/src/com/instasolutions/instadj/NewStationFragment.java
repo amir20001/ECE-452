@@ -151,7 +151,7 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 		
 		returnStation.Name = stationName.getText().toString();
-		returnStation.Owner = new UserData(prefs.getString("FirstName", "FName"), prefs.getString("LastName", "LName"), prefs.getString("UserID", "0"));
+		returnStation.Owner = new UserData(prefs.getString("FirstName", "FName"), prefs.getString("LastName", "LName"), prefs.getString("UserID", "0"), "0");
 		PlayListAdapter playlistAdapter = (PlayListAdapter)playlistsListView.getAdapter();
 		returnStation.Playlist = (PlaylistData)playlistAdapter.getItem(selectedPlaylistPos);
 		returnStation.Song = new SongData();

@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="5dip" >
+    android:padding="5dip">
  
     <!--  ListRow Left sized Thumbnail image -->
     <LinearLayout android:id="@+id/thumbnail"
@@ -28,8 +28,6 @@
  
      <!-- Rightend Arrow -->
 
-    <!-- TODO: Implement score fields -->
-
      <ImageView android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -46,5 +44,18 @@
          android:textSize="15dip"
          android:textStyle="bold"
          android:typeface="sans" />
- 
+
+    <TextView
+        android:id="@+id/text_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="Score: "
+        android:textColor="@color/white"
+        android:textSize="15dip"
+        android:textStyle="bold"
+        android:typeface="sans"
+        android:layout_alignParentEnd="true"
+        android:paddingEnd="20dp" />
+
 </RelativeLayout>

@@ -95,8 +95,8 @@ public class RightDrawerFragment extends Fragment {
             SparseArray<SongData> songs = new SparseArray<SongData>();
 	    	mSongHistoryList = new SongListAdapter(this.getActivity(), songs );
 	        SparseArray<UserData> users = new SparseArray<UserData>();
-	        users.append(0, new UserData("TestFirst", "TestLast", "TESTID"));
-	        users.append(1, new UserData("TestFirst2", "TestLast2", "TESTLAST2"));
+	        users.append(0, new UserData("TestFirst", "TestLast", "TESTID", "0"));
+	        users.append(1, new UserData("TestFirst2", "TestLast2", "TESTLAST2", "2"));
 	        mUserList = new UserListAdapter(this.getActivity(), users);
 	        mDrawerListView.setAdapter(mSongHistoryList);
             mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);

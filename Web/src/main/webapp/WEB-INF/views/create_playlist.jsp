@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
-    <title>Create Rooms</title>
+    <title>Create Room </title>
     
         <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -13,9 +13,6 @@
     <link href="css/font-awesome-ie7.css" rel="stylesheet">
     <!-- Bootbusiness theme -->
     <link href="css/boot-business.css" rel="stylesheet">
-<script
-src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-
 </head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>User View</title>
@@ -26,15 +23,18 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 	href="<%=request.getContextPath()%>/resources/css/bootstrap.min.css"
 	rel="stylesheet" />	
 
-<h1>Add a music room.</h1>
+<h1>Create a new Playlist.</h1>
  		
-<form:form method="post" action="/room/createaroom">
-Room Name: <input type="text" name="roomID">
+<form:form method="post" action="/playlist/createlist.html"
+        modelAttribute="uploadForm" enctype="multipart/form-data">
 <br />
-Room Genre: <input type="text" name="room_genre" />
+Playlist Name: <input type="text" name="name">
+<br />
+Playlist Genre: <input type="text" name="genre" />
 <br />
 <input type="submit" value="Submit" />
 
 </form:form>
+
 </body>
 </html>

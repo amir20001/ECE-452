@@ -140,7 +140,7 @@ public class LoginActivity extends Activity implements OnClickListener,
                         prefEdit.putString("UserID", user.getId());
                         prefEdit.commit();
                         
-                        UserData ud = new UserData(user.getFirstName(), user.getLastName(), user.getId());
+                        UserData ud = new UserData(user.getFirstName(), user.getLastName(), user.getId(), "0");
                         
                         try{
                         	JSONObject jud = new JSONObject();

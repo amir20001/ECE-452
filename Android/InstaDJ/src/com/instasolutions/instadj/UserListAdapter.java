@@ -66,10 +66,12 @@ public class UserListAdapter extends BaseAdapter{
 			v = inflater.inflate(R.layout.list_row_users, null);
 		
 		TextView UserName = (TextView)v.findViewById(R.id.user_name);
+        TextView Score = (TextView)v.findViewById(R.id.text_score);
 		ImageView Picture = (ImageView)v.findViewById(R.id.list_user_picture);
 
         UserData user = users.get(pos);
-		
+
+        Score.setText("Score: " + user.getScore());
 		UserName.setText(user.getFirstName() + " " + user.getLastName());
 		Picture.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.com_facebook_profile_picture_blank_square));
 		

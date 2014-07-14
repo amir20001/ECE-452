@@ -74,7 +74,8 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 										new SparseArray<SongData>());
 						UserData owner = new UserData(jUser.getString("firstName"),
 										jUser.getString("lastName"),
-										jUser.getString("userId"));
+										jUser.getString("userId"),
+                                        jUser.getString("score"));
 						stations.append(i, new StationData(jStation.getInt("id"),
 												jStation.getString("name"),
 												owner,
