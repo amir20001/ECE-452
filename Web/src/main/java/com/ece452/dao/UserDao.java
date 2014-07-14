@@ -55,8 +55,8 @@ public class UserDao {
 		}
 
 	}
-	
-	public String updateGCMId(String id, String userid){
+
+	public String updateGCMId(String id, String userid) {
 		String sql = "UPDATE user SET gcm_id=? WHERE user_id=?;";
 		Connection conn = null;
 		try {
@@ -77,7 +77,7 @@ public class UserDao {
 				}
 			}
 		}
-		
+
 	}
 
 	public User getUser(String userid) {
@@ -126,7 +126,19 @@ public class UserDao {
 				}
 			}
 		}
+	}
 
+	public List<User> getUsersInRoom(int roomId) {
+		String sql = "SELECT * FROM USER WHERE room_id =?";
+
+		List<User> user = new ArrayList<User>();
+		try {
+			user = jdbcTemplate.query(sql, new Object[] { roomId },
+					new UserMapper());
+			return user;
+		} catch (Exception e) {
+			return user;
+		}
 	}
 
 }
