@@ -47,16 +47,6 @@ public class Sync {
 		this.songScore = songScore;
 	}
 
-	public Content addToContent(Content content) {
-
-		content.createData("action", action);
-		content.createData("songId", new Integer(songId).toString());
-		content.createData("position", new Integer(position).toString());
-		content.createData("songScore", new Integer(songScore).toString());
-
-		return content;
-	}
-
 	public int getRoomId() {
 		return roomId;
 	}

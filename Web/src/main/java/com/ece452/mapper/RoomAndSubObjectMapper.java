@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.ece452.domain.Playlist;
 import com.ece452.domain.Room;
+import com.ece452.domain.Song;
 import com.ece452.domain.User;
 
 public class RoomAndSubObjectMapper implements RowMapper<Room> {
@@ -21,6 +22,9 @@ public class RoomAndSubObjectMapper implements RowMapper<Room> {
 			Playlist playlist = new Playlist();
 			playlist.map(resultSet);
 			room.setPlaylist(playlist);
+			Song song = new Song();
+			song.map(resultSet);
+			room.setSong(song);
 			room.map(resultSet);
 		} catch (Exception e) {
 			System.out.println(e);

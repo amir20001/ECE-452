@@ -151,6 +151,28 @@ public class UserDao {
 		}
 	}
 
+	public void updateAllRoomRefs(int roomId) {
+		String sql = "	UPDATE USER SET room_id =0 WHERE room_id =?";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement;
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1, roomId);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
 	public List<User> getUsersInRoom(int roomId) {
 		String sql = "SELECT * FROM USER WHERE room_id =?";
 

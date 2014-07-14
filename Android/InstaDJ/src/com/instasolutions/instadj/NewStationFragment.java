@@ -126,7 +126,7 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 				break;
 			case R.id.newstation_save_button:
 				CurrentRoomFragment fragment = ((ListeningRoom)activity).getCurrentRoomFragment();
-				fragment.setStation(createStation());
+				fragment.setStation(createStation(), activity);
 				FragmentManager fragmentManager = this.getFragmentManager();
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 				fragmentTransaction.replace(R.id.container, fragment, "CurrentRoomFragment");
@@ -155,21 +155,6 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 		PlayListAdapter playlistAdapter = (PlayListAdapter)playlistsListView.getAdapter();
 		returnStation.Playlist = (PlaylistData)playlistAdapter.getItem(selectedPlaylistPos);
 		returnStation.Song = new SongData();
-		
-		try{
-        	JSONObject jstation = new JSONObject();
-        	jstation.put("name", returnStation.Name);
-        	jstation.put("ownerUserId", prefs.getString("UserID", "0"));
-        	jstation.put("playlistId", returnStation.Playlist.id);
-        	jstation.put("listenerCount", returnStation.ListenerCount);
-
-        	
-        	ServicePostHelper post = new ServicePostHelper();
-        	post.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
-    				"http://instadj.amir20001.cloudbees.net/room/insert",jstation.toString());
-        }catch (Exception e){
-        	Log.e("instaDJ", "JSONException", e);
-        }
 		
 		return returnStation;
 

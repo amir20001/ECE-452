@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ece452.domain.Follow;
 import com.ece452.domain.User;
+import com.ece452.mapper.FollowMapper;
 import com.ece452.mapper.UserMapper;
 import com.mysql.jdbc.Statement;
 
@@ -84,6 +85,18 @@ public class FollowDao {
 			return users;
 		} catch (Exception e) {
 			return users;
+		}
+	}
+	
+	public List<Follow> getId(String followerId, String followeeId)
+	{
+		String sql = "SELECT * FROM follow WHERE follower = ? AND followee = ?;";
+		List<Follow> followList = new ArrayList<Follow>();
+		try {
+			followList = jdbcTemplate.query(sql, new Object[] {followerId, followeeId}, new FollowMapper());
+			return followList;
+		} catch (Exception e) {
+			return followList;
 		}
 	}
 

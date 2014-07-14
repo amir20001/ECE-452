@@ -5,15 +5,11 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Hashtable;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -22,14 +18,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.facebook.widget.ProfilePictureView;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 public class UserListAdapter extends BaseAdapter{
 
@@ -72,7 +60,7 @@ public class UserListAdapter extends BaseAdapter{
         UserData user = users.get(pos);
 
         Score.setText("Score: " + user.getScore());
-		UserName.setText(user.getFirstName() + " " + user.getLastName());
+		UserName.setText(user.getFirstName() + " " + user.getLastName().charAt(0) + ".");
 		Picture.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.com_facebook_profile_picture_blank_square));
 		
 		final DownloadPictureTask task = new DownloadPictureTask(Picture);
@@ -80,6 +68,16 @@ public class UserListAdapter extends BaseAdapter{
 				"https://graph.facebook.com/" + user.getUserID() + "/picture?type=square");
 		
 		return v;
+	}
+	
+	public SparseArray<UserData> getArray()
+	{
+		return users;
+	}
+	
+	public void setArray(SparseArray<UserData> uArray)
+	{
+		users = uArray;
 	}
 	
 	

@@ -87,6 +87,16 @@ public class RoomController {
 		model.addAttribute("rooms", rooms);
 		return new ModelAndView("roomView");
 	}
+	
+	@RequestMapping(value = "/getCurrentUsers/{roomId}", method = RequestMethod.GET)
+	public void getUsersInRoom(@PathVariable("roomId") int roomID,
+			HttpServletResponse response) throws JsonGenerationException,
+			JsonMappingException, IOException {
+		List<User> usersInRoom = userDao.getUsersInRoom(roomID);
+		ObjectMapper mapper = new ObjectMapper();
+		response.setContentType("application/json");
+		mapper.writeValue(response.getOutputStream(), usersInRoom);
+	}
 
 	@RequestMapping(value = "createaroom", method = RequestMethod.POST)
 	public ModelAndView posttome(HttpSession session, Model model,
@@ -106,7 +116,7 @@ public class RoomController {
 			@PathVariable("userId") String userId,
 			@PathVariable("roomId") int roomId) throws JsonGenerationException,
 			JsonMappingException, IOException {
-		
+
 		User user = userDao.getUser(userId);
 		userDao.updateRoom(userId, roomId);
 		if (user.getRoomId() > 0) {
@@ -131,6 +141,14 @@ public class RoomController {
 			roomDao.updateListenerCount(false, roomId);
 		}
 	}
+	
+	@RequestMapping(value = "/updatecurrentsong/{roomId}/{songId}", method = RequestMethod.POST)
+	public void updateCurrentSong(HttpServletResponse response,
+			@PathVariable("roomId") int roomId,
+			@PathVariable("songId") int songId) throws JsonGenerationException,
+			JsonMappingException, IOException {
+		roomDao.updateCurrentSong(songId, roomId);
+	}
 
 	@RequestMapping(value = "/sync", method = RequestMethod.POST)
 	public void sync(HttpServletResponse response, HttpServletRequest request)
@@ -145,11 +163,35 @@ public class RoomController {
 		Sync sync = mapper.readValue(json, Sync.class);
 		List<User> usersInRoom = userDao.getUsersInRoom(sync.getRoomId());
 		Content content = new Content();
-		content = sync.addToContent(content);
+		content.setSync(sync);
 		for (User user : usersInRoom) {
 			content.addRegId(user.getGcmId());
 		}
-		GcmHelper.post(content);
+		if (usersInRoom.size() > 0) {
+			GcmHelper.post(content);
+		}
+	}
+
+	@RequestMapping(value = "/delete/{roomId}", method = RequestMethod.POST)
+	public void delete(HttpServletResponse response,
+			@PathVariable("roomId") int roomId) throws JsonGenerationException,
+			JsonMappingException, IOException {
+		List<User> usersInRoom = userDao.getUsersInRoom(roomId);
+		Sync sync = new Sync();
+		Content content = new Content();
+		sync.setAction(Sync.kick);
+		sync.setRoomId(roomId);
+		content.setSync(sync);
+
+		for (User user : usersInRoom) {
+			content.addRegId(user.getGcmId());
+		}
+
+		userDao.updateAllRoomRefs(roomId);
+		roomDao.delete(roomId);
+		if (usersInRoom.size() > 0) {
+			GcmHelper.post(content);
+		}
 	}
 
 }

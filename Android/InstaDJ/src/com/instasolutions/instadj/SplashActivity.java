@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.view.Window;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
@@ -20,6 +19,7 @@ public class SplashActivity extends Activity {
         ImageView logoImage = (ImageView)findViewById(R.id.splash_image);
         WebView loadAnimation = (WebView)findViewById(R.id.splash_load);
         loadAnimation.loadUrl("file:///android_asset/splash.html");
+        loadAnimation.setBackgroundColor(0x00000000);
         logoImage.setImageResource(R.drawable.logo_animation);
         AnimationDrawable logoAnimation = (AnimationDrawable)logoImage.getDrawable();
         logoAnimation.start();

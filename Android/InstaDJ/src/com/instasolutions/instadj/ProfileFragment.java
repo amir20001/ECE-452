@@ -16,6 +16,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -63,6 +64,7 @@ public class ProfileFragment extends Fragment{
 	public void onActivityCreated(Bundle savedInstanceState)
     {
     	super.onActivityCreated(savedInstanceState);
+        Bundle args = this.getArguments();
 		btn_logout = (Button) activity.findViewById(R.id.button_Logout);
 		image_profile = (ImageView) activity.findViewById(R.id.splash_image);
 		text_name = (TextView) activity.findViewById(R.id.text_name);
@@ -71,51 +73,66 @@ public class ProfileFragment extends Fragment{
         profile_pic = (ProfilePictureView) activity.findViewById(R.id.image_profile_pic);
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
-        // Display the person's name
-        text_name.setText(prefs.getString("FirstName", "Fname") + " " + prefs.getString("LastName", "Lname"));
 
-        // Display the profile picture
-        profile_pic.setProfileId(prefs.getString("UserID", ""));
+        if (args == null || args.getString("UserID", "").isEmpty()){
+            // Display the person's name
+            text_name.setText(prefs.getString("FirstName", "Fname") + " " + prefs.getString("LastName", "Lname"));
 
-        // Display the person's score
-        ServiceGetHelper getHelper = new ServiceGetHelper(){
-            @Override
-            protected void onPostExecute(String result) {
-                try {
-                    JSONObject jProfileInfo = new JSONObject(result);
-                    text_score.setText("Score: " + jProfileInfo.getString("score"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            // Display the profile picture
+            profile_pic.setProfileId(prefs.getString("UserID", ""));
+
+            // Display the person's score
+            ServiceGetHelper getHelper = new ServiceGetHelper(){
+                @Override
+                protected void onPostExecute(String result) {
+                    try {
+                        JSONObject jProfileInfo = new JSONObject(result);
+                        text_score.setText("Score: " + jProfileInfo.getString("score"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-        };
+            };
 
-        getHelper.execute("http://instadj.amir20001.cloudbees.net/user/get/" + prefs.getString("UserID", "0"));
+            getHelper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+	    			"http://instadj.amir20001.cloudbees.net/user/get/" + prefs.getString("UserID", "0"));
 
-        // Button event handler
-        btn_logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Create a confirmation dialog
-                String logout = getResources().getString(R.string.com_facebook_loginview_log_out_action);
-                String cancel = getResources().getString(R.string.com_facebook_loginview_cancel_action);
-                String message = String.format(getResources().getString(R.string.com_facebook_loginview_logged_in_as), prefs.getString("FirstName", "Fname") + " " + prefs.getString("LastName", "Lname"));
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setMessage(message)
-                       .setCancelable(true)
-                       .setPositiveButton(logout, new DialogInterface.OnClickListener() {
-                           public void onClick(DialogInterface dialog, int which) {
-                               fb_session.closeAndClearTokenInformation();
-                               Intent newIntent = new Intent(activity.getApplicationContext(), LoginActivity.class);
-                               activity.startActivity(newIntent);
-                               activity.finish();
-                           }
-                       })
-                       .setNegativeButton(cancel, null);
-                builder.create().show();
-            }
-        });
+            // Button event handler
+            btn_logout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Create a confirmation dialog
+                    String logout = getResources().getString(R.string.com_facebook_loginview_log_out_action);
+                    String cancel = getResources().getString(R.string.com_facebook_loginview_cancel_action);
+                    String message = String.format(getResources().getString(R.string.com_facebook_loginview_logged_in_as), prefs.getString("FirstName", "Fname") + " " + prefs.getString("LastName", "Lname"));
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setMessage(message)
+                            .setCancelable(true)
+                            .setPositiveButton(logout, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    fb_session.closeAndClearTokenInformation();
+                                    Intent newIntent = new Intent(activity.getApplicationContext(), LoginActivity.class);
+                                    activity.startActivity(newIntent);
+                                    activity.finish();
+                                }
+                            })
+                            .setNegativeButton(cancel, null);
+                    builder.create().show();
+                }
+            });
+        } else {
+            // Display alt person's name
+            text_name.setText(args.getString("FirstName", "Fname") + " " + args.getString("LastName", "Lname"));
+
+            // Display alt profile picture
+            profile_pic.setProfileId(args.getString("UserID", ""));
+
+            // Display alt person's score
+            text_score.setText("Score: " + args.getString("Score"));
+
+            btn_logout.setVisibility(View.INVISIBLE);
+        }
 
     }
 }

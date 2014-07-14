@@ -2,13 +2,17 @@ package com.instasolutions.instadj;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -54,11 +58,34 @@ public class FollowersFragment extends Fragment{
                 try {
                     JSONArray jFollowersArray = new JSONArray(result);
                     for(int i = 0; i <jFollowersArray.length(); i++){
-                        JSONObject jPlaylist = jFollowersArray.getJSONObject(i);
+                        final JSONObject jPlaylist = jFollowersArray.getJSONObject(i);
+                        final String userID = jPlaylist.getString("userId");
+                        final String fName = jPlaylist.getString("firstName");
+                        final String lName = jPlaylist.getString("lastName");
+                        final String score = jPlaylist.getString("score");
 
-                        UserData user = new UserData(jPlaylist.getString("firstName"), jPlaylist.getString("lastName"), jPlaylist.getString("userId"), jPlaylist.getString("score"));
+                        final UserData user = new UserData(fName, lName, userID, score);
 
                         followersList.append(i, user);
+
+                        followersView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                UserData user = (UserData) followersView.getItemAtPosition(i);
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                ProfileFragment profileFrag = new ProfileFragment();
+                                Bundle args = new Bundle();
+                                args.putString("UserID", user.getUserID());
+                                args.putString("FirstName", user.getFirstName());
+                                args.putString("LastName", user.getLastName());
+                                args.putString("Score", user.getScore());
+                                profileFrag.setArguments(args);
+                                fragmentTransaction.replace(R.id.container, profileFrag, "ProfileFragment");
+                                fragmentTransaction.addToBackStack(null);
+                                fragmentTransaction.commit();
+                            }
+                        });
 
                     }
                 } catch (JSONException e) {
@@ -71,6 +98,7 @@ public class FollowersFragment extends Fragment{
 
         };
 
-        getHelper.execute("http://instadj.amir20001.cloudbees.net/follow/get/followers/" + prefs.getString("UserID", "0"));
+        getHelper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+    			"http://instadj.amir20001.cloudbees.net/follow/get/followers/" + prefs.getString("UserID", "0"));
     }
 }

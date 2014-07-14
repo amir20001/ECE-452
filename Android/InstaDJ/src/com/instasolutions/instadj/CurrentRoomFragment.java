@@ -9,12 +9,14 @@ import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
@@ -59,7 +61,8 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private ImageButton btn_favourite;
     private ImageButton btn_like;
     private ImageButton btn_dislike;
-    private ImageButton btn_removeRoom;
+    private ImageButton btn_closeRoom;
+    private ImageButton btn_follow;
     private Handler updateHandler = new Handler();
     private TextView text_curTime;
     private TextView text_endTime;
@@ -75,9 +78,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private int playlistPosition = 0;
     private static Boolean initialized = false;
     private Boolean currentlyFavourited = false;
-    private Boolean currentlyLiked = false;
-    private Boolean currentlyDisliked = false;
+    private int currentVote = 0;
     private Boolean firstSong = false;
+    private Boolean userFollowingHost = false;
     @Override
     public View onCreateView(LayoutInflater inflater, 
             ViewGroup container, 
@@ -107,6 +110,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     
     public void initialize()
     {
+        playlistPosition = 0;
+        currentlyFavourited = false;
+        currentVote = 0;
     	if(station == null)
     	{
     		 StationsFragment fragment = ((ListeningRoom)activity).getStationsFragment();
@@ -141,7 +147,8 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    btn_favourite = (ImageButton)activity.findViewById(R.id.room_favourite_button);
 	    btn_like = (ImageButton)activity.findViewById(R.id.room_like_button);
 	    btn_dislike = (ImageButton)activity.findViewById(R.id.room_dislike_button);
-	    btn_removeRoom = (ImageButton)activity.findViewById(R.id.room_remove_button);
+	    btn_closeRoom = (ImageButton)activity.findViewById(R.id.room_close_button);
+	    btn_follow = (ImageButton)activity.findViewById(R.id.room_follow_button);
         seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
         text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
         text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
@@ -153,6 +160,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         
         btn_play.setOnClickListener(this);
         btn_favourite.setOnClickListener(this);
+        btn_closeRoom.setOnClickListener(this);
         
         if(station != null)
         {
@@ -163,25 +171,32 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         }
         if(prefs.getBoolean("userIsHosting", false))
         {
-            seekbar.setOnSeekBarChangeListener(this);
-            btn_next.setOnClickListener(this);
-            btn_removeRoom.setOnClickListener(this);
-        	btn_next.setVisibility(ImageView.VISIBLE);
-        	btn_removeRoom.setVisibility(ImageView.VISIBLE);
+        	//At this time not allowing host to skip or change position in song
+        	//TODO: Determine if upload is complete before moving to next song
+            //seekbar.setOnSeekBarChangeListener(this);
+            //btn_next.setOnClickListener(this);
+        	btn_closeRoom.setImageResource(R.drawable.ic_action_discard);
+        	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	
+        	btn_next.setVisibility(ImageView.INVISIBLE);
         	btn_like.setVisibility(ImageView.INVISIBLE);
         	btn_dislike.setVisibility(ImageView.INVISIBLE);
+        	btn_follow.setVisibility(ImageView.INVISIBLE);
         	prepareRoom();
         }
         else
         {
         	btn_next.setVisibility(ImageView.INVISIBLE);
-        	btn_removeRoom.setVisibility(ImageView.INVISIBLE);
         	
         	btn_like.setOnClickListener(this);
         	btn_dislike.setOnClickListener(this);
+        	btn_follow.setOnClickListener(this);
+        	btn_closeRoom.setImageResource(R.drawable.insta_leave_room);
+        	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	btn_like.setVisibility(ImageView.VISIBLE);
         	btn_dislike.setVisibility(ImageView.VISIBLE);
+        	btn_follow.setVisibility(ImageView.VISIBLE);
+        	initFollow();
         	nextSong();
         }
 
@@ -198,7 +213,8 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    btn_favourite = (ImageButton)activity.findViewById(R.id.room_favourite_button);
 	    btn_like = (ImageButton)activity.findViewById(R.id.room_like_button);
 	    btn_dislike = (ImageButton)activity.findViewById(R.id.room_dislike_button);
-	    btn_removeRoom = (ImageButton)activity.findViewById(R.id.room_remove_button);
+	    btn_closeRoom = (ImageButton)activity.findViewById(R.id.room_close_button);
+	    btn_follow = (ImageButton)activity.findViewById(R.id.room_follow_button);
         seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
         text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
         text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
@@ -210,24 +226,35 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         
         btn_play.setOnClickListener(this);
         btn_favourite.setOnClickListener(this);
+        btn_closeRoom.setOnClickListener(this);
         
         if(prefs.getBoolean("userIsHosting", false))
         {
-            seekbar.setOnSeekBarChangeListener(this);
-            btn_next.setOnClickListener(this);
-        	btn_next.setVisibility(ImageView.VISIBLE);
-        	btn_removeRoom.setVisibility(ImageView.VISIBLE);
+        	//At this time not allowing host to skip or change position in song
+        	//TODO: Determine if upload is complete before moving to next song
+            //seekbar.setOnSeekBarChangeListener(this);
+            //btn_next.setOnClickListener(this);
+        	btn_closeRoom.setImageResource(R.drawable.ic_action_discard);
+        	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	
+        	btn_next.setVisibility(ImageView.INVISIBLE);
         	btn_like.setVisibility(ImageView.INVISIBLE);
         	btn_dislike.setVisibility(ImageView.INVISIBLE);
+        	btn_follow.setVisibility(ImageView.INVISIBLE);
         }
         else
         {
         	btn_next.setVisibility(ImageView.INVISIBLE);
-        	btn_removeRoom.setVisibility(ImageView.INVISIBLE);
         	
+        	btn_like.setOnClickListener(this);
+        	btn_dislike.setOnClickListener(this);
+        	btn_follow.setOnClickListener(this);
+        	btn_closeRoom.setImageResource(R.drawable.insta_leave_room);
+        	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	btn_like.setVisibility(ImageView.VISIBLE);
         	btn_dislike.setVisibility(ImageView.VISIBLE);
+        	btn_follow.setVisibility(ImageView.VISIBLE);
+        	initFollow();
         }
         
 
@@ -262,8 +289,44 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         seekbar.setMax((int)endTime);
     }
     
-    public void setStation(StationData s)
+    private void initFollow()
     {
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+    	ServiceGetHelper helper = new ServiceGetHelper(){
+    		@Override
+    		protected void onPostExecute(String result)
+    		{
+    			try {
+					JSONArray followArray = new JSONArray(result);
+					if(followArray.length() == 0)
+					{
+						btn_follow.setImageResource(R.drawable.ic_action_add_person);
+						userFollowingHost = false;
+					}
+					else
+					{
+						btn_follow.setImageResource(R.drawable.ic_action_add_person_green);
+						userFollowingHost = true;
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
+    		
+    	};
+    	helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+    			"http://instadj.amir20001.cloudbees.net/follow/getid/" + prefs.getString("UserID", "UserID")+ "/" + station.Owner.getUserID());
+    }
+    
+    public void setStation(StationData s, Activity a)
+    {    	
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(a);  
+    	if(station != null)
+    	{
+        	ServicePostHelper helper = new ServicePostHelper();
+        	helper.execute("http://instadj.amir20001.cloudbees.net/room/leave/" + station.id + "/" + prefs.getString("UserID", "UserID"));
+    	}
     	this.station = s;
     	this.station.Playlist.populateSongs();
     	if(mediaplayer != null)
@@ -275,6 +338,13 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         	text_stationName.setText(station.Name);
     	}
     	initialized = false;
+    	userFollowingHost =false;
+    	
+    	ServicePostHelper helper = new ServicePostHelper();
+    	helper.execute("http://instadj.amir20001.cloudbees.net/room/join/" + station.id + "/" + prefs.getString("UserID", "UserID"));
+    	Editor prefEdit = prefs.edit();
+    	prefEdit.putInt("userCurrentRoom", station.id);
+    	prefEdit.commit();
 
     }
 	
@@ -332,6 +402,12 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
 	    				"http://instadj.amir20001.cloudbees.net/favourite/insert/" + prefs.getString("UserID", "0") + "/" + station.Song.id);
 	    	}
+	    	if(currentVote != 0)
+	    	{
+				ServicePostHelper helper = new ServicePostHelper();
+				helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR
+						, "http://instadj.amir20001.cloudbees.net/song/vote/" + station.Song.id + "/" + currentVote);
+	    	}
 	    	//Remove previous song from storage
 	    	if(prefs.getBoolean("userIsHosting", false) && !firstSong)
 	    	{
@@ -353,6 +429,12 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    		playlistPosition = 0;
 	    	}
 	    	station.Song = station.Playlist.Songs.get(playlistPosition);
+	    	if(prefs.getBoolean("userIsHosting", false) && !firstSong)
+	    	{
+	    		ServicePostHelper helper = new ServicePostHelper();
+	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+	    				"http://instadj.amir20001.cloudbees.net/room/updatecurrentsong/" + station.id + "/" + station.Song.id);
+	    	}
 
     	    Uri.Builder uri_b = new Uri.Builder();
     	    
@@ -384,8 +466,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     		firstSong = false;
     		
     		currentlyFavourited = false;
-    		currentlyDisliked = false;
-    		currentlyLiked = false;
+    		currentVote = 0;
     		btn_like.setImageResource(R.drawable.ic_action_good);
     		btn_dislike.setImageResource(R.drawable.ic_action_bad);
     		btn_favourite.setImageResource(R.drawable.ic_action_favorite);
@@ -395,13 +476,43 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    
 	    private void prepareRoom()
 	    {
-	    	final ProgressDialog dialog = ProgressDialog.show(this.activity, "Preparing Room", "Please Wait...", true);
+	    	final ProgressDialog dialog = new ProgressDialog(this.activity,android.R.style.Theme_Holo_Dialog);
+	    	dialog.setTitle("Preparing Room");
+	    	dialog.setMessage("Please Wait...");
+	    	dialog.setIndeterminate(true);
 	    	final CurrentRoomFragment room = this;
 	    	dialog.show();
 	    	ServiceUploadHelper upload = new ServiceUploadHelper(){
 	    		@Override
 	    		 protected void onPostExecute(Integer i) {
+	    			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 	    	    	dialog.dismiss();
+	    			try{
+	    	        	JSONObject jstation = new JSONObject();
+	    	        	jstation.put("name", station.Name);
+	    	        	jstation.put("ownerUserId", prefs.getString("UserID", "0"));
+	    	        	jstation.put("playlistId", station.Playlist.id);
+	    	        	jstation.put("listenerCount", station.ListenerCount);
+	    	        	jstation.put("currentSongId", station.Song.id );
+
+	    	        	
+	    	        	ServicePostHelper post = new ServicePostHelper();
+	    	        	post.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+	    	    				"http://instadj.amir20001.cloudbees.net/room/insert",jstation.toString());
+	    	        	String jString = post.get();
+	    	        	jstation = new JSONObject(jString);
+	    	        	station.id = jstation.getInt("id");
+	    		    	ServicePostHelper helper = new ServicePostHelper();
+	    		    	helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+	    		    			"http://instadj.amir20001.cloudbees.net/room/join/" + station.id + "/" + prefs.getString("UserID", "UserID"));
+	    		    	Editor prefEdit = prefs.edit();
+	    		    	prefEdit.putInt("userCurrentRoom", station.id);
+	    		    	prefEdit.commit();
+	    	        	
+	    	        	
+	    	        }catch (Exception e){
+	    	        	Log.e("instaDJ", "JSONException", e);
+	    	        }
 	    	    	room.nextSong();
 	    		}
 	    	};
@@ -416,28 +527,28 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    {
 	    	if(like)
 	    	{
-	    		if(currentlyLiked)
+	    		if(currentVote == 1)
 	    		{
-	    			currentlyLiked = false;
+	    			currentVote = 0;
 	    			btn_like.setImageResource(R.drawable.ic_action_good);
 	    		}
 	    		else
 	    		{
-	    			currentlyLiked = true;
+	    			currentVote = 1;
 		    		btn_like.setImageResource(R.drawable.ic_action_good_green);
 		    		btn_dislike.setImageResource(R.drawable.ic_action_bad);
 	    		}
 	    	}
 	    	else
 	    	{
-	    		if(currentlyDisliked)
+	    		if(currentVote == -1)
 	    		{
-	    			currentlyDisliked = false;
+	    			currentVote = 0;
 	    			btn_dislike.setImageResource(R.drawable.ic_action_bad);
 	    		}
 	    		else
 	    		{
-	    			currentlyDisliked = true;
+	    			currentVote = -1;
 	    			btn_like.setImageResource(R.drawable.ic_action_good);
 	    			btn_dislike.setImageResource(R.drawable.ic_action_bad_red);
 	    		}
@@ -461,7 +572,72 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    
 	    private void closeRoom()
 	    {
-	    	
+	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+	    	if(mediaplayer != null)
+	    		mediaplayer.release();
+	    	if(updateHandler != null)
+	    		updateHandler.removeCallbacks(UpdateSeekBar);
+	    	if(prefs.getBoolean("userIsHosting", false))
+	    	{
+		    	ServicePostHelper helper = new ServicePostHelper();
+		    	helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+		    			"http://instadj.amir20001.cloudbees.net/room/delete/" + station.id);
+	    	}
+	    	else
+	    	{
+	    		ServicePostHelper helper = new ServicePostHelper();
+	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+		    			"http://instadj.amir20001.cloudbees.net/room/leave/" + station.id + "/" + prefs.getString("UserID", "UserID"));
+	    	}
+	    	station = null;
+	    	initialized = false;
+	    	Editor prefEditor = prefs.edit();
+	    	prefEditor.putBoolean("userIsHosting", false);
+	    	prefEditor.commit();
+	    	//Go to default fragment
+	    	((ListeningRoom)activity).onNavigationDrawerItemSelected(-1);
+	    }
+	    
+	    public void forceQuitRoom()
+	    {
+//    	    AlertDialog.Builder builder = new AlertDialog.Builder(ListeningRoom.mThis, android.R.style.Theme_Holo_Dialog);
+//   	        builder.setMessage("The host has closed the room.").setTitle("Room Closed");
+//   	        builder.show();
+   	        
+	    	if(mediaplayer != null)
+	    		mediaplayer.release();
+	    	if(updateHandler != null)
+	    		updateHandler.removeCallbacks(UpdateSeekBar);
+	    	station = null;
+	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+	    	Editor prefEdit = prefs.edit();
+	    	prefEdit.putInt("userCurrentRoom", -1);
+	    	prefEdit.commit();
+	    	initialized = false;
+	    	//Go to default fragment
+	    	((ListeningRoom)activity).onNavigationDrawerItemSelected(-1);
+	    }
+	    
+	    private void updateFollowing()
+	    {
+	    	SharedPreferences prefs  = PreferenceManager.getDefaultSharedPreferences(activity);
+	    	String userID = prefs.getString("UserID", "UserID");
+	    	if(!userFollowingHost)
+	    	{
+	    		userFollowingHost = true;
+	    		btn_follow.setImageResource(R.drawable.ic_action_add_person_green);
+	    		ServicePostHelper helper = new ServicePostHelper();
+	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+	    				"http://instadj.amir20001.cloudbees.net/follow/insert/" + userID + "/" + station.Owner.getUserID());
+	    	}
+	    	else
+	    	{
+	    		userFollowingHost = false;
+	    		btn_follow.setImageResource(R.drawable.ic_action_add_person);
+	    		ServicePostHelper helper = new ServicePostHelper();
+	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+	    				"http://instadj.amir20001.cloudbees.net/follow/delete/" + userID + "/" + station.Owner.getUserID());
+	    	}
 	    }
 	    
 
@@ -484,9 +660,11 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 				case R.id.room_like_button:
 					updateLikes(true);
 					break;
-				case R.id.room_remove_button:
+				case R.id.room_close_button:
 					closeRoom();
 					break;
+				case R.id.room_follow_button:
+					updateFollowing();
 				default:
 					break;
 			}

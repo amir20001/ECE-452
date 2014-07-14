@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
@@ -115,6 +116,8 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 		{
 			TextView SongPath = (TextView)v.findViewById(R.id.song_contentpath);
 			CheckBox checkbox = (CheckBox)v.findViewById(R.id.songs_checkbox);
+			int id = Resources.getSystem().getIdentifier("btn_check_holo_dark", "drawable", "android");
+			checkbox.setButtonDrawable(id);
 			Boolean checked = checkBoxArray.get(pos);
 			SongPath.setText(song.LocalPath);
 			checkbox.setTag(pos);
