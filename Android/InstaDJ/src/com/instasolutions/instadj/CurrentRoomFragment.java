@@ -60,7 +60,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private ImageButton btn_favourite;
     private ImageButton btn_like;
     private ImageButton btn_dislike;
-    private ImageButton btn_removeRoom;
+    private ImageButton btn_closeRoom;
     private Handler updateHandler = new Handler();
     private TextView text_curTime;
     private TextView text_endTime;
@@ -144,7 +144,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    btn_favourite = (ImageButton)activity.findViewById(R.id.room_favourite_button);
 	    btn_like = (ImageButton)activity.findViewById(R.id.room_like_button);
 	    btn_dislike = (ImageButton)activity.findViewById(R.id.room_dislike_button);
-	    btn_removeRoom = (ImageButton)activity.findViewById(R.id.room_remove_button);
+	    btn_closeRoom = (ImageButton)activity.findViewById(R.id.room_close_button);
         seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
         text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
         text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
@@ -156,6 +156,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         
         btn_play.setOnClickListener(this);
         btn_favourite.setOnClickListener(this);
+        btn_closeRoom.setOnClickListener(this);
         
         if(station != null)
         {
@@ -166,12 +167,14 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         }
         if(prefs.getBoolean("userIsHosting", false))
         {
-            seekbar.setOnSeekBarChangeListener(this);
-            btn_next.setOnClickListener(this);
-            btn_removeRoom.setOnClickListener(this);
-        	btn_next.setVisibility(ImageView.VISIBLE);
-        	btn_removeRoom.setVisibility(ImageView.VISIBLE);
+        	//At this time not allowing host to skip or change position in song
+        	//TODO: Determine if upload is complete before moving to next song
+            //seekbar.setOnSeekBarChangeListener(this);
+            //btn_next.setOnClickListener(this);
+        	btn_closeRoom.setImageResource(R.drawable.ic_action_discard);
+        	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	
+        	btn_next.setVisibility(ImageView.INVISIBLE);
         	btn_like.setVisibility(ImageView.INVISIBLE);
         	btn_dislike.setVisibility(ImageView.INVISIBLE);
         	prepareRoom();
@@ -179,10 +182,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         else
         {
         	btn_next.setVisibility(ImageView.INVISIBLE);
-        	btn_removeRoom.setVisibility(ImageView.INVISIBLE);
         	
-        	btn_like.setOnClickListener(this);
-        	btn_dislike.setOnClickListener(this);
+        	btn_closeRoom.setImageResource(R.drawable.insta_leave_room);
+        	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	btn_like.setVisibility(ImageView.VISIBLE);
         	btn_dislike.setVisibility(ImageView.VISIBLE);
         	nextSong();
@@ -201,7 +203,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    btn_favourite = (ImageButton)activity.findViewById(R.id.room_favourite_button);
 	    btn_like = (ImageButton)activity.findViewById(R.id.room_like_button);
 	    btn_dislike = (ImageButton)activity.findViewById(R.id.room_dislike_button);
-	    btn_removeRoom = (ImageButton)activity.findViewById(R.id.room_remove_button);
+	    btn_closeRoom = (ImageButton)activity.findViewById(R.id.room_close_button);
         seekbar = (SeekBar)activity.findViewById(R.id.seekBar1);
         text_curTime = (TextView)activity.findViewById(R.id.text_curTime);
         text_endTime = (TextView)activity.findViewById(R.id.text_endTime);
@@ -213,22 +215,27 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         
         btn_play.setOnClickListener(this);
         btn_favourite.setOnClickListener(this);
+        btn_closeRoom.setOnClickListener(this);
         
         if(prefs.getBoolean("userIsHosting", false))
         {
-            seekbar.setOnSeekBarChangeListener(this);
-            btn_next.setOnClickListener(this);
-        	btn_next.setVisibility(ImageView.VISIBLE);
-        	btn_removeRoom.setVisibility(ImageView.VISIBLE);
+        	//At this time not allowing host to skip or change position in song
+        	//TODO: Determine if upload is complete before moving to next song
+            //seekbar.setOnSeekBarChangeListener(this);
+            //btn_next.setOnClickListener(this);
+        	btn_closeRoom.setImageResource(R.drawable.ic_action_discard);
+        	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	
+        	btn_next.setVisibility(ImageView.INVISIBLE);
         	btn_like.setVisibility(ImageView.INVISIBLE);
         	btn_dislike.setVisibility(ImageView.INVISIBLE);
         }
         else
         {
         	btn_next.setVisibility(ImageView.INVISIBLE);
-        	btn_removeRoom.setVisibility(ImageView.INVISIBLE);
         	
+        	btn_closeRoom.setImageResource(R.drawable.insta_leave_room);
+        	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	btn_like.setVisibility(ImageView.VISIBLE);
         	btn_dislike.setVisibility(ImageView.VISIBLE);
         }
@@ -432,6 +439,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	        	jstation.put("ownerUserId", prefs.getString("UserID", "0"));
 	    	        	jstation.put("playlistId", station.Playlist.id);
 	    	        	jstation.put("listenerCount", station.ListenerCount);
+	    	        	jstation.put("currentSongId", station.Song.id );
 
 	    	        	
 	    	        	ServicePostHelper post = new ServicePostHelper();
@@ -510,17 +518,25 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    private void closeRoom()
 	    {
 	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-	    	Editor prefEditor = prefs.edit();
-	    	prefEditor.putBoolean("userIsHosting", false);
-	    	prefEditor.commit();
 	    	if(mediaplayer != null)
 	    		mediaplayer.release();
 	    	if(updateHandler != null)
 	    		updateHandler.removeCallbacks(UpdateSeekBar);
-	    	ServicePostHelper helper = new ServicePostHelper();
-	    	helper.execute("http://instadj.amir20001.cloudbees.net/room/delete/" + station.id);
+	    	if(prefs.getBoolean("userIsHosting", false))
+	    	{
+		    	ServicePostHelper helper = new ServicePostHelper();
+		    	helper.execute("http://instadj.amir20001.cloudbees.net/room/delete/" + station.id);
+	    	}
+	    	else
+	    	{
+	    		ServicePostHelper helper = new ServicePostHelper();
+	    		helper.execute("http://instadj.amir20001.cloudbees.net/room/leave/" + station.id + "/" + prefs.getString("UserID", "UserID"));
+	    	}
 	    	station = null;
 	    	initialized = false;
+	    	Editor prefEditor = prefs.edit();
+	    	prefEditor.putBoolean("userIsHosting", false);
+	    	prefEditor.commit();
 	    	//Go to default fragment
 	    	((ListeningRoom)activity).onNavigationDrawerItemSelected(-1);
 	    }
@@ -565,7 +581,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 				case R.id.room_like_button:
 					updateLikes(true);
 					break;
-				case R.id.room_remove_button:
+				case R.id.room_close_button:
 					closeRoom();
 					break;
 				default:

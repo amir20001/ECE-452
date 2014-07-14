@@ -11,167 +11,165 @@
         android:layout_alignParentTop="true"
         android:scaleType="centerCrop"
         android:src="@drawable/blankart" />
-    
-     <RelativeLayout
-         android:id="@+id/header"
-         android:layout_width="match_parent"
-         android:layout_height="85dp"
-         android:layout_alignParentTop="true"
-         android:background="@color/transparent_black"
-         android:orientation="vertical" >
 
-         <TextView
-             android:id="@+id/text_song"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_alignTop="@+id/album_art"
-             android:layout_marginLeft="20dp"
-             android:layout_toRightOf="@+id/album_art"
-             android:text="SongName"
-             android:textAppearance="?android:attr/textAppearanceMedium"
-             android:textColor="@color/white" />
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/transparent_black"
+        android:orientation="vertical" >
 
-         <TextView
-             android:id="@+id/text_artist"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_alignLeft="@+id/text_song"
-             android:layout_below="@+id/text_song"
-             android:text="ArtistName"
-             android:textAppearance="?android:attr/textAppearanceSmall"
-             android:textColor="@color/platinum" />
+        <TextView
+            android:id="@+id/text_song"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/album_art"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/album_art"
+            android:text="SongName"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white" />
 
-         <ImageView
-             android:id="@+id/album_art"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_alignParentBottom="true"
-             android:layout_alignParentLeft="true"
-             android:layout_marginLeft="16dp"
-             android:adjustViewBounds="true"
-             android:maxHeight="50dp"
-             android:maxWidth="50dp"
-             android:paddingBottom="5dp"
-             android:src="@drawable/blankart" />
+        <TextView
+            android:id="@+id/text_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/text_song"
+            android:layout_below="@+id/text_song"
+            android:text="ArtistName"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/platinum" />
 
-         <TextView
-             android:id="@+id/currentroom_stationname_text"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_alignLeft="@+id/album_art"
-             android:layout_alignParentTop="true"
-             android:text="StationName"
-             android:textAppearance="?android:attr/textAppearanceLarge"
-             android:textColor="@color/white" />
+        <ImageView
+            android:id="@+id/album_art"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="16dp"
+            android:adjustViewBounds="true"
+            android:maxHeight="50dp"
+            android:maxWidth="50dp"
+            android:paddingBottom="5dp"
+            android:src="@drawable/blankart" />
 
-         <ImageButton
-             android:id="@+id/room_favourite_button"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_alignBottom="@+id/text_song"
-             android:layout_alignParentRight="true"
-             android:layout_alignParentTop="true"
-             android:background="@null"
-             android:src="@drawable/ic_action_favorite" />
+        <TextView
+            android:id="@+id/currentroom_stationname_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/album_art"
+            android:layout_alignParentTop="true"
+            android:text="StationName"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white" />
 
-     </RelativeLayout>
+        <ImageButton
+            android:id="@+id/room_close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@null"
+            android:minHeight="48dip"
+            android:minWidth="48dip"
+            android:src="@drawable/ic_action_discard" />
 
-      <RelativeLayout
-          android:id="@+id/footer"
-          android:layout_width="match_parent"
-          android:layout_height="100dp"
-          android:layout_alignParentBottom="true"
-          android:background="@color/transparent_black"
-          android:orientation="vertical" >
+    </RelativeLayout>
 
-              <ImageButton
-                  android:id="@+id/Button_Play"
-                  style="?android:attr/buttonStyleSmall"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentBottom="true"
-                  android:layout_centerHorizontal="true"
-                  android:background="@android:color/transparent"
-                  android:src="@drawable/ic_action_play"
-                  android:text="Play" />
+    <RelativeLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent_black"
+        android:orientation="vertical" >
 
-              <TextView
-                  android:id="@+id/text_endTime"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentRight="true"
-                  android:layout_below="@+id/seekBar1"
-                  android:text="@string/start_time"
-                  android:textAppearance="?android:attr/textAppearanceSmall" 
-                  android:textColor="@color/white" />
+        <ImageButton
+            android:id="@+id/Button_Play"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_play"
+            android:text="Play" />
 
-              <SeekBar
-                  android:id="@+id/seekBar1"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentLeft="true"
-                  android:layout_alignParentTop="true"
-                  android:max="10"
-                  android:progress="0" />
+        <TextView
+            android:id="@+id/text_endTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/seekBar1"
+            android:text="@string/start_time"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white" />
 
-              <TextView
-                  android:id="@+id/text_curTime"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignBaseline="@+id/text_endTime"
-                  android:layout_alignBottom="@+id/text_endTime"
-                  android:layout_alignParentLeft="true"
-                  android:text="@string/start_time"
-                  android:textAppearance="?android:attr/textAppearanceSmall"
-                  android:textColor="@color/white" />
+        <SeekBar
+            android:id="@+id/seekBar1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:max="10"
+            android:progress="0" />
 
-              <ImageButton
-                  android:id="@+id/button_next"
-                  style="?android:attr/buttonStyleSmall"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentBottom="true"
-                  android:layout_toRightOf="@+id/Button_Play"
-                  android:background="@android:color/transparent"
-                  android:src="@drawable/ic_action_next"
-                  android:text="Play" />
+        <TextView
+            android:id="@+id/text_curTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/text_endTime"
+            android:layout_alignBottom="@+id/text_endTime"
+            android:layout_alignParentLeft="true"
+            android:text="@string/start_time"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white" />
 
-              <ImageButton
-                  android:id="@+id/room_like_button"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentBottom="true"
-                  android:layout_alignParentRight="true"
-                  android:background="@null"
-                  android:minHeight="48dip"
-                  android:minWidth="48dip"
-                  android:src="@drawable/ic_action_good" />
+        <ImageButton
+            android:id="@+id/button_next"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/Button_Play"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_next"
+            android:text="Play" />
 
-              <ImageButton
-                  android:id="@+id/room_dislike_button"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentBottom="true"
-                  android:layout_alignParentLeft="true"
-                  android:background="@null"
-                  android:minHeight="48dip"
-                  android:minWidth="48dip"
-                  android:src="@drawable/ic_action_bad" />
+        <ImageButton
+            android:id="@+id/room_like_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:minHeight="48dip"
+            android:minWidth="48dip"
+            android:src="@drawable/ic_action_good" />
 
-              <ImageButton
-                  android:id="@+id/room_remove_button"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentBottom="true"
-                  android:layout_alignTop="@+id/Button_Play"
-                  android:layout_toLeftOf="@+id/Button_Play"
-                  android:background="@null"
-                  android:minHeight="48dip"
-                  android:minWidth="48dip"
-                  android:src="@drawable/ic_action_discard" />
+        <ImageButton
+            android:id="@+id/room_dislike_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:background="@null"
+            android:minHeight="48dip"
+            android:minWidth="48dip"
+            android:src="@drawable/ic_action_bad" />
 
-</RelativeLayout>
-    
-    
+        <ImageButton
+            android:id="@+id/room_favourite_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/Button_Play"
+            android:background="@null"
+            android:minHeight="48dip"
+            android:minWidth="48dip"
+            android:src="@drawable/ic_action_favorite" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
