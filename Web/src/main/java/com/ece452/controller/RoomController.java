@@ -106,14 +106,16 @@ public class RoomController {
 			@PathVariable("userId") String userId,
 			@PathVariable("roomId") int roomId) throws JsonGenerationException,
 			JsonMappingException, IOException {
+		
 		User user = userDao.getUser(userId);
-		user.setRoomId(roomId);
+		userDao.updateRoom(userId, roomId);
 		if (user.getRoomId() > 0) {
 			// already in a room we need to leave that first
 			roomDao.updateListenerCount(false, user.getRoomId());
 		}
 		// update new room
 		roomDao.updateListenerCount(true, roomId);
+
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(response.getOutputStream(), user);
 	}
@@ -144,7 +146,7 @@ public class RoomController {
 		List<User> usersInRoom = userDao.getUsersInRoom(sync.getRoomId());
 		Content content = new Content();
 		content = sync.addToContent(content);
-		for(User user :usersInRoom ){
+		for (User user : usersInRoom) {
 			content.addRegId(user.getGcmId());
 		}
 		GcmHelper.post(content);

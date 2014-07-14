@@ -80,6 +80,29 @@ public class UserDao {
 
 	}
 
+	public void updateRoom(String userid, int roomId) {
+		String sql = "UPDATE user SET room_id=? WHERE user_id=?;";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, roomId);
+			statement.setString(2, userid);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+
 	public User getUser(String userid) {
 		User user = null;
 		String sql = "SELECT * FROM user WHERE user_id = ?";

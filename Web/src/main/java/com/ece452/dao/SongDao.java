@@ -213,8 +213,8 @@ public class SongDao {
 	}
 
 	public void vote(boolean upvote, int songId) {
-		String upvoteSql = "UPDATE song SET net_score=net_score+1 WHERE id =1";
-		String downvoteSql = "UPDATE song SET net_score=net_score-1 WHERE id =1";
+		String upvoteSql = "UPDATE song SET net_score=net_score+1 WHERE id =?";
+		String downvoteSql = "UPDATE song SET net_score=net_score-1 WHERE id =?";
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
