@@ -208,9 +208,10 @@ public class SongController {
 
 	}
 
-	@RequestMapping(value = "/song/vote/{songid}/{value}", method = RequestMethod.POST)
-	public void vote(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("songId") int songId, @PathVariable("value") int value) {
+	@RequestMapping(value = "/vote/{songId}/{value}", method = RequestMethod.POST)
+	public void vote(HttpServletRequest request,
+			HttpServletResponse response, @PathVariable("songId") int songId,
+			@PathVariable("value") int value) {
 		Song song = songDao.getSong(songId);
 		String userId = null;
 		if (song != null) {
