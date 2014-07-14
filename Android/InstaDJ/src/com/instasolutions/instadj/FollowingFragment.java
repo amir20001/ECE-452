@@ -64,11 +64,33 @@ public class FollowingFragment extends Fragment{
                     JSONArray jFollowingArray = new JSONArray(result);
                     for(int i = 0; i < jFollowingArray.length(); i++){
                         JSONObject jPlaylist =  jFollowingArray.getJSONObject(i);
+                        final String userID = jPlaylist.getString("userId");
+                        final String fName = jPlaylist.getString("firstName");
+                        final String lName = jPlaylist.getString("lastName");
+                        final String score = jPlaylist.getString("score");
 
-                        UserData user = new UserData(jPlaylist.getString("firstName"), jPlaylist.getString("lastName"), jPlaylist.getString("userId"), jPlaylist.getString("score"));
+                        final UserData user = new UserData(fName, lName, userID, score);
 
                         followingList.append(i, user);
 
+                        followingView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                UserData user = (UserData) followingView.getItemAtPosition(i);
+                                FragmentManager fragmentManager = getFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                ProfileFragment profileFrag = new ProfileFragment();
+                                Bundle args = new Bundle();
+                                args.putString("UserID", user.getUserID());
+                                args.putString("FirstName", user.getFirstName());
+                                args.putString("LastName", user.getLastName());
+                                args.putString("Score", user.getScore());
+                                profileFrag.setArguments(args);
+                                fragmentTransaction.replace(R.id.container, profileFrag, "ProfileFragment");
+                                fragmentTransaction.addToBackStack(null);
+                                fragmentTransaction.commit();
+                            }
+                        });
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
