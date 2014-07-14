@@ -9,6 +9,9 @@ import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -41,6 +44,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.instasolutions.instadj.util.ServiceGetHelper;
 import com.instasolutions.instadj.util.ServicePostHelper;
 import com.instasolutions.instadj.util.ServiceUploadHelper;
 
@@ -348,15 +353,15 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    		playlistPosition = 0;
 	    	}
 	    	station.Song = station.Playlist.Songs.get(playlistPosition);
-	    	//Upload next song
-	    	ServiceUploadHelper upload = new ServiceUploadHelper();
-	    	upload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
-    				station.Playlist.Songs.get(playlistPosition+1 > station.Playlist.Songs.size() ? 0 : playlistPosition+1 ));
 
     	    Uri.Builder uri_b = new Uri.Builder();
     	    
 	    	if(prefs.getBoolean("userIsHosting", false)){
 	            uri_b.path(station.Song.LocalPath);
+		    	//Upload next song
+		    	ServiceUploadHelper upload = new ServiceUploadHelper();
+		    	upload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+	    				station.Playlist.Songs.get(playlistPosition+1 > station.Playlist.Songs.size() ? 0 : playlistPosition+1 ));
 	    	}
 	    	else
 	    	{

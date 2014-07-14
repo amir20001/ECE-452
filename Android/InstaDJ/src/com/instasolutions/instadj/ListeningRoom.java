@@ -1,6 +1,15 @@
 package com.instasolutions.instadj;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.instasolutions.instadj.util.ServiceGetHelper;
+import com.instasolutions.instadj.util.ServicePostHelper;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -13,10 +22,12 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +50,7 @@ public class ListeningRoom extends FragmentActivity
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
+	private final String SENDER_ID = "31805204739"; 
     private NavigationDrawerFragment mNavigationDrawerFragment_left;
     private RightDrawerFragment mNavigationDrawerFragment_right;
     
@@ -53,6 +65,7 @@ public class ListeningRoom extends FragmentActivity
     private FollowingFragment followingFragment;
     private FollowersFragment followersFragment;
     private ProfileFragment profileFrag;
+    private Context context;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +77,7 @@ public class ListeningRoom extends FragmentActivity
         followingFragment = new FollowingFragment();
         followersFragment = new FollowersFragment();
         profileFrag = new ProfileFragment();
+        context = this.getApplicationContext();
         setContentView(R.layout.activity_listening_room);
         mNavigationDrawerFragment_left = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_left);
@@ -80,6 +94,8 @@ public class ListeningRoom extends FragmentActivity
         mNavigationDrawerFragment_right.setUp(
                 R.id.navigation_drawer_right,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        
+        verifyGCMId();
         
     }
 
@@ -209,6 +225,75 @@ public class ListeningRoom extends FragmentActivity
     {
     	return favoritesFrag;
     }
+    
+	public void verifyGCMId()
+	{
+		//check to see if user has a registered GCM
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		ServiceGetHelper helper = new ServiceGetHelper();
+		helper.execute("http://instadj.amir20001.cloudbees.net/user/get/" + prefs.getString("UserID", "UserID"));
+		JSONObject jUser = new JSONObject();
+		String GCMId = ""; 
+
+		try {
+			jUser = new JSONObject(helper.get());
+		} catch (JSONException e1) {
+
+			e1.printStackTrace();
+		} catch (InterruptedException e1) {
+
+			e1.printStackTrace();
+		} catch (ExecutionException e1) {
+
+			e1.printStackTrace();
+		}
+
+		
+		try {
+			GCMId = jUser.getString("gcmId");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		if(GCMId.isEmpty() || GCMId.compareTo("null") == 0)
+		{
+			registerGCMInBackground();
+		}
+		else
+		{
+			Editor prefEdit = prefs.edit();
+			prefEdit.putString("GCMID", GCMId);
+			prefEdit.commit();
+		}
+	}
+	
+	private void registerGCMInBackground() {
+	    new AsyncTask<Void, Void, String>() {
+	        @Override
+	        protected String doInBackground(Void... params) {
+	            String regid = "";
+	            try {
+	            	GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+	            	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+	                regid = gcm.register(SENDER_ID);
+	                
+	                ServicePostHelper helper = new ServicePostHelper();
+	                helper.execute("http://instadj.amir20001.cloudbees.net/user/updategcmid/" + prefs.getString("UserID", "UserID") + "/" + regid);
+	                Editor prefEdit = prefs.edit();
+	    			prefEdit.putString("GCMID", regid);
+	    			prefEdit.commit();
+	                return regid;
+
+
+	            } catch (IOException ex) {
+	                Log.e("GCM Register Error", ex.getMessage());
+	                return regid;
+	            }
+	        }
+
+
+	    }.execute(null, null, null);
+	}
     
     
    

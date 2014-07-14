@@ -25,6 +25,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.plus.Plus;
 import com.instasolutions.instadj.util.ServicePostHelper;
 
@@ -56,6 +57,7 @@ public class LoginActivity extends Activity implements OnClickListener,
 	
 	private SignInButton g_signInButton;
 	
+	
 	//Facebook override
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,7 @@ public class LoginActivity extends Activity implements OnClickListener,
     			.addOnConnectionFailedListener(this)
     			.addApi(Plus.API)
     			.addScope(Plus.SCOPE_PLUS_LOGIN).build();
+	    
 	    	
 	    
 	}
