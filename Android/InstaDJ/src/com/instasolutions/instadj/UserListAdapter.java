@@ -60,7 +60,7 @@ public class UserListAdapter extends BaseAdapter{
         UserData user = users.get(pos);
 
         Score.setText("Score: " + user.getScore());
-		UserName.setText(user.getFirstName() + " " + user.getLastName());
+		UserName.setText(user.getFirstName() + " " + user.getLastName().charAt(0) + ".");
 		Picture.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.com_facebook_profile_picture_blank_square));
 		
 		final DownloadPictureTask task = new DownloadPictureTask(Picture);
@@ -68,6 +68,16 @@ public class UserListAdapter extends BaseAdapter{
 				"https://graph.facebook.com/" + user.getUserID() + "/picture?type=square");
 		
 		return v;
+	}
+	
+	public SparseArray<UserData> getArray()
+	{
+		return users;
+	}
+	
+	public void setArray(SparseArray<UserData> uArray)
+	{
+		users = uArray;
 	}
 	
 	

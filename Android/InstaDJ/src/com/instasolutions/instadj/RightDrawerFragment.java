@@ -2,6 +2,13 @@ package com.instasolutions.instadj;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.instasolutions.instadj.util.ServiceGetHelper;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -11,6 +18,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -24,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -57,6 +66,9 @@ public class RightDrawerFragment extends Fragment {
     
     private SongListAdapter mSongHistoryList;
     private UserListAdapter mUserList;
+    private SparseArray<UserData> users = new SparseArray<UserData>();
+    
+    private Activity activity = null;
 
     public RightDrawerFragment() {
     }
@@ -68,6 +80,7 @@ public class RightDrawerFragment extends Fragment {
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        activity = this.getActivity();
 
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
@@ -93,11 +106,8 @@ public class RightDrawerFragment extends Fragment {
                 }
             });
             SparseArray<SongData> songs = new SparseArray<SongData>();
-	    	mSongHistoryList = new SongListAdapter(this.getActivity(), songs );
-	        SparseArray<UserData> users = new SparseArray<UserData>();
-	        users.append(0, new UserData("TestFirst", "TestLast", "TESTID", "0"));
-	        users.append(1, new UserData("TestFirst2", "TestLast2", "TESTLAST2", "2"));
-	        mUserList = new UserListAdapter(this.getActivity(), users);
+   	    	mSongHistoryList = new SongListAdapter(this.getActivity(), songs );
+            refreshUserList();
 	        mDrawerListView.setAdapter(mSongHistoryList);
             mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
@@ -231,6 +241,7 @@ public class RightDrawerFragment extends Fragment {
             if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
                 mDrawerLayout.closeDrawer(Gravity.RIGHT);
             } else {
+            	refreshUserList();
     	        mDrawerListView.setAdapter(mUserList);
                 mDrawerLayout.openDrawer(Gravity.RIGHT);
             }
@@ -279,5 +290,44 @@ public class RightDrawerFragment extends Fragment {
     	songs.append(songs.size(), song);
     	mSongHistoryList.setArray(songs);
     	mDrawerListView.setAdapter(mSongHistoryList);
+    }
+    
+    private void refreshUserList()
+    {
+    	 users.clear();
+	        ServiceGetHelper getHelper = new ServiceGetHelper(){
+	    		@Override
+	    		 protected void onPostExecute(String result) {
+	    			try {
+						JSONArray jUserArray = new JSONArray(result);
+						for(int i = 0; i <jUserArray.length(); i++){
+							JSONObject jUser = jUserArray.getJSONObject(i);
+
+							users.append(i, new UserData(jUser.getString("firstName"),
+									jUser.getString("lastName"),
+									jUser.getString("userId"),
+									jUser.getString("score")));
+							
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+	    	        mUserList = new UserListAdapter(activity, users);
+	    	        
+	    	    }
+
+	    	};
+	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+	        getHelper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+					"http://instadj.amir20001.cloudbees.net/room/getCurrentUsers/" + prefs.getInt("userCurrentRoom", -1));
+	        try {
+				getHelper.get();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     }
 }

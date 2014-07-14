@@ -440,6 +440,11 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	        	String jString = post.get();
 	    	        	jstation = new JSONObject(jString);
 	    	        	station.id = jstation.getInt("id");
+	    		    	ServicePostHelper helper = new ServicePostHelper();
+	    		    	helper.execute("http://instadj.amir20001.cloudbees.net/room/join/" + station.id + "/" + prefs.getString("UserID", "UserID"));
+	    		    	Editor prefEdit = prefs.edit();
+	    		    	prefEdit.putInt("userCurrentRoom", station.id);
+	    		    	prefEdit.commit();
 	    	        	
 	    	        	
 	    	        }catch (Exception e){
@@ -522,6 +527,10 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    
 	    public void forceQuitRoom()
 	    {
+//    	    AlertDialog.Builder builder = new AlertDialog.Builder(ListeningRoom.mThis, android.R.style.Theme_Holo_Dialog);
+//   	        builder.setMessage("The host has closed the room.").setTitle("Room Closed");
+//   	        builder.show();
+   	        
 	    	if(mediaplayer != null)
 	    		mediaplayer.release();
 	    	if(updateHandler != null)

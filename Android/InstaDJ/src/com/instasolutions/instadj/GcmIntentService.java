@@ -45,11 +45,7 @@ public class GcmIntentService extends IntentService {
                 {
                 	//Kick user out of room
                 	currentRoom.forceQuitRoom();
-            	    AlertDialog.Builder builder = new AlertDialog.Builder(ListeningRoom.mThis, android.R.style.Theme_Holo_Dialog);
-           	        builder.setMessage("The host has closed the room.").setTitle("Room Closed");
-           	        AlertDialog dialog = builder.create();
-           	        dialog.show();
-                	
+             	
                 }
                 else if(action.compareTo("sync") == 0)
                 {
