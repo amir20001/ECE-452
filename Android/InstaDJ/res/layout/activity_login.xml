@@ -31,6 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_googleAuth"
         android:layout_alignParentLeft="true"
-        android:src="@drawable/instadjlogo" />
+        android:src="@drawable/instadjlogo"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>
