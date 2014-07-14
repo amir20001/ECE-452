@@ -156,21 +156,6 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 		returnStation.Playlist = (PlaylistData)playlistAdapter.getItem(selectedPlaylistPos);
 		returnStation.Song = new SongData();
 		
-		try{
-        	JSONObject jstation = new JSONObject();
-        	jstation.put("name", returnStation.Name);
-        	jstation.put("ownerUserId", prefs.getString("UserID", "0"));
-        	jstation.put("playlistId", returnStation.Playlist.id);
-        	jstation.put("listenerCount", returnStation.ListenerCount);
-
-        	
-        	ServicePostHelper post = new ServicePostHelper();
-        	post.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
-    				"http://instadj.amir20001.cloudbees.net/room/insert",jstation.toString());
-        }catch (Exception e){
-        	Log.e("instaDJ", "JSONException", e);
-        }
-		
 		return returnStation;
 
 	}

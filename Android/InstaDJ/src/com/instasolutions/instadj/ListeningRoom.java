@@ -37,6 +37,7 @@ import android.view.ViewGroup;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -67,9 +68,13 @@ public class ListeningRoom extends FragmentActivity
     private ProfileFragment profileFrag;
     private Context context;
     
+    public static ListeningRoom mThis = null;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        mThis = this;
         curRoomFrag = new CurrentRoomFragment();
         stationsFrag = new StationsFragment();
         favoritesFrag = new FavoritesFragment();
@@ -82,7 +87,6 @@ public class ListeningRoom extends FragmentActivity
         mNavigationDrawerFragment_left = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_left);
         mTitle = getTitle();
-
         // Set up the left drawer.
         mNavigationDrawerFragment_left.setUp(
                 R.id.navigation_drawer_left,
@@ -96,6 +100,7 @@ public class ListeningRoom extends FragmentActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         
         verifyGCMId();
+        
         
     }
 
@@ -119,7 +124,7 @@ public class ListeningRoom extends FragmentActivity
         	}
         	else
         	{
-        		AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Holo_Dialog);
+        	   AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Holo_Dialog);
        	       builder.setMessage("Close your room before selecting a new station.").setTitle("Currenty Hosting");
        	       AlertDialog dialog = builder.create();
        	       dialog.show();
@@ -131,8 +136,18 @@ public class ListeningRoom extends FragmentActivity
         	fragmentTag = "FavoritesFragment";
         	break;
         case 3:
-        	selectedFragment = playlistsFrag;
-        	fragmentTag = "PlaylistsFragment";
+        	if(!prefs.getBoolean("userIsHosting", false)){
+            	selectedFragment = playlistsFrag;
+            	fragmentTag = "PlaylistsFragment";
+        	}
+        	else
+        	{
+        	   AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_Holo_Dialog);
+       	       builder.setMessage("Close your room before modifying playlists.").setTitle("Currenty Hosting");
+       	       AlertDialog dialog = builder.create();
+       	       dialog.show();
+       	       return;
+        	}
         	break;
         case 4:
             selectedFragment = followingFragment;

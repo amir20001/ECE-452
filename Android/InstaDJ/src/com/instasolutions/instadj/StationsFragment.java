@@ -50,6 +50,7 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 	public void onActivityCreated(Bundle savedInstanceState)
     {
     	super.onActivityCreated(savedInstanceState);
+    	stations.clear();
     	final ProgressBar pbar = (ProgressBar)activity.findViewById(R.id.stations_progressbar);
     	Button NewStationButton = (Button)this.getActivity().findViewById(R.id.stations_new_button);
     	NewStationButton.setOnClickListener(this);

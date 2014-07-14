@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
@@ -75,8 +76,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private int playlistPosition = 0;
     private static Boolean initialized = false;
     private Boolean currentlyFavourited = false;
-    private Boolean currentlyLiked = false;
-    private Boolean currentlyDisliked = false;
+    private int currentVote = 0;
     private Boolean firstSong = false;
     @Override
     public View onCreateView(LayoutInflater inflater, 
@@ -263,7 +263,13 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     }
     
     public void setStation(StationData s)
-    {
+    {    	
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);  
+    	if(station != null)
+    	{
+        	ServicePostHelper helper = new ServicePostHelper();
+        	helper.execute("http://instadj.amir20001.cloudbees.net/room/leave/" + station.id + "/" + prefs.getString("UserID", "UserID"));
+    	}
     	this.station = s;
     	this.station.Playlist.populateSongs();
     	if(mediaplayer != null)
@@ -275,6 +281,12 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         	text_stationName.setText(station.Name);
     	}
     	initialized = false;
+    	
+    	ServicePostHelper helper = new ServicePostHelper();
+    	helper.execute("http://instadj.amir20001.cloudbees.net/room/join/" + station.id + "/" + prefs.getString("UserID", "UserID"));
+    	Editor prefEdit = prefs.edit();
+    	prefEdit.putInt("userCurrentRoom", station.id);
+    	prefEdit.commit();
 
     }
 	
@@ -332,6 +344,12 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
 	    				"http://instadj.amir20001.cloudbees.net/favourite/insert/" + prefs.getString("UserID", "0") + "/" + station.Song.id);
 	    	}
+	    	if(currentVote != 0)
+	    	{
+				ServicePostHelper helper = new ServicePostHelper();
+				helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR
+						, "http://instadj.amir20001.cloudbees.net/song/vote/" + station.Song.id + "/" + currentVote);
+	    	}
 	    	//Remove previous song from storage
 	    	if(prefs.getBoolean("userIsHosting", false) && !firstSong)
 	    	{
@@ -384,8 +402,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     		firstSong = false;
     		
     		currentlyFavourited = false;
-    		currentlyDisliked = false;
-    		currentlyLiked = false;
+    		currentVote = 0;
     		btn_like.setImageResource(R.drawable.ic_action_good);
     		btn_dislike.setImageResource(R.drawable.ic_action_bad);
     		btn_favourite.setImageResource(R.drawable.ic_action_favorite);
@@ -395,13 +412,36 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    
 	    private void prepareRoom()
 	    {
-	    	final ProgressDialog dialog = ProgressDialog.show(this.activity, "Preparing Room", "Please Wait...", true);
+	    	final ProgressDialog dialog = new ProgressDialog(this.activity,android.R.style.Theme_Holo_Dialog);
+	    	dialog.setTitle("Preparing Room");
+	    	dialog.setMessage("Please Wait...");
+	    	dialog.setIndeterminate(true);
 	    	final CurrentRoomFragment room = this;
 	    	dialog.show();
 	    	ServiceUploadHelper upload = new ServiceUploadHelper(){
 	    		@Override
 	    		 protected void onPostExecute(Integer i) {
+	    			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 	    	    	dialog.dismiss();
+	    			try{
+	    	        	JSONObject jstation = new JSONObject();
+	    	        	jstation.put("name", station.Name);
+	    	        	jstation.put("ownerUserId", prefs.getString("UserID", "0"));
+	    	        	jstation.put("playlistId", station.Playlist.id);
+	    	        	jstation.put("listenerCount", station.ListenerCount);
+
+	    	        	
+	    	        	ServicePostHelper post = new ServicePostHelper();
+	    	        	post.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
+	    	    				"http://instadj.amir20001.cloudbees.net/room/insert",jstation.toString());
+	    	        	String jString = post.get(10, TimeUnit.MILLISECONDS);
+	    	        	jstation = new JSONObject(jString);
+	    	        	station.id = jstation.getInt("id");
+	    	        	
+	    	        	
+	    	        }catch (Exception e){
+	    	        	Log.e("instaDJ", "JSONException", e);
+	    	        }
 	    	    	room.nextSong();
 	    		}
 	    	};
@@ -416,28 +456,28 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    {
 	    	if(like)
 	    	{
-	    		if(currentlyLiked)
+	    		if(currentVote == 1)
 	    		{
-	    			currentlyLiked = false;
+	    			currentVote = 0;
 	    			btn_like.setImageResource(R.drawable.ic_action_good);
 	    		}
 	    		else
 	    		{
-	    			currentlyLiked = true;
+	    			currentVote = 1;
 		    		btn_like.setImageResource(R.drawable.ic_action_good_green);
 		    		btn_dislike.setImageResource(R.drawable.ic_action_bad);
 	    		}
 	    	}
 	    	else
 	    	{
-	    		if(currentlyDisliked)
+	    		if(currentVote == -1)
 	    		{
-	    			currentlyDisliked = false;
+	    			currentVote = 0;
 	    			btn_dislike.setImageResource(R.drawable.ic_action_bad);
 	    		}
 	    		else
 	    		{
-	    			currentlyDisliked = true;
+	    			currentVote = -1;
 	    			btn_like.setImageResource(R.drawable.ic_action_good);
 	    			btn_dislike.setImageResource(R.drawable.ic_action_bad_red);
 	    		}
@@ -461,7 +501,38 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    
 	    private void closeRoom()
 	    {
-	    	
+	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+	    	Editor prefEditor = prefs.edit();
+	    	prefEditor.putBoolean("userIsHosting", false);
+	    	prefEditor.commit();
+	    	if(mediaplayer != null)
+	    		mediaplayer.release();
+	    	if(updateHandler != null)
+	    		updateHandler.removeCallbacks(UpdateSeekBar);
+	    	ServicePostHelper helper = new ServicePostHelper();
+	    	helper.execute("http://instadj.amir20001.cloudbees.net/room/delete/" + station.id);
+	    	station = null;
+	    	//Go to default fragment
+	    	((ListeningRoom)activity).onNavigationDrawerItemSelected(-1);
+	    }
+	    
+	    public void forceQuitRoom()
+	    {
+    	    AlertDialog.Builder builder = new AlertDialog.Builder(activity, android.R.style.Theme_Holo_Dialog);
+   	        builder.setMessage("The host has closed the room.").setTitle("Room Closed");
+   	        AlertDialog dialog = builder.create();
+   	        dialog.show();
+	    	if(mediaplayer != null)
+	    		mediaplayer.release();
+	    	if(updateHandler != null)
+	    		updateHandler.removeCallbacks(UpdateSeekBar);
+	    	station = null;
+	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+	    	Editor prefEdit = prefs.edit();
+	    	prefEdit.putInt("userCurrentRoom", -1);
+	    	prefEdit.commit();
+	    	//Go to default fragment
+	    	((ListeningRoom)activity).onNavigationDrawerItemSelected(-1);
 	    }
 	    
 
