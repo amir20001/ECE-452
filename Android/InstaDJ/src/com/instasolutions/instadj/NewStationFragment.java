@@ -126,7 +126,7 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 				break;
 			case R.id.newstation_save_button:
 				CurrentRoomFragment fragment = ((ListeningRoom)activity).getCurrentRoomFragment();
-				fragment.setStation(createStation());
+				fragment.setStation(createStation(), activity);
 				FragmentManager fragmentManager = this.getFragmentManager();
 				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 				fragmentTransaction.replace(R.id.container, fragment, "CurrentRoomFragment");

@@ -122,7 +122,7 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 	public void onItemClick(AdapterView<?> av, View v, int i, long l) {
 		
 	   CurrentRoomFragment fragment = ((ListeningRoom)activity).getCurrentRoomFragment();
-	   fragment.setStation((StationData)av.getAdapter().getItem(i));
+	   fragment.setStation((StationData)av.getAdapter().getItem(i), activity);
 	   FragmentManager fragmentManager = this.getFragmentManager();
 	   FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
        fragmentTransaction.replace(R.id.container, fragment, "CurrentRoomFragment");

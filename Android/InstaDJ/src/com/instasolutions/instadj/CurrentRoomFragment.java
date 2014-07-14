@@ -107,6 +107,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     
     public void initialize()
     {
+        playlistPosition = 0;
+        currentlyFavourited = false;
+        currentVote = 0;
     	if(station == null)
     	{
     		 StationsFragment fragment = ((ListeningRoom)activity).getStationsFragment();
@@ -262,9 +265,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         seekbar.setMax((int)endTime);
     }
     
-    public void setStation(StationData s)
+    public void setStation(StationData s, Activity a)
     {    	
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);  
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(a);  
     	if(station != null)
     	{
         	ServicePostHelper helper = new ServicePostHelper();
@@ -434,7 +437,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	        	ServicePostHelper post = new ServicePostHelper();
 	    	        	post.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
 	    	    				"http://instadj.amir20001.cloudbees.net/room/insert",jstation.toString());
-	    	        	String jString = post.get(10, TimeUnit.MILLISECONDS);
+	    	        	String jString = post.get();
 	    	        	jstation = new JSONObject(jString);
 	    	        	station.id = jstation.getInt("id");
 	    	        	
@@ -512,6 +515,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	ServicePostHelper helper = new ServicePostHelper();
 	    	helper.execute("http://instadj.amir20001.cloudbees.net/room/delete/" + station.id);
 	    	station = null;
+	    	initialized = false;
 	    	//Go to default fragment
 	    	((ListeningRoom)activity).onNavigationDrawerItemSelected(-1);
 	    }
@@ -531,6 +535,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	Editor prefEdit = prefs.edit();
 	    	prefEdit.putInt("userCurrentRoom", -1);
 	    	prefEdit.commit();
+	    	initialized = false;
 	    	//Go to default fragment
 	    	((ListeningRoom)activity).onNavigationDrawerItemSelected(-1);
 	    }
