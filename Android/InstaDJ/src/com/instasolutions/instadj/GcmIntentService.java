@@ -1,7 +1,6 @@
-package com.instasolutions.instadj.util;
+package com.instasolutions.instadj;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.instasolutions.instadj.ListeningRoom;
 
 import android.R;
 import android.app.IntentService;

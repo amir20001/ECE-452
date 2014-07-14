@@ -40,7 +40,7 @@
         <activity android:name="com.instasolutions.instadj.LoginActivity"
                   android:theme="@android:style/Theme.NoTitleBar"></activity>
         <receiver
-            android:name=".util.GcmBroadcastReceiver"
+            android:name="com.instasolutions.instadj.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />

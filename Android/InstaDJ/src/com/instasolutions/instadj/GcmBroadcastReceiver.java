@@ -1,4 +1,4 @@
-package com.instasolutions.instadj.util;
+package com.instasolutions.instadj;
 
 import android.app.Activity;
 import android.content.ComponentName;
