@@ -76,5 +76,16 @@ public class FollowController {
 		List<User> allFollowed = followDao.getAllFollowees(userId);
 		mapper.writeValue(response.getOutputStream(), allFollowed);
 	}
+	
+	@RequestMapping(value = "/getid/{followerId}/{followeeId}", method = RequestMethod.GET)
+	public void getFollowId(HttpServletRequest request,
+			HttpServletResponse response, @PathVariable("followerId") String followerId,
+			@PathVariable("followeeId") String followeeId)
+			throws ServletException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+
+		List<Follow> allFollowed = followDao.getId(followerId, followeeId);
+		mapper.writeValue(response.getOutputStream(), allFollowed);
+	}
 
 }
