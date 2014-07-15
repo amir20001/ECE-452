@@ -7,8 +7,8 @@ import com.ece452.domain.Sync;
 
 public class Content {
 
-	private List<String> registration_ids;
-	private  Sync data;
+	private List<String> registration_ids = new LinkedList<String>();
+	private Sync data;
 
 	public void addRegId(String regId) {
 		if (registration_ids == null)
@@ -17,7 +17,7 @@ public class Content {
 	}
 
 	public void setSync(Sync sync) {
-		 this.setData(sync);
+		this.setData(sync);
 	}
 
 	public List<String> getRegistration_ids() {
