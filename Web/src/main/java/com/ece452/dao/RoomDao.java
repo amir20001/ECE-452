@@ -92,7 +92,22 @@ public class RoomDao {
 	}
 
 	public List<Room> getAllRooms() {
-		String sql = "SELECT * FROM room INNER JOIN `user` ON room.owner_user_id= `user`.user_id JOIN playlist ON room.playlist_id = playlist.id JOIN song ON room.current_song_id = song.id;";
+		String sql = "SELECT room.*, user.first_name AS user_first_name, "
+				+ "user.last_name AS user_last_name, user.user_id AS "
+				+ "user_user_id, user.score AS user_score, user.room_id AS"
+				+ " user_room_id, user.gcm_id AS user_gcm_id, playlist.id AS"
+				+ "	playlist_id , playlist.name AS playlist_name , playlist.genre AS"
+				+ " playlist_genre, playlist.track_count AS playlist_track_count ,"
+				+ " playlist.user_id AS playlist_user_id , song.id AS song_id, "
+				+ "song.file_name AS song_file_name, song.uuid AS song_uuid,"
+				+ "song.title AS song_title, song.album AS song_album, "
+				+ "song.artist AS song_artist, song.duration AS song_duration, "
+				+ "song.playlist_id AS song_playlist_id, song.net_score AS "
+				+ "song_net_score, song.song_url AS song_song_url, song.song_uri "
+				+ "AS song_song_uri, song.art_url AS song_art_url FROM room INNER "
+				+ "JOIN `user` ON room.owner_user_id= `user`.user_id JOIN playlist "
+				+ "ON room.playlist_id = playlist.id JOIN song ON room.current_song_id"
+				+ " = song.id;";
 		List<Room> rooms = new ArrayList<Room>();
 		try {
 			rooms = jdbcTemplate.query(sql, new RoomAndSubObjectMapper());

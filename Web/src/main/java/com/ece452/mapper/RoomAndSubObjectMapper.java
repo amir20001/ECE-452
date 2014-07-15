@@ -17,15 +17,17 @@ public class RoomAndSubObjectMapper implements RowMapper<Room> {
 		Room room = new Room();
 		try {
 			User user = new User();
-			user.map(resultSet);
-			room.setUser(user);
 			Playlist playlist = new Playlist();
-			playlist.map(resultSet);
-			room.setPlaylist(playlist);
 			Song song = new Song();
-			song.map(resultSet);
-			room.setSong(song);
+			
+			user.map("user_",resultSet);
+			playlist.map("playlist_",resultSet);
+			song.map("song_",resultSet);
 			room.map(resultSet);
+			
+			room.setUser(user);
+			room.setSong(song);
+			room.setPlaylist(playlist);
 		} catch (Exception e) {
 			System.out.println(e);
 		}
