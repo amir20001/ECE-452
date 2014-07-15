@@ -64,6 +64,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private ImageButton btn_closeRoom;
     private ImageButton btn_follow;
     private Handler updateHandler = new Handler();
+    private Handler scoreHandler = new Handler();
     private TextView text_curTime;
     private TextView text_endTime;
     private TextView text_songName;
@@ -175,12 +176,12 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         {
         	//At this time not allowing host to skip or change position in song
         	//TODO: Determine if upload is complete before moving to next song
-            //seekbar.setOnSeekBarChangeListener(this);
-            //btn_next.setOnClickListener(this);
+            seekbar.setOnSeekBarChangeListener(this);
+            btn_next.setOnClickListener(this);
         	btn_closeRoom.setImageResource(R.drawable.ic_action_discard);
         	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	
-        	btn_next.setVisibility(ImageView.INVISIBLE);
+        	btn_next.setVisibility(ImageView.VISIBLE);
         	btn_like.setVisibility(ImageView.INVISIBLE);
         	btn_dislike.setVisibility(ImageView.INVISIBLE);
         	btn_follow.setVisibility(ImageView.INVISIBLE);
@@ -235,12 +236,12 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         {
         	//At this time not allowing host to skip or change position in song
         	//TODO: Determine if upload is complete before moving to next song
-            //seekbar.setOnSeekBarChangeListener(this);
-            //btn_next.setOnClickListener(this);
+            seekbar.setOnSeekBarChangeListener(this);
+            btn_next.setOnClickListener(this);
         	btn_closeRoom.setImageResource(R.drawable.ic_action_discard);
         	btn_closeRoom.setVisibility(ImageView.VISIBLE);
         	
-        	btn_next.setVisibility(ImageView.INVISIBLE);
+        	btn_next.setVisibility(ImageView.VISIBLE);
         	btn_like.setVisibility(ImageView.INVISIBLE);
         	btn_dislike.setVisibility(ImageView.INVISIBLE);
         	btn_follow.setVisibility(ImageView.INVISIBLE);
@@ -332,10 +333,11 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     	}
     	this.station = s;
     	this.station.Playlist.populateSongs();
-    	if(mediaplayer != null)
-    		mediaplayer.release();
     	if(updateHandler != null)
     		updateHandler.removeCallbacks(UpdateSeekBar);
+    	if(mediaplayer != null)
+    		mediaplayer.release();
+
     	if(text_stationName != null)
     	{
         	text_stationName.setText(station.Name);
@@ -379,16 +381,22 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    
 	    private Runnable UpdateSeekBar = new Runnable(){
 	    	public void run(){
-	    		curTime = mediaplayer.getCurrentPosition();
-	    		seekbar.setProgress((int)curTime);
-	    		text_curTime.setText(String.format("%d:%02d", TimeUnit.MILLISECONDS.toMinutes((long) curTime),
-	    	   	         TimeUnit.MILLISECONDS.toSeconds((long) curTime) - 
-	    	   	         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) curTime))));
-	    		updateHandler.postDelayed(this, 900);
+	    		if(mediaplayer != null && mediaplayer.isPlaying())
+	    		{
+		    		curTime = mediaplayer.getCurrentPosition();
+		    		seekbar.setProgress((int)curTime);
+		    		text_curTime.setText(String.format("%d:%02d", TimeUnit.MILLISECONDS.toMinutes((long) curTime),
+		    	   	         TimeUnit.MILLISECONDS.toSeconds((long) curTime) - 
+		    	   	         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes((long) curTime))));
+	    		}
 	    		//Song Complete
 	    		if(curTime >= endTime)
-	    		{
+	    		{	    			
 	    			nextSong();
+	    		}
+	    		else
+	    		{
+		    		updateHandler.postDelayed(this, 100);
 	    		}
 	    	}
 	    };
@@ -396,6 +404,8 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    private void nextSong()
 	    {
 	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+	    	if(updateHandler != null)
+	    		updateHandler.removeCallbacks(UpdateSeekBar);
 	    	if(mediaplayer != null)
 	    		mediaplayer.release();
 	    	//Add favorited song to database
@@ -573,13 +583,13 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	}
 	    }
 	    
-	    private void closeRoom()
+	    public void closeRoom()
 	    {
 	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-	    	if(mediaplayer != null)
-	    		mediaplayer.release();
 	    	if(updateHandler != null)
 	    		updateHandler.removeCallbacks(UpdateSeekBar);
+	    	if(mediaplayer != null)
+	    		mediaplayer.release();
 	    	if(prefs.getBoolean("userIsHosting", false))
 	    	{
 		    	ServicePostHelper helper = new ServicePostHelper();
@@ -606,11 +616,10 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     	    AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity(), android.R.style.Theme_Holo_Dialog);
    	        builder.setMessage("The host has closed the room.").setTitle("Room Closed");
    	        builder.show();
-   	        
-	    	if(mediaplayer != null)
-	    		mediaplayer.release();
 	    	if(updateHandler != null)
 	    		updateHandler.removeCallbacks(UpdateSeekBar);
+	    	if(mediaplayer != null)
+	    		mediaplayer.release();
 	    	station = null;
 	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 	    	Editor prefEdit = prefs.edit();
@@ -621,15 +630,31 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	((ListeningRoom)activity).onNavigationDrawerItemSelected(-1);
 	    }
 	    
-	    public void displayScore(int score)
+	    public void displayScore(final int score)
 	    {
-	    	text_score.setText(String.valueOf(score));
-	    	text_score.setVisibility(ImageView.VISIBLE);
-	    	text_score.postDelayed(new Runnable(){
+	    	
+	    	activity.runOnUiThread(new Runnable(){
 
 				@Override
 				public void run() {
-					text_score.setVisibility(ImageView.INVISIBLE);
+			    	text_score.setText(String.valueOf(score));
+			    	text_score.setVisibility(ImageView.VISIBLE);					
+				}
+	    		
+	    	});
+	    	scoreHandler.postDelayed(new Runnable(){
+
+				@Override
+				public void run() {
+					activity.runOnUiThread(new Runnable(){
+
+						@Override
+						public void run() {
+							text_score.setVisibility(ImageView.INVISIBLE);
+							
+						}
+						
+					});
 					
 				}
     		}, 5000);

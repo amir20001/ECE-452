@@ -211,13 +211,7 @@ public class ListeningRoom extends FragmentActivity
     @Override
     protected void onDestroy()
     {
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    	if(prefs.getBoolean("userIsHosting", false)){
-    		//TODO: Add close room code here as well
-    		Editor prefEdit = prefs.edit();
-    		prefEdit.putBoolean("userIsHosting", false);
-    		prefEdit.commit();
-    	}
+    	this.getCurrentRoomFragment().closeRoom();
     	super.onDestroy();
     }
     
