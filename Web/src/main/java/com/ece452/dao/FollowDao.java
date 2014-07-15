@@ -39,7 +39,8 @@ public class FollowDao {
 
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement statement = conn.prepareStatement(sql,
+					Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, follow.getFollowerId());
 			statement.setString(2, follow.getFolloweeId());
 
@@ -49,7 +50,8 @@ public class FollowDao {
 				// get auto increment key
 				follow.setId(generatedKeys.getInt(1));
 			} else {
-				throw new SQLException("Creating follow failed, no generated key obtained.");
+				throw new SQLException(
+						"Creating follow failed, no generated key obtained.");
 			}
 			generatedKeys.close();
 			statement.close();
@@ -70,7 +72,8 @@ public class FollowDao {
 		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.follower AND follow.followee = ?;";
 		List<User> users = new ArrayList<User>();
 		try {
-			users = jdbcTemplate.query(sql, new Object[] { userId }, new UserMapper());
+			users = jdbcTemplate.query(sql, new Object[] { userId },
+					new UserMapper());
 			return users;
 		} catch (Exception e) {
 			return users;
@@ -81,22 +84,45 @@ public class FollowDao {
 		String sql = "SELECT user.* FROM follow INNER JOIN `user` ON user.user_id = follow.followee AND follow.follower = ?;";
 		List<User> users = new ArrayList<User>();
 		try {
-			users = jdbcTemplate.query(sql, new Object[] { userId }, new UserMapper());
+			users = jdbcTemplate.query(sql, new Object[] { userId },
+					new UserMapper());
 			return users;
 		} catch (Exception e) {
 			return users;
 		}
 	}
-	
-	public List<Follow> getId(String followerId, String followeeId)
-	{
+
+	public List<Follow> getId(String followerId, String followeeId) {
 		String sql = "SELECT * FROM follow WHERE follower = ? AND followee = ?;";
 		List<Follow> followList = new ArrayList<Follow>();
 		try {
-			followList = jdbcTemplate.query(sql, new Object[] {followerId, followeeId}, new FollowMapper());
+			followList = jdbcTemplate.query(sql, new Object[] { followerId,
+					followeeId }, new FollowMapper());
 			return followList;
 		} catch (Exception e) {
 			return followList;
+		}
+	}
+
+	public void delete(String followerId, String followeeId) {
+		String sql = "DELETE FROM follow WHERE follower = ? AND followee =?";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, followerId);
+			statement.setString(2, followeeId);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
 	}
 

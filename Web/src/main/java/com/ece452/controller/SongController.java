@@ -182,6 +182,7 @@ public class SongController {
 			sync.setAction(Sync.score);
 			sync.setSongScore(song.getNetScore());
 			sync.setSongId(songId);
+			sync.setSong(song);
 
 			int playlistId = song.getPlaylistId();
 			Playlist playlist = playlistDao.getPlaylist(playlistId);
