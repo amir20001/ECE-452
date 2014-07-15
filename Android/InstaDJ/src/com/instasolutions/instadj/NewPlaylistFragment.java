@@ -31,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.instasolutions.instadj.util.ServicePostHelper;
 
@@ -131,8 +132,25 @@ public class NewPlaylistFragment extends Fragment implements
 				getFragmentManager().popBackStack();
 				break;
 			case R.id.newplaylist_save_button:
-				createPlaylist();
-				getFragmentManager().popBackStack();
+				EditText playlistName = (EditText)this.getActivity().findViewById(R.id.newplaylist_name_input);
+				String name = playlistName.getText().toString();
+				if(name.length() == 0)
+				{
+					Toast.makeText(this.getActivity(), "Enter a playlist name.", Toast.LENGTH_SHORT).show();
+				}
+				else if(name.length() > 15)
+				{
+					Toast.makeText(this.getActivity(), "Playlist name must be under 15 character.", Toast.LENGTH_SHORT).show();
+				}
+				else if(songlist_adapter.getCheckBoxArray().size() < 1)
+				{
+					Toast.makeText(this.getActivity(), "Select at least one song.", Toast.LENGTH_LONG).show();
+				}
+				else
+				{
+					createPlaylist();
+					getFragmentManager().popBackStack();
+				}
 				break;
 			default:
 				break;

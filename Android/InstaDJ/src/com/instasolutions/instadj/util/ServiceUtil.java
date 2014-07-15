@@ -9,8 +9,8 @@ public class ServiceUtil {
 
 	public static String convertInputStreamToString(InputStream inputStream)
 			throws IOException {
-		BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(inputStream));
+		InputStreamReader iStreamReader = new InputStreamReader(inputStream);
+		BufferedReader bufferedReader = new BufferedReader(iStreamReader);
 		String line = "";
 		String result = "";
 		while ((line = bufferedReader.readLine()) != null)

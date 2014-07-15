@@ -1,137 +1,150 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dip" >
+    android:orientation="horizontal" >
 
-     <TextView
-         android:id="@+id/station_name"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentLeft="true"
-         android:layout_alignParentTop="true"
-         android:text="StationName"
-         android:textColor="@color/white"
-         android:textSize="15dip"
-         android:textStyle="bold"
-         android:typeface="sans" />
+    <LinearLayout
+        android:layout_width="115dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="5dp" >
 
-     <TextView
-         android:id="@+id/station_playlist_name"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_below="@+id/station_name"
-         android:text="CurrentPlaylist"
-         android:textAppearance="?android:attr/textAppearanceSmall"
-         android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/station_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="StationName"
+            android:textColor="@color/white"
+            android:textSize="15dip"
+            android:textStyle="bold"
+            android:typeface="sans" />
 
-     <TextView
-         android:id="@+id/station_playlist_genre"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/station_playlist_name"
-         android:layout_below="@+id/station_playlist_name"
-         android:text="PlaylistGenre"
-         android:textAppearance="?android:attr/textAppearanceSmall"
-         android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/station_playlist_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/station_name"
+            android:text="CurrentPlaylist"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white" />
 
-     <TextView
-         android:id="@+id/station_listener_count"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/station_listening_label"
-         android:layout_below="@+id/station_listening_label"
-         android:text="#Listening"
-         android:textColor="@color/platinum" />
+        <TextView
+            android:id="@+id/station_playlist_genre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/station_playlist_name"
+            android:layout_below="@+id/station_playlist_name"
+            android:text="PlaylistGenre"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white" />
 
-     <TextView
-         android:id="@+id/station_listening_label"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/station_playlist_genre"
-         android:layout_below="@+id/station_playlist_genre"
-         android:text="Listening:"
-         android:textAppearance="?android:attr/textAppearanceSmall"
-         android:textColor="@color/platinum" />
+        <TextView
+            android:id="@+id/station_listening_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/station_playlist_genre"
+            android:layout_below="@+id/station_playlist_genre"
+            android:text="Listening:"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/platinum" />
 
-     <Space
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_centerVertical="true"
-         android:layout_marginLeft="25dp"
-         android:layout_toRightOf="@+id/station_playlist_name" />
+        <TextView
+            android:id="@+id/station_listener_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/station_listening_label"
+            android:layout_below="@+id/station_listening_label"
+            android:text="#Listening"
+            android:textColor="@color/platinum" />
+    </LinearLayout>
 
-     <ImageView
-         android:id="@+id/station_song_art"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_below="@+id/station_now_playing"
-         android:layout_marginLeft="56dp"
-         android:layout_toRightOf="@+id/station_playlist_name"
-         android:adjustViewBounds="true"
-         android:maxHeight="50dp"
-         android:maxWidth="50dp"
-         android:src="@drawable/blankart" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="50dp" >
 
-     <TextView
-         android:id="@+id/station_owner_label"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/station_song_art"
-         android:layout_alignParentTop="true"
-         android:text="DJ:"
-         android:textAppearance="?android:attr/textAppearanceSmall"
-         android:textColor="@color/platinum" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
 
-     <TextView
-         android:id="@+id/station_owner"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentTop="true"
-         android:layout_toRightOf="@+id/station_owner_label"
-         android:text="Owner"
-         android:textAppearance="?android:attr/textAppearanceSmall"
-         android:textColor="@color/platinum" />
+            <TextView
+                android:id="@+id/station_owner_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="DJ:"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/platinum" />
 
-     <TextView
-         android:id="@+id/station_now_playing"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignLeft="@+id/station_owner_label"
-         android:layout_below="@+id/station_owner_label"
-         android:text="Now Playing:"
-         android:textAppearance="?android:attr/textAppearanceSmall"
-         android:textColor="@color/platinum" />
+            <TextView
+                android:id="@+id/station_owner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Owner"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/platinum" />
+        </LinearLayout>
 
-     <TextView
-         android:id="@+id/station_song_name"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignBaseline="@+id/station_playlist_genre"
-         android:layout_alignBottom="@+id/station_playlist_genre"
-         android:layout_toRightOf="@+id/station_owner"
-         android:text="SongName"
-         android:textAppearance="?android:attr/textAppearanceSmall"
-         android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/station_now_playing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/station_owner_label"
+            android:layout_below="@+id/station_owner_label"
+            android:text="Now Playing:"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/platinum" />
 
-     <TextView
-         android:id="@+id/station_song_artist"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_above="@+id/station_listener_count"
-         android:layout_toRightOf="@+id/station_owner"
-         android:text="SongArtist"
-         android:textAppearance="?android:attr/textAppearanceSmall"
-         android:textColor="@color/platinum" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="81dp"
+            android:orientation="horizontal"
+            android:padding="5dip" >
 
-     <TextView
-         android:id="@+id/station_id"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_above="@+id/station_now_playing"
-         android:layout_toRightOf="@+id/station_now_playing"
-         android:text="TextView"
-         android:visibility="invisible" />
- 
-</RelativeLayout>
+            <ImageView
+                android:id="@+id/station_song_art"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:maxHeight="50dp"
+                android:maxWidth="50dp"
+                android:src="@drawable/blankart" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="5dp">
+
+                <TextView
+                    android:id="@+id/station_song_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SongName"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/station_song_artist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SongArtist"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/platinum" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/station_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/station_now_playing"
+                android:layout_toRightOf="@+id/station_now_playing"
+                android:text="TextView"
+                android:visibility="invisible" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

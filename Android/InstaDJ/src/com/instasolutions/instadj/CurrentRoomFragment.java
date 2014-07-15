@@ -69,6 +69,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
     private TextView text_songName;
     private TextView text_artist;
     private TextView text_stationName;
+    private TextView text_score;
     private ImageView large_art;
     private ImageView small_art;
     private double curTime = 0;
@@ -157,6 +158,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         text_stationName = (TextView)activity.findViewById(R.id.currentroom_stationname_text);
         large_art = (ImageView)activity.findViewById(R.id.image_art);
         small_art = (ImageView)activity.findViewById(R.id.album_art);
+        text_score = (TextView)activity.findViewById(R.id.room_score_text);
         
         btn_play.setOnClickListener(this);
         btn_favourite.setOnClickListener(this);
@@ -223,6 +225,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
         text_stationName = (TextView)activity.findViewById(R.id.currentroom_stationname_text);
         large_art = (ImageView)activity.findViewById(R.id.image_art);
         small_art = (ImageView)activity.findViewById(R.id.album_art);
+        text_score = (TextView)activity.findViewById(R.id.room_score_text);
         
         btn_play.setOnClickListener(this);
         btn_favourite.setOnClickListener(this);
@@ -600,9 +603,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    
 	    public void forceQuitRoom()
 	    {
-//    	    AlertDialog.Builder builder = new AlertDialog.Builder(ListeningRoom.mThis, android.R.style.Theme_Holo_Dialog);
-//   	        builder.setMessage("The host has closed the room.").setTitle("Room Closed");
-//   	        builder.show();
+    	    AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity(), android.R.style.Theme_Holo_Dialog);
+   	        builder.setMessage("The host has closed the room.").setTitle("Room Closed");
+   	        builder.show();
    	        
 	    	if(mediaplayer != null)
 	    		mediaplayer.release();
@@ -616,6 +619,21 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 	    	initialized = false;
 	    	//Go to default fragment
 	    	((ListeningRoom)activity).onNavigationDrawerItemSelected(-1);
+	    }
+	    
+	    public void displayScore(int score)
+	    {
+	    	text_score.setText(String.valueOf(score));
+	    	text_score.setVisibility(ImageView.VISIBLE);
+	    	text_score.postDelayed(new Runnable(){
+
+				@Override
+				public void run() {
+					text_score.setVisibility(ImageView.INVISIBLE);
+					
+				}
+    		}, 5000);
+	    	
 	    }
 	    
 	    private void updateFollowing()

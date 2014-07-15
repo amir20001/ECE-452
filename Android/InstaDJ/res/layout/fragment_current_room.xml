@@ -54,15 +54,21 @@
             android:paddingBottom="5dp"
             android:src="@drawable/blankart" />
 
-        <TextView
-            android:id="@+id/currentroom_stationname_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/album_art"
-            android:layout_alignParentTop="true"
-            android:text="StationName"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/white" />
+		<RelativeLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="match_parent" >
+
+	        <TextView
+	            android:id="@+id/currentroom_stationname_text"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentTop="true"
+	            android:text="StationName"
+	            android:textAppearance="?android:attr/textAppearanceLarge"
+	            android:textColor="@color/white" />
+
+        </RelativeLayout>
 
         <ImageButton
             android:id="@+id/room_close_button"
@@ -71,8 +77,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:background="@null"
-            android:minHeight="48dip"
-            android:minWidth="48dip"
+            android:minHeight="40dip"
+            android:minWidth="40dip"
             android:src="@drawable/ic_action_discard" />
 
         <ImageButton
@@ -82,8 +88,8 @@
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/room_close_button"
             android:background="@null"
-            android:minHeight="48dip"
-            android:minWidth="48dip"
+            android:minHeight="40dip"
+            android:minWidth="40dip"
             android:src="@drawable/ic_action_add_person" />
 
     </RelativeLayout>
@@ -182,5 +188,16 @@
             android:src="@drawable/ic_action_favorite" />
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/room_score_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="101dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="invisible" />
 
 </RelativeLayout>

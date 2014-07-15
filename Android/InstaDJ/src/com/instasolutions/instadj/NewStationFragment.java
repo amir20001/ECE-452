@@ -49,6 +49,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -59,6 +60,7 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 	int selectedPlaylistPos = 0;
 	SparseArray<PlaylistData> playlists = new SparseArray<PlaylistData>();
 	Activity activity = null;
+	Fragment fragment = null;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -68,6 +70,7 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 
 	        View view = inflater.inflate(R.layout.fragment_newstation, container, false);
 	        activity = this.getActivity();
+	        fragment = this;
 	        return view;
 	    }
 	
@@ -108,6 +111,15 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
     	        playlistsListView.setAdapter(adapter);
     	        pbar.setVisibility(ImageView.INVISIBLE);
     	        
+    	        if(playlists.size() == 0)
+    	        {
+    	        	Toast.makeText(activity, "No playlists found. Create a playlist first.", Toast.LENGTH_SHORT).show();;
+    	     	   FragmentManager fragmentManager = fragment.getFragmentManager();
+    	    	   FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    	           fragmentTransaction.replace(R.id.container, new PlaylistsFragment(), "PlaylistsFragment");
+    	           fragmentTransaction.commit();
+    	        }
+    	        
     	    }
 
     	};
@@ -125,13 +137,27 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 				getFragmentManager().popBackStack();
 				break;
 			case R.id.newstation_save_button:
-				CurrentRoomFragment fragment = ((ListeningRoom)activity).getCurrentRoomFragment();
-				fragment.setStation(createStation(), activity);
-				FragmentManager fragmentManager = this.getFragmentManager();
-				FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-				fragmentTransaction.replace(R.id.container, fragment, "CurrentRoomFragment");
-		       	fragmentTransaction.addToBackStack(null);
-		       	fragmentTransaction.commit();
+				EditText stationName = (EditText)activity.findViewById(R.id.newstation_name_input);
+				String name = stationName.getText().toString();
+				if(name.length() == 0)
+				{
+					Toast.makeText(this.getActivity(), "Enter a station name.", Toast.LENGTH_SHORT).show();
+				}
+				else if(name.length() > 15)
+				{
+					Toast.makeText(this.getActivity(), "Station name must be under 15 character.", Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					CurrentRoomFragment fragment = ((ListeningRoom)activity).getCurrentRoomFragment();
+					fragment.setStation(createStation(), activity);
+					FragmentManager fragmentManager = this.getFragmentManager();
+					FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+					fragmentTransaction.replace(R.id.container, fragment, "CurrentRoomFragment");
+			       	fragmentTransaction.addToBackStack(null);
+			       	fragmentTransaction.commit();
+				}
+
 				break;
 			default:
 				break;

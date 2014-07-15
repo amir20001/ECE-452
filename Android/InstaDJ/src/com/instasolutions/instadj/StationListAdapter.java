@@ -57,7 +57,7 @@ public class StationListAdapter extends BaseAdapter{
 		StationData station = stations.get(pos);
 		
 		StationName.setText(station.Name);
-		StationOwner.setText(station.Owner.getFirstName() + " " + station.Owner.getLastName());
+		StationOwner.setText(station.Owner.getFirstName() + " " + station.Owner.getLastName().charAt(0) + ".");
 		StationPlaylist.setText(station.Playlist.Name);
 		StationPlaylistGenre.setText(station.Playlist.Genre);
 		StationSongName.setText(station.Song.Title);

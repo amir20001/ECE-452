@@ -315,5 +315,3 @@ public class ListeningRoom extends FragmentActivity
     
    
 };
-
-

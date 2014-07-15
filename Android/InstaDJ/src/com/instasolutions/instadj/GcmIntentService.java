@@ -51,6 +51,11 @@ public class GcmIntentService extends IntentService {
                 {
                 	//sync room
                 }
+                else if(action.compareTo("score") == 0)
+                {
+                	//Push score
+                	currentRoom.displayScore(songScore);
+                }
                 
                 
                 Log.i(TAG, "Received: " + extras.toString());
