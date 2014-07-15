@@ -18,7 +18,9 @@ CREATE TABLE follow (
 	followee VARCHAR(255),
 	PRIMARY KEY (id),
 	CONSTRAINT fk_following_following FOREIGN KEY (follower) REFERENCES `user`(user_id),
-	CONSTRAINT fk_following_followed FOREIGN KEY (followee) REFERENCES `user`(user_id)
+	CONSTRAINT fk_following_followed FOREIGN KEY (followee) REFERENCES `user`(user_id),
+	CONSTRAINT uc_followe_followee UNIQUE (follower,followee)
+
 );
 
 CREATE TABLE favourite (

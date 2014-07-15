@@ -1,6 +1,5 @@
 package com.ece452.domain;
 
-import com.ece452.util.Content;
 
 public class Sync {
 
@@ -14,6 +13,7 @@ public class Sync {
 	private int songId;
 	private int position;
 	private int songScore;
+	private Song song;
 
 	public String getAction() {
 		return action;
@@ -53,6 +53,14 @@ public class Sync {
 
 	public void setRoomId(int roomId) {
 		this.roomId = roomId;
+	}
+
+	public Song getSong() {
+		return song;
+	}
+
+	public void setSong(Song song) {
+		this.song = song;
 	}
 
 }

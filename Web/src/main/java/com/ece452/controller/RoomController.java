@@ -117,15 +117,10 @@ public class RoomController {
 			@PathVariable("roomId") int roomId) throws JsonGenerationException,
 			JsonMappingException, IOException {
 
-		User user = userDao.getUser(userId);
+		
 		userDao.updateRoom(userId, roomId);
-		if (user.getRoomId() > 0) {
-			// already in a room we need to leave that first
-			roomDao.updateListenerCount(false, user.getRoomId());
-		}
-		// update new room
 		roomDao.updateListenerCount(true, roomId);
-
+		User user = userDao.getUser(userId);
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(response.getOutputStream(), user);
 	}
@@ -139,7 +134,10 @@ public class RoomController {
 		if (user.getRoomId() > 0) {
 			user.setRoomId(0);
 			roomDao.updateListenerCount(false, roomId);
+			userDao.updateRoom(userId, 0);
 		}
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.writeValue(response.getOutputStream(), user);
 	}
 	
 	@RequestMapping(value = "/updatecurrentsong/{roomId}/{songId}", method = RequestMethod.POST)
