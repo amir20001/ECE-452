@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.ece452.domain.User;
+import com.ece452.mapper.GcmIdMapper;
 import com.ece452.mapper.UserMapper;
 
 @Repository
@@ -183,6 +184,18 @@ public class UserDao {
 			return user;
 		} catch (Exception e) {
 			return user;
+		}
+	}
+
+	public List<String> getGcmOfAllUsersInRoom() {
+		String sql = "SELECT gcm_id FROM USER WHERE room_id >0";
+
+		List<String> gcmIds = new ArrayList<String>();
+		try {
+			gcmIds = jdbcTemplate.query(sql, new GcmIdMapper());
+			return gcmIds;
+		} catch (Exception e) {
+			return gcmIds;
 		}
 	}
 

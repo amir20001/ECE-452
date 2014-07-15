@@ -17,6 +17,10 @@
 
 	<mvc:annotation-driven />
 	<context:component-scan base-package="com.ece452" />
+	<task:executor id="executor" pool-size="5" />
+	<task:scheduler id="scheduler" pool-size="5" />
+	<task:annotation-driven scheduler="scheduler"
+		executor="executor" />
 
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -37,7 +41,8 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
 		<!-- Amazon Web Services -->
 		<!-- Production -->
-		<property name="url" value="jdbc:mysql://ec2-50-19-213-178.compute-1.amazonaws.com:3306/instadj"></property>
+		<property name="url"
+			value="jdbc:mysql://ec2-50-19-213-178.compute-1.amazonaws.com:3306/instadj"></property>
 		<property name="username" value="instadj"></property>
 		<property name="password" value="root123"></property>
 	</bean>
