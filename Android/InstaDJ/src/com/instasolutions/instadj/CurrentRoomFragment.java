@@ -456,7 +456,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener, On
 		    	//Upload next song
 		    	ServiceUploadHelper upload = new ServiceUploadHelper();
 		    	upload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
-	    				station.Playlist.Songs.get(playlistPosition+1 > station.Playlist.Songs.size() ? 0 : playlistPosition+1 ));
+	    				station.Playlist.Songs.get(playlistPosition+1 >= station.Playlist.Songs.size() ? 0 : playlistPosition+1 ));
 	    	}
 	    	else
 	    	{
