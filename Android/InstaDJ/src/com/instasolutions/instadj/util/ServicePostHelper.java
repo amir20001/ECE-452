@@ -35,6 +35,7 @@ public class ServicePostHelper extends AsyncTask<String, Void, String> {
 			}
 			httpPost.setHeader("Accept", "application/json");
 			httpPost.setHeader("Content-type", "application/json");
+			System.out.println("executing request " + httpPost.getRequestLine());
 			HttpResponse httpResponse = httpclient.execute(httpPost);
 			BufferedReader br = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
 			if(br != null){

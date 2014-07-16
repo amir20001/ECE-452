@@ -77,17 +77,23 @@
         android:text="Search:"
         android:textColor="@color/white" />
 
+    <Spinner
+        android:id="@+id/newplaylist_filterby_songs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newplaylist_name_input"
+        android:layout_below="@+id/newplaylist_genre_label"
+        android:layout_marginTop="14dp"
+        android:layout_toLeftOf="@+id/newplaylist_cancel_button" />
+
     <EditText
         android:id="@+id/newplaylist_filter_songs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/newplaylist_filter_label"
-        android:layout_alignBottom="@+id/newplaylist_filter_label"
-        android:layout_alignLeft="@+id/newplaylist_name_input"
+        android:layout_alignLeft="@+id/newplaylist_cancel_button"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/newplaylist_genre_spinner"
         android:ems="10"
-        android:textColor="@color/white" >
-
-        <requestFocus />
-    </EditText>
+        android:textColor="@color/white" />
 
 </RelativeLayout>

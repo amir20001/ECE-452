@@ -26,6 +26,7 @@ public class ServiceGetHelper extends AsyncTask<String, Void, String> {
 
 				// make get request to the given URL
 				HttpGet httpget = new HttpGet(params[0]);
+				System.out.println("executing request " + httpget.getRequestLine());
 
 				HttpResponse httpResponse = httpclient.execute(httpget);
 				inputStream = httpResponse.getEntity().getContent();

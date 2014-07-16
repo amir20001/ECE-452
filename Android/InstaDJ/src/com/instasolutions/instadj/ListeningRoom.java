@@ -98,6 +98,11 @@ public class ListeningRoom extends FragmentActivity
         mNavigationDrawerFragment_right.setUp(
                 R.id.navigation_drawer_right,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Editor editPrefs = prefs.edit();
+        editPrefs.putBoolean("userIsHosting", false);
+        editPrefs.commit();
+       
         
         verifyGCMId();
         
@@ -238,43 +243,40 @@ public class ListeningRoom extends FragmentActivity
 	public void verifyGCMId()
 	{
 		//check to see if user has a registered GCM
+		ServiceGetHelper helper = new ServiceGetHelper(){
+			@Override
+			protected void onPostExecute(String result){
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+				
+				JSONObject jUser = new JSONObject();
+				String GCMId = ""; 
+
+				try {
+					jUser = new JSONObject(result);
+					GCMId = jUser.getString("gcmId");
+				} catch (JSONException e1) {
+
+					e1.printStackTrace();
+				}
+				
+				
+				if(GCMId.isEmpty() || GCMId.compareTo("null") == 0)
+				{
+					registerGCMInBackground();
+				}
+				else
+				{
+					Editor prefEdit = prefs.edit();
+					prefEdit.putString("GCMID", GCMId);
+					prefEdit.commit();
+				}
+				
+			}
+		};
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		ServiceGetHelper helper = new ServiceGetHelper();
 		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
     			"http://instadj.amir20001.cloudbees.net/user/get/" + prefs.getString("UserID", "UserID"));
-		JSONObject jUser = new JSONObject();
-		String GCMId = ""; 
 
-		try {
-			jUser = new JSONObject(helper.get());
-		} catch (JSONException e1) {
-
-			e1.printStackTrace();
-		} catch (InterruptedException e1) {
-
-			e1.printStackTrace();
-		} catch (ExecutionException e1) {
-
-			e1.printStackTrace();
-		}
-
-		
-		try {
-			GCMId = jUser.getString("gcmId");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
-		if(GCMId.isEmpty() || GCMId.compareTo("null") == 0)
-		{
-			registerGCMInBackground();
-		}
-		else
-		{
-			Editor prefEdit = prefs.edit();
-			prefEdit.putString("GCMID", GCMId);
-			prefEdit.commit();
-		}
 	}
 	
 	private void registerGCMInBackground() {

@@ -242,7 +242,6 @@ public class RightDrawerFragment extends Fragment {
                 mDrawerLayout.closeDrawer(Gravity.RIGHT);
             } else {
             	refreshUserList();
-    	        mDrawerListView.setAdapter(mUserList);
                 mDrawerLayout.openDrawer(Gravity.RIGHT);
             }
             return true;
@@ -313,6 +312,7 @@ public class RightDrawerFragment extends Fragment {
 						e.printStackTrace();
 					}
 	    	        mUserList = new UserListAdapter(activity, users);
+	    	        mDrawerListView.setAdapter(mUserList);
 	    	        
 	    	    }
 
@@ -320,14 +320,5 @@ public class RightDrawerFragment extends Fragment {
 	    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 	        getHelper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, 
 					"http://instadj.amir20001.cloudbees.net/room/getCurrentUsers/" + prefs.getInt("userCurrentRoom", -1));
-	        try {
-				getHelper.get();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
     }
 }

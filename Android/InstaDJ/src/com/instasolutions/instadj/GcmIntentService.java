@@ -40,7 +40,10 @@ public class GcmIntentService extends IntentService {
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 String action = extras.getString("action");
                 if(action == null)
+                {
+                	Log.i(TAG, "Received: KeepAlive");
                 	return;
+                }
                 CurrentRoomFragment currentRoom = ListeningRoom.mThis.getCurrentRoomFragment();
                 if(action.compareTo("kick") == 0)
                 {

@@ -348,7 +348,14 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 		Boolean userIsHost = prefs.getBoolean("userIsHosting", false);
 		if (mediaplayer.isPlaying()) {
 			mediaplayer.pause();
- 			btn_play.setImageResource(R.drawable.ic_action_play);
+			activity.runOnUiThread(new Runnable(){
+
+				@Override
+				public void run() {
+					btn_play.setImageResource(R.drawable.ic_action_play);
+				}
+				
+			});
 			if (userIsHost) {
 				ServicePostHelper helper = new ServicePostHelper();
 				helper.executeOnExecutor(
@@ -380,18 +387,19 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 							jRoom = new JSONObject(result);
 							int currentPos = jRoom.getInt("songPosition");
 							int startTime = jRoom.getInt("songPlayStartTime");
-							Boolean isplaying = jRoom.getBoolean("songIsPlaying");
+							Boolean isplaying = jRoom
+									.getBoolean("songIsPlaying");
 							dialog.dismiss();
-							if(isplaying)
-							{
-								//Note could be a timezone issue here
-								long positionDifference = System.currentTimeMillis()-startTime;
-								mediaplayer.seekTo((int)(currentPos + positionDifference));
+							if (isplaying) {
+								// Note could be a timezone issue here
+								long positionDifference = System
+										.currentTimeMillis() - startTime;
+								mediaplayer
+										.seekTo((int) (currentPos + positionDifference));
 								startPlayer();
-							}
-							else
-							{
-								Toast.makeText(activity, "Room paused by DJ.", Toast.LENGTH_SHORT).show();
+							} else {
+								Toast.makeText(activity, "Room paused by DJ.",
+										Toast.LENGTH_SHORT).show();
 							}
 
 						} catch (JSONException e) {
@@ -410,40 +418,48 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 	}
 
 	private void startPlayer() {
-		mediaplayer.start();
-		btn_play.setImageResource(R.drawable.ic_action_pause);
-		curTime = mediaplayer.getCurrentPosition();
-		endTime = mediaplayer.getDuration();
+		activity.runOnUiThread(new Runnable(){
 
-		text_endTime.setText(String.format(
-				"%d:%02d",
-				TimeUnit.MILLISECONDS.toMinutes((long) endTime),
-				TimeUnit.MILLISECONDS.toSeconds((long) endTime)
-						- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
-								.toMinutes((long) endTime))));
-		text_curTime.setText(String.format(
-				"%d:%02d",
-				TimeUnit.MILLISECONDS.toMinutes((long) curTime),
-				TimeUnit.MILLISECONDS.toSeconds((long) curTime)
-						- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
-								.toMinutes((long) curTime))));
-		seekbar.setProgress((int) curTime);
-		updateHandler.postDelayed(UpdateSeekBar, 100);
-	}
-
-	private Runnable UpdateSeekBar = new Runnable() {
-		public void run() {
-			if (mediaplayer != null && mediaplayer.isPlaying()) {
+			@Override
+			public void run() {
+				mediaplayer.start();
+				btn_play.setImageResource(R.drawable.ic_action_pause);
 				curTime = mediaplayer.getCurrentPosition();
-				seekbar.setProgress((int) curTime);
+				endTime = mediaplayer.getDuration();
+
+				text_endTime.setText(String.format(
+						"%d:%02d",
+						TimeUnit.MILLISECONDS.toMinutes((long) endTime),
+						TimeUnit.MILLISECONDS.toSeconds((long) endTime)
+								- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
+										.toMinutes((long) endTime))));
 				text_curTime.setText(String.format(
 						"%d:%02d",
 						TimeUnit.MILLISECONDS.toMinutes((long) curTime),
 						TimeUnit.MILLISECONDS.toSeconds((long) curTime)
-								- TimeUnit.MINUTES
-										.toSeconds(TimeUnit.MILLISECONDS
-												.toMinutes((long) curTime))));
+								- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
+										.toMinutes((long) curTime))));
+				seekbar.setProgress((int) curTime);
+				updateHandler.postDelayed(UpdateSeekBar, 100);
+				
 			}
+			
+		});
+	}
+
+	private Runnable UpdateSeekBar = new Runnable() {
+		public void run() {
+			if (station == null || mediaplayer == null) {
+				return;
+			}
+			curTime = mediaplayer.getCurrentPosition();
+			seekbar.setProgress((int) curTime);
+			text_curTime.setText(String.format(
+					"%d:%02d",
+					TimeUnit.MILLISECONDS.toMinutes((long) curTime),
+					TimeUnit.MILLISECONDS.toSeconds((long) curTime)
+							- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
+									.toMinutes((long) curTime))));
 			// Song Complete
 			if (curTime >= endTime) {
 				nextSong();
@@ -539,6 +555,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 			dialog.setTitle("Getting Next Song");
 			dialog.setMessage("Please Wait...");
 			dialog.setIndeterminate(true);
+			dialog.show();
 			ServiceGetHelper helper = new ServiceGetHelper() {
 				@Override
 				protected void onPostExecute(String result) {
@@ -608,7 +625,6 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 			protected void onPostExecute(Integer i) {
 				SharedPreferences prefs = PreferenceManager
 						.getDefaultSharedPreferences(activity);
-				dialog.dismiss();
 				try {
 					JSONObject jstation = new JSONObject();
 					jstation.put("name", station.Name);
@@ -637,6 +653,12 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 
 				} catch (Exception e) {
 					Log.e("instaDJ", "JSONException", e);
+				}
+				try {
+					Thread.sleep(5000, 0);
+					dialog.dismiss();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 				room.nextSong();
 			}
@@ -709,13 +731,20 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 	}
 
 	public void forceQuitRoom() {
-		// AlertDialog.Builder builder = new
-		// AlertDialog.Builder(this.getActivity(),
-		// android.R.style.Theme_Holo_Dialog);
-		// builder.setMessage("The host has closed the room.").setTitle("Room Closed");
-		// builder.show();
-		Toast.makeText(activity, "Room closed.", Toast.LENGTH_SHORT).show();
-		;
+		activity.runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity,
+						android.R.style.Theme_Holo_Dialog);
+				builder.setMessage("The host has closed the room.").setTitle(
+						"Room Closed");
+				builder.show();
+
+			}
+
+		});
+
 		if (updateHandler != null)
 			updateHandler.removeCallbacks(UpdateSeekBar);
 		if (mediaplayer != null)

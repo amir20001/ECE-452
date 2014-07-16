@@ -28,17 +28,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.instasolutions.instadj.util.ServicePostHelper;
 
 public class NewPlaylistFragment extends Fragment implements
 		LoaderManager.LoaderCallbacks<Cursor>, OnClickListener{
+	
+	private int filterType = SongListAdapter.FILTERBYTITLE;
 
 	private static final int URL_LOADER = 0;
     String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
@@ -73,11 +77,33 @@ public class NewPlaylistFragment extends Fragment implements
     	Button cancelButton = (Button)this.getActivity().findViewById(R.id.newplaylist_cancel_button);
     	Button saveButton = (Button)this.getActivity().findViewById(R.id.newplaylist_save_button);
     	Spinner genreSpinner = (Spinner)this.getActivity().findViewById(R.id.newplaylist_genre_spinner);
+    	Spinner filterBySpinner = (Spinner)this.getView().findViewById(R.id.newplaylist_filterby_songs);
     	
     	cancelButton.setOnClickListener(this);
     	saveButton.setOnClickListener(this);
-    	ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.spinner_genre_view, getResources().getStringArray(R.array.genres_array));
+    	ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(),
+    	        R.array.genres_array, android.R.layout.simple_spinner_item);
+    	adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     	genreSpinner.setAdapter(adapter);
+    	adapter = ArrayAdapter.createFromResource(this.getActivity(),
+    	        R.array.filterBy_song_array, android.R.layout.simple_spinner_item);
+    	adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    	filterBySpinner.setAdapter(adapter);
+    	filterBySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				filterType = arg2;
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+    		
+    	});
     	
     	EditText filter = (EditText)this.getActivity().findViewById(R.id.newplaylist_filter_songs);
     	filter.addTextChangedListener(new TextWatcher(){
@@ -97,7 +123,7 @@ public class NewPlaylistFragment extends Fragment implements
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				
-				songlist_adapter.getFilter().filter(s);
+				songlist_adapter.getFilter(filterType).filter(s);
 				
 			}
     		
