@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Welcome</title>
+<title>Playlists View</title>
 <!-- <link type="text/css" href="resources/css/bootstrap.css" rel="stylesheet" /> -->
 <link type="text/css" href="css/bootstrap-responsive.min.css"
 	rel="stylesheet">
@@ -18,12 +18,13 @@
 <body>
 	 
 	<div class="panel panel-default">
-		<display:table class="table table-striped table-condensed"
-			name="playlists">
+		<display:table class="table table-hover row-clickable"
+			name="playlists" export="true">
 			<display:column property="id" title="ID" />
 			<display:column property="name" />
 			<display:column property="genre" />
 			<display:column property="trackCount" />
+			<display:column property="userId" />
 		</display:table>
 </body>
 </html>
