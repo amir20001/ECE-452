@@ -28,7 +28,6 @@ public class FollowersFragment extends Fragment{
     Activity activity = null;
     ListView followersView = null;
     SparseArray<UserData> followersList = new SparseArray<UserData>();
-    SparseArray<UserData> emptyList = new SparseArray<UserData>();
 
     /** Called when the activity is first created. */
     @Override
@@ -51,8 +50,8 @@ public class FollowersFragment extends Fragment{
         final ProgressBar pbar = (ProgressBar)activity.findViewById(R.id.followers_progress);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 
-        emptyList.clear();
-        followersView.setAdapter(new UserListAdapter(activity, emptyList));
+        followersList.clear();
+        followersView.setAdapter(new UserListAdapter(activity, followersList));
         pbar.setVisibility(ProgressBar.VISIBLE);
 
         ServiceGetHelper getHelper = new ServiceGetHelper(){
