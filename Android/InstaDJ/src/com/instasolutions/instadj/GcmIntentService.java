@@ -35,11 +35,8 @@ public class GcmIntentService extends IntentService {
         if (!extras.isEmpty()) { 
         	if (GoogleCloudMessaging.
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                int songPosition = extras.getInt("position");
                 int songScore = extras.getInt("songScore");
                 String action = extras.getString("action");
-                int roomId = extras.getInt("roomId");
-                int songId = extras.getInt("songId");
                 CurrentRoomFragment currentRoom = ListeningRoom.mThis.getCurrentRoomFragment();
                 if(action.compareTo("kick") == 0)
                 {
@@ -47,16 +44,19 @@ public class GcmIntentService extends IntentService {
                 	currentRoom.forceQuitRoom();
              	
                 }
-                else if(action.compareTo("sync") == 0)
-                {
-                	//sync room
-                }
                 else if(action.compareTo("score") == 0)
                 {
                 	//Push score
                 	currentRoom.displayScore(songScore);
                 }
-                
+                else if(action.compareTo("roompause") == 0)
+                {
+                	currentRoom.play();
+                }
+                else if(action.compareTo("roomplay") == 0)
+                {
+                	currentRoom.play();
+                }
                 
                 Log.i(TAG, "Received: " + extras.toString());
             }

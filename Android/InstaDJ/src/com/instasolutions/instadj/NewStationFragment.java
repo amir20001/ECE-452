@@ -107,7 +107,7 @@ public class NewStationFragment extends Fragment implements OnClickListener, OnI
 					e.printStackTrace();
 				}
     	        PlayListAdapter adapter = new PlayListAdapter(activity, playlists );
-    	        adapter.setButtonsEnabled(true);;
+    	        adapter.setButtonsEnabled(false);;
     	        playlistsListView.setAdapter(adapter);
     	        pbar.setVisibility(ImageView.INVISIBLE);
     	        
