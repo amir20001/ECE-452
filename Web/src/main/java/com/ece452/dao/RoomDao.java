@@ -31,9 +31,8 @@ public class RoomDao {
 		this.dataSource = dataSource;
 	}
 
-	public Room insert(Room room) {
-
-		String sql = "INSERT INTO room (name,owner_user_id,listener_count,current_song_id,playlist_id) VALUES (?,?,?,?,?)";
+	public Room insert(Room room) {	
+		String sql = "INSERT INTO room (name,owner_user_id,listener_count,current_song_id,playlist_id,song_position,song_is_playing,song_play_start_time) VALUES (?,?,?,?,?,?,?,?)";
 		ResultSet generatedKeys = null;
 		Connection conn = null;
 		try {
@@ -49,6 +48,9 @@ public class RoomDao {
 				statement.setInt(4, room.getCurrentSongId());
 			}
 			statement.setInt(5, room.getPlaylistId());
+			statement.setInt(6, room.getSongPosition());
+			statement.setBoolean(7, room.isSongIsPlaying());
+			statement.setLong(8, room.getSongPlayStartTime());
 			System.out.println(statement.toString());
 			statement.executeUpdate();
 
@@ -74,6 +76,19 @@ public class RoomDao {
 			}
 		}
 
+	}
+
+	public Room getRoomNoObjects(int id) {
+		Room room = null;
+		String sql = "SELECT * FROM room WHERE id = ?";
+		try {
+			room = jdbcTemplate.queryForObject(sql, new Object[] { id },
+					new RoomAndSubObjectMapper());
+		} catch (Exception e) {
+			// No room was found with the specified id, return null
+			return null;
+		}
+		return room;
 	}
 
 	public Room getRoom(int id) {
@@ -156,7 +171,7 @@ public class RoomDao {
 			}
 		}
 	}
-	
+
 	public void updateCurrentSong(int songId, int roomId) {
 		String sql = "UPDATE room SET current_song_id=? WHERE id =?";
 		Connection conn = null;
@@ -199,6 +214,35 @@ public class RoomDao {
 				}
 			}
 		}
+	}
+
+	public void updateSongData(int roomId, int songPosition,
+			boolean songIsPlaying, long songPlayStartTime) {
+		String sql = "UPDATE room SET song_position=?,"
+				+ " song_is_playing=?, song_play_start_time=?  WHERE id =?";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement;
+			statement = conn.prepareStatement(sql);
+
+			statement.setInt(1, songPosition);
+			statement.setBoolean(2, songIsPlaying);
+			statement.setLong(3, songPlayStartTime);
+			statement.setInt(4, roomId);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
 	}
 
 }

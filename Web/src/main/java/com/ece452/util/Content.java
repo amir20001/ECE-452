@@ -1,5 +1,6 @@
 package com.ece452.util;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,12 +8,10 @@ import com.ece452.domain.Sync;
 
 public class Content {
 
-	private List<String> registration_ids = new LinkedList<String>();
+	private List<String> registration_ids = new ArrayList<String>();
 	private Sync data;
 
 	public void addRegId(String regId) {
-		if (registration_ids == null)
-			registration_ids = new LinkedList<String>();
 		registration_ids.add(regId);
 	}
 

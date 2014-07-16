@@ -9,6 +9,10 @@ public class Room extends BaseEntity {
 	private int listenerCount;
 	private int currentSongId;
 	private int playlistId;
+	private int songPosition;
+	private boolean songIsPlaying;
+	private long songPlayStartTime;
+
 	@MapperIgnore
 	private User user;
 	@MapperIgnore
@@ -45,7 +49,6 @@ public class Room extends BaseEntity {
 		this.listenerCount = listenerCount;
 	}
 
-
 	public int getPlaylistId() {
 		return playlistId;
 	}
@@ -77,7 +80,7 @@ public class Room extends BaseEntity {
 	public void setPlaylist(Playlist playlist) {
 		this.playlist = playlist;
 	}
-	
+
 	public Song getSong() {
 		return song;
 	}
@@ -86,13 +89,36 @@ public class Room extends BaseEntity {
 		this.song = song;
 	}
 
-
 	public int getCurrentSongId() {
 		return currentSongId;
 	}
 
 	public void setCurrentSongId(int currentSongId) {
 		this.currentSongId = currentSongId;
+	}
+
+	public int getSongPosition() {
+		return songPosition;
+	}
+
+	public void setSongPosition(int songPosition) {
+		this.songPosition = songPosition;
+	}
+
+	public boolean isSongIsPlaying() {
+		return songIsPlaying;
+	}
+
+	public void setSongIsPlaying(boolean songIsPlaying) {
+		this.songIsPlaying = songIsPlaying;
+	}
+
+	public long getSongPlayStartTime() {
+		return songPlayStartTime;
+	}
+
+	public void setSongPlayStartTime(long songPlayStartTime) {
+		this.songPlayStartTime = songPlayStartTime;
 	}
 
 }

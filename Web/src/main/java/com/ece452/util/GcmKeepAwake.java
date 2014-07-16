@@ -21,7 +21,7 @@ public class GcmKeepAwake {
 		List<String> gcmIds = userDao.getGcmOfAllUsersInRoom();
 		Content content = new Content();
 		for (String gcmId : gcmIds) {
-			if (StringUtils.isEmpty(gcmId)) {
+			if (!StringUtils.isEmpty(gcmId)) {
 				content.addRegId(gcmId);
 			}
 		}

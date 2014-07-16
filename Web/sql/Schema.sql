@@ -69,6 +69,9 @@ CREATE TABLE room (
 	 playlist_id INT NULL,
 	 listener_count INT,
 	 current_song_id INT NULL,
+	 song_position INT,
+	 song_is_playing boolean,
+	 song_play_start_time BIGINT,	 
 	 PRIMARY KEY (id),
 	 CONSTRAINT fk_room_owner_id FOREIGN KEY (owner_user_id) REFERENCES `user`(user_id),
 	 CONSTRAINT fk_room_current_song_id FOREIGN KEY (current_song_id) REFERENCES song (id)
