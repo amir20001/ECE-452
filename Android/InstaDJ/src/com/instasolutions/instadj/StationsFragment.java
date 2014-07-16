@@ -85,7 +85,8 @@ public class StationsFragment extends Fragment implements OnClickListener, OnIte
 													jSong.getString("duration"),
 													jSong.getString("songUri"),
 													jSong.getString("artUrl"),
-													jSong.getString("songUrl"));
+													jSong.getString("songUrl"),
+													jSong.getInt("netScore"));
 						
 						stations.append(i, new StationData(jStation.getInt("id"),
 												jStation.getString("name"),

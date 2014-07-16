@@ -113,7 +113,7 @@ public class NewPlaylistFragment extends Fragment implements
 			    	         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durLong)));
         	}
         	songs.append(i, new SongData(-1, cursor.getString(0), cursor.getString(1), 
-        				cursor.getString(2), durString, cursor.getString(4), ""));
+        				cursor.getString(2), durString, cursor.getString(4), "", 0));
         }
         songlist_adapter = new SongListAdapter(this.getActivity(), songs, true);
         listview.setAdapter(songlist_adapter);

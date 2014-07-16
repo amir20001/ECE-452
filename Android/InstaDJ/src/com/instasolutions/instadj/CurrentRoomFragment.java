@@ -348,7 +348,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 		Boolean userIsHost = prefs.getBoolean("userIsHosting", false);
 		if (mediaplayer.isPlaying()) {
 			mediaplayer.pause();
-			btn_play.setImageResource(R.drawable.ic_action_play);
+ 			btn_play.setImageResource(R.drawable.ic_action_play);
 			if (userIsHost) {
 				ServicePostHelper helper = new ServicePostHelper();
 				helper.executeOnExecutor(
@@ -552,7 +552,8 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 								jSong.getString("duration"),
 								jSong.getString("songUri"),
 								jSong.getString("artUrl"),
-								jSong.getString("songUrl"));
+								jSong.getString("songUrl"),
+								jSong.getInt("netScore"));
 						station.Song = song;
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -730,13 +731,13 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 		((ListeningRoom) activity).onNavigationDrawerItemSelected(-1);
 	}
 
-	public void displayScore(final int score) {
+	public void displayScore(final SongData song) {
 
 		activity.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				text_score.setText(String.valueOf(score));
+				text_score.setText(String.valueOf(song.score));
 				text_score.setVisibility(ImageView.VISIBLE);
 			}
 

@@ -66,7 +66,8 @@ public class FavoritesFragment extends Fragment {
 											jSong.getString("duration"),
 											null,
 											jSong.getString("artUrl"),
-											""));
+											"",
+											jSong.getInt("netScore")));
 							
 						}
 		    	        SongListAdapter adapter = new SongListAdapter(activity, songs);

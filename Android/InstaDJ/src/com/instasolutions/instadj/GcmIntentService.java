@@ -1,5 +1,8 @@
 package com.instasolutions.instadj;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import android.R;
@@ -35,8 +38,9 @@ public class GcmIntentService extends IntentService {
         if (!extras.isEmpty()) { 
         	if (GoogleCloudMessaging.
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                int songScore = extras.getInt("songScore");
                 String action = extras.getString("action");
+                if(action == null)
+                	return;
                 CurrentRoomFragment currentRoom = ListeningRoom.mThis.getCurrentRoomFragment();
                 if(action.compareTo("kick") == 0)
                 {
@@ -47,7 +51,25 @@ public class GcmIntentService extends IntentService {
                 else if(action.compareTo("score") == 0)
                 {
                 	//Push score
-                	currentRoom.displayScore(songScore);
+                	JSONObject jSong;
+					try {
+						jSong = new JSONObject(extras.getString("song"));
+	                	SongData song = new SongData(jSong.getInt("id"),
+								jSong.getString("title"), 
+								jSong.getString("artist"),
+								jSong.getString("album"),
+								jSong.getString("duration"),
+								jSong.getString("songUri"),
+								jSong.getString("artUrl"),
+								jSong.getString("songUrl"),
+								jSong.getInt("netScore"));
+	                	currentRoom.displayScore(song);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+                	
                 }
                 else if(action.compareTo("roompause") == 0)
                 {

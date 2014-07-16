@@ -81,7 +81,8 @@ public class PlaylistData {
 									jSong.getString("duration"),
 									jSong.getString("songUri"),
 									jSong.getString("artUrl"),
-									jSong.getString("songUrl"));
+									jSong.getString("songUrl"),
+									jSong.getInt("netScore"));
 
 				this.Songs.append(i, song);
 				

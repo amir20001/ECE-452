@@ -14,6 +14,7 @@ public class SongData {
 	public String Art_URL;
 	public Bitmap Art_Bitmap;
 	public String Song_URL;
+	public int score;
 	
 	public SongData()
 	{
@@ -25,8 +26,9 @@ public class SongData {
 		this.LocalPath = "";
 		this.Art_URL = "";
 		this.Song_URL = "";
+		this.score = 0;
 	}
-	public SongData(int id, String Title, String Artist, String Album, String Duration, String LocalPath, String Art_URL, String Song_URL){
+	public SongData(int id, String Title, String Artist, String Album, String Duration, String LocalPath, String Art_URL, String Song_URL, int score){
 		this.id = id;
 		this.Title = Title;
 		this.Artist = Artist;
@@ -35,9 +37,10 @@ public class SongData {
 		this.LocalPath = LocalPath;
 		this.Art_URL = Art_URL;
 		this.Song_URL = Song_URL;
+		this.score = score;
 	}
 	
-	public SongData(int id, String Title, String Artist, String Album, String Duration, String LocalPath, Bitmap Art_Bitmap, String Song_URL){
+	public SongData(int id, String Title, String Artist, String Album, String Duration, String LocalPath, Bitmap Art_Bitmap, String Song_URL, int score){
 		this.id = id;
 		this.Title = Title;
 		this.Artist = Artist;
@@ -46,10 +49,11 @@ public class SongData {
 		this.LocalPath = LocalPath;
 		this.Art_Bitmap = Art_Bitmap;
 		this.Song_URL = Song_URL;
+		this.score = score;
 		
 	}
 	
-	public SongData(int id, String Title, String Artist, String Album, String Duration, String LocalPath, String Song_URL){
+	public SongData(int id, String Title, String Artist, String Album, String Duration, String LocalPath, String Song_URL, int score){
 		this.id = id;
 		this.Title = Title;
 		this.Artist = Artist;
@@ -57,6 +61,7 @@ public class SongData {
 		this.Duration = Duration;
 		this.LocalPath = LocalPath;		
 		this.Song_URL = Song_URL;
+		this.score = score;
 	}
 	
 }
