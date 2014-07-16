@@ -490,16 +490,16 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 		}
 
 		if (prefs.getBoolean("userIsHosting", false)) {
+			if (playlistPosition >= station.Playlist.Songs.size()) {
+				playlistPosition = 0;
+			}
+			station.Song = station.Playlist.Songs.get(playlistPosition);
 			if (!firstSong) {
 				ServicePostHelper helper = new ServicePostHelper();
 				helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 						"http://instadj.amir20001.cloudbees.net/room/updatecurrentsong/"
 								+ station.id + "/" + station.Song.id);
 			}
-			if (playlistPosition >= station.Playlist.Songs.size()) {
-				playlistPosition = 0;
-			}
-			station.Song = station.Playlist.Songs.get(playlistPosition);
 			// Upload next song
 			ServiceUploadHelper upload = new ServiceUploadHelper();
 			upload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,

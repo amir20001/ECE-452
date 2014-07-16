@@ -33,6 +33,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -40,10 +42,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.CompoundButton;
 
-public class SongListAdapter extends BaseAdapter implements CompoundButton.OnCheckedChangeListener{
+public class SongListAdapter extends BaseAdapter implements CompoundButton.OnCheckedChangeListener, Filterable{
 
 	private Activity activity;
 	private SparseArray<SongData> songs = new SparseArray<SongData>();
+	private SparseArray<SongData> songsFiltered = new SparseArray<SongData>();
 	private SparseBooleanArray checkBoxArray = new SparseBooleanArray();
 	private static LayoutInflater inflater = null;
 	private Boolean UseSelect = false;
@@ -54,6 +57,7 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 	{
 		activity = a;
 		songs = d;
+		songsFiltered = d;
 		inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
 	}
@@ -62,6 +66,7 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 	{
 		activity = a;
 		songs = d;
+		songsFiltered = d;
 		inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		UseSelect = useSelect;
 	}
@@ -74,7 +79,7 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 	@Override
 	public int getCount() {
 		
-		return songs.size();
+		return songsFiltered.size();
 	}
 
 	@Override
@@ -105,7 +110,7 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 		TextView duration = (TextView)v.findViewById(R.id.song_duration);
 		ImageView art = (ImageView)v.findViewById(R.id.list_album_art);
 			
-		final SongData song = songs.get(pos);
+		final SongData song = songsFiltered.get(pos);
 		
 		title.setText(song.Title);
 		artist.setText(song.Artist);
@@ -213,6 +218,51 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 	public void setButtonsEnabled(boolean buttons)
 	{
 		this.UseButtons = buttons;
+	}
+
+	@Override
+	public Filter getFilter() {
+		return new Filter()
+	       {
+	            @Override
+	            protected FilterResults performFiltering(CharSequence charSequence)
+	            {
+	                FilterResults results = new FilterResults();
+
+	                if(charSequence == null || charSequence.length() == 0)
+	                {
+	                    results.values = songs;
+	                    results.count = songs.size();
+	                }
+	                else
+	                {
+	                   SparseArray<SongData> filteredSongs = new  SparseArray<SongData>();
+	                    int c = 0;
+	                    for(int i = 0; i < songs.size(); i++)
+	                    {
+
+	                    	SongData song = songs.get(i);
+	                        if(song.Title.contains(charSequence))
+	                        {
+	                        	filteredSongs.append(c, song);
+	                        	c++;
+	                        }
+	                    }            
+
+	                    results.values = filteredSongs;
+	                    results.count = filteredSongs.size();
+	                }
+
+	                return results;
+	            }
+
+	            @Override
+	            protected void publishResults(CharSequence charSequence, FilterResults filterResults)
+	            {
+	                songsFiltered = (SparseArray<SongData>)filterResults.values;
+	                notifyDataSetChanged();
+	            }
+	        };
 	}
 	
 
