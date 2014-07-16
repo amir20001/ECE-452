@@ -190,6 +190,7 @@ public class RoomController {
 			content.addRegId(gcmId);
 		}
 		content.setData(sync);
+		GcmHelper.post(content);
 	}
 	
 	
@@ -210,6 +211,7 @@ public class RoomController {
 			content.addRegId(gcmId);
 		}
 		content.setData(sync);
+		GcmHelper.post(content);
 	}
 
 }
