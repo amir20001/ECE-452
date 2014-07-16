@@ -20,8 +20,13 @@
 	<div class="panel panel-default">
 		<display:table class="table table-striped table-condensed"
 			name="users">
-			<display:column property="username" />
-			<display:column property="pictureUrl" />
+			<display:column property="userId" />
+			<display:column property="firstName" />
+			<display:column property="lastName" />
+			<display:column property="score" />
+			<display:column property="roomId" />
+			<display:column property="gcmId" />
 		</display:table>
+	</div>
 </body>
 </html>
