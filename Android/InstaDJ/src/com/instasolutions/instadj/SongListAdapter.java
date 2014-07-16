@@ -123,9 +123,9 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 			CheckBox checkbox = (CheckBox)v.findViewById(R.id.songs_checkbox);
 			int id = Resources.getSystem().getIdentifier("btn_check_holo_dark", "drawable", "android");
 			checkbox.setButtonDrawable(id);
-			Boolean checked = checkBoxArray.get(pos);
+			Boolean checked = checkBoxArray.get(song.id);
 			SongPath.setText(song.LocalPath);
-			checkbox.setTag(pos);
+			checkbox.setTag(song.id);
 			checkbox.setOnCheckedChangeListener(null);
 			if(checked != null)
 			{
@@ -134,7 +134,7 @@ public class SongListAdapter extends BaseAdapter implements CompoundButton.OnChe
 			else
 			{
 				checkbox.setChecked(false);
-				checkBoxArray.append(pos, false);
+				checkBoxArray.append(song.id, false);
 			}
 
 			checkbox.setOnCheckedChangeListener(this);
