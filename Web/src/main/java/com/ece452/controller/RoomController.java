@@ -3,6 +3,7 @@ package com.ece452.controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -87,7 +88,7 @@ public class RoomController {
 		model.addAttribute("rooms", rooms);
 		return new ModelAndView("roomView");
 	}
-	
+
 	@RequestMapping(value = "/getCurrentUsers/{roomId}", method = RequestMethod.GET)
 	public void getUsersInRoom(@PathVariable("roomId") int roomID,
 			HttpServletResponse response) throws JsonGenerationException,
@@ -117,12 +118,11 @@ public class RoomController {
 			@PathVariable("roomId") int roomId) throws JsonGenerationException,
 			JsonMappingException, IOException {
 
-		
 		userDao.updateRoom(userId, roomId);
 		roomDao.updateListenerCount(true, roomId);
-		User user = userDao.getUser(userId);
+		Room room = roomDao.getRoomNoObjects(roomId);
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.writeValue(response.getOutputStream(), user);
+		mapper.writeValue(response.getOutputStream(), room);
 	}
 
 	@RequestMapping(value = "/leave/{roomId}/{userId}", method = RequestMethod.POST)
@@ -139,35 +139,16 @@ public class RoomController {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(response.getOutputStream(), user);
 	}
-	
+
 	@RequestMapping(value = "/updatecurrentsong/{roomId}/{songId}", method = RequestMethod.POST)
 	public void updateCurrentSong(HttpServletResponse response,
 			@PathVariable("roomId") int roomId,
 			@PathVariable("songId") int songId) throws JsonGenerationException,
 			JsonMappingException, IOException {
+		Date date = new Date();
+		date.getTime();
 		roomDao.updateCurrentSong(songId, roomId);
-	}
-
-	@RequestMapping(value = "/sync", method = RequestMethod.POST)
-	public void sync(HttpServletResponse response, HttpServletRequest request)
-			throws JsonGenerationException, JsonMappingException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(
-				request.getInputStream()));
-		String json = "";
-		if (br != null) {
-			json = br.readLine();
-		}
-		ObjectMapper mapper = new ObjectMapper();
-		Sync sync = mapper.readValue(json, Sync.class);
-		List<User> usersInRoom = userDao.getUsersInRoom(sync.getRoomId());
-		Content content = new Content();
-		content.setSync(sync);
-		for (User user : usersInRoom) {
-			content.addRegId(user.getGcmId());
-		}
-		if (usersInRoom.size() > 0) {
-			GcmHelper.post(content);
-		}
+		roomDao.updateSongData(roomId, 0, true, date.getTime());
 	}
 
 	@RequestMapping(value = "/delete/{roomId}", method = RequestMethod.POST)
@@ -178,7 +159,6 @@ public class RoomController {
 		Sync sync = new Sync();
 		Content content = new Content();
 		sync.setAction(Sync.kick);
-		sync.setRoomId(roomId);
 		content.setSync(sync);
 
 		for (User user : usersInRoom) {
@@ -190,6 +170,46 @@ public class RoomController {
 		if (usersInRoom.size() > 0) {
 			GcmHelper.post(content);
 		}
+	}
+
+	@RequestMapping(value = "/pause/{roomId}/{position}", method = RequestMethod.POST)
+	public void hostPause(HttpServletResponse response,
+			@PathVariable("roomId") int roomId,
+			@PathVariable("position") int position)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		Date date = new Date();
+		Sync sync = new Sync();
+		Content content = new Content();
+
+		roomDao.updateSongData(roomId, position, false, date.getTime());
+		Room room = roomDao.getRoom(roomId);
+		List<String> gcmInRoom = userDao.getGcmInRoom(roomId);
+		sync.setRoom(room);
+		sync.setAction(Sync.roompause);
+		for (String gcmId : gcmInRoom) {
+			content.addRegId(gcmId);
+		}
+		content.setData(sync);
+	}
+	
+	
+	@RequestMapping(value = "play/{roomId}", method = RequestMethod.POST)
+	public void hostPlay(HttpServletResponse response,
+			@PathVariable("roomId") int roomId)
+			throws JsonGenerationException, JsonMappingException, IOException {
+		Date date = new Date();
+		Sync sync = new Sync();
+		Content content = new Content();
+		Room room = roomDao.getRoomNoObjects(roomId);
+		roomDao.updateSongData(roomId, room.getSongPosition(), true, date.getTime());
+
+		List<String> gcmInRoom = userDao.getGcmInRoom(roomId);
+		sync.setRoom(room);
+		sync.setAction(Sync.roomplay);
+		for (String gcmId : gcmInRoom) {
+			content.addRegId(gcmId);
+		}
+		content.setData(sync);
 	}
 
 }

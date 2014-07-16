@@ -167,12 +167,16 @@ public class SongController {
 	public void delete(HttpServletRequest request,
 			HttpServletResponse response, @PathVariable("songId") int songId) {
 		Song song = songDao.getSong(songId);
+		song.setNetScore(0);
 		if (song != null) {
 			String uuid = song.getUuid();
 			if (!StringUtils.isEmpty(uuid)) {
 				fileHelper.delete(uuid);
+				song.setSongUrl(null);
+				song.setUuid(null);
 			}
 		}
+		songDao.update(song);
 
 		try {
 			Thread.sleep(5);
@@ -180,8 +184,7 @@ public class SongController {
 			Content content = new Content();
 			Sync sync = new Sync();
 			sync.setAction(Sync.score);
-			sync.setSongScore(song.getNetScore());
-			sync.setSongId(songId);
+			sync.setSong(song);
 			sync.setSong(song);
 
 			int playlistId = song.getPlaylistId();
@@ -195,7 +198,6 @@ public class SongController {
 						for (User user : usersInRoom) {
 							content.addRegId(user.getGcmId());
 						}
-						sync.setRoomId(roomId);
 					}
 				}
 			}
@@ -209,9 +211,8 @@ public class SongController {
 	}
 
 	@RequestMapping(value = "/vote/{songId}/{value}", method = RequestMethod.POST)
-	public void vote(HttpServletRequest request,
-			HttpServletResponse response, @PathVariable("songId") int songId,
-			@PathVariable("value") int value) {
+	public void vote(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable("songId") int songId, @PathVariable("value") int value) {
 		Song song = songDao.getSong(songId);
 		String userId = null;
 		if (song != null) {

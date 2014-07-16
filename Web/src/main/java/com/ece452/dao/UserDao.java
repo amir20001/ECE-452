@@ -187,6 +187,19 @@ public class UserDao {
 		}
 	}
 
+	public List<String> getGcmInRoom(int roomId) {
+		String sql = "SELECT gcm_id FROM USER WHERE room_id = ?";
+
+		List<String> gcmIds = new ArrayList<String>();
+		try {
+			gcmIds = jdbcTemplate.query(sql, new Object[] { roomId },
+					new GcmIdMapper());
+			return gcmIds;
+		} catch (Exception e) {
+			return gcmIds;
+		}
+	}
+
 	public List<String> getGcmOfAllUsersInRoom() {
 		String sql = "SELECT gcm_id FROM USER WHERE room_id >0";
 
