@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>User View</title>
+<title>Rooms View</title>
 <!-- <link type="text/css" href="resources/css/bootstrap.css" rel="stylesheet" /> -->
 <link type="text/css" href="css/bootstrap-responsive.min.css"
 	rel="stylesheet">
