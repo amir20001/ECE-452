@@ -88,6 +88,14 @@ public class RoomController {
 		model.addAttribute("rooms", rooms);
 		return new ModelAndView("roomView");
 	}
+	
+	@RequestMapping(value = "/view/{roomId}", method = RequestMethod.GET)
+	public ModelAndView showRoom(@PathVariable("roomId") int roomID,
+			HttpSession session, Model model) {
+		Room room = roomDao.getRoom(roomID);
+		model.addAttribute("rooms", room);
+		return new ModelAndView("singleRoomView");
+	}
 
 	@RequestMapping(value = "/getCurrentUsers/{roomId}", method = RequestMethod.GET)
 	public void getUsersInRoom(@PathVariable("roomId") int roomID,
