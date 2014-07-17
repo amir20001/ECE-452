@@ -28,7 +28,7 @@
 			<display:column property="uuid" />
 			<display:column property="playlistId" />
 			<display:column property="netScore" />			
-			<display:column property="songUrl" href="{song.id}"/>
+			<display:column property="songUrl" href="{song.songUrl}"/>
 			<display:column property="songUri"/>
 			<display:column property="artUrl" title="art" href="{artUrl}"/>
 		</display:table>
