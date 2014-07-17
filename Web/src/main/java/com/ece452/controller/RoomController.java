@@ -163,19 +163,22 @@ public class RoomController {
 	public void delete(HttpServletResponse response,
 			@PathVariable("roomId") int roomId) throws JsonGenerationException,
 			JsonMappingException, IOException {
-		List<User> usersInRoom = userDao.getUsersInRoom(roomId);
+		List<String> gcmInRoom = userDao.getGcmInRoom(roomId);
 		Sync sync = new Sync();
 		Content content = new Content();
 		sync.setAction(Sync.kick);
 		content.setSync(sync);
 
-		for (User user : usersInRoom) {
-			content.addRegId(user.getGcmId());
+		Room room = roomDao.getRoomNoObjects(roomId);
+		for (String gcm : gcmInRoom) {
+			if (room != null && room.getOwnerUserId().equals(gcm)) {
+				content.addRegId(gcm);
+			}
 		}
-
 		userDao.updateAllRoomRefs(roomId);
+
 		roomDao.delete(roomId);
-		if (usersInRoom.size() > 0) {
+		if (content.getRegistration_ids().size() > 0) {
 			GcmHelper.post(content);
 		}
 	}
@@ -195,28 +198,32 @@ public class RoomController {
 		sync.setRoom(room);
 		sync.setAction(Sync.roompause);
 		for (String gcmId : gcmInRoom) {
-			content.addRegId(gcmId);
+			if (!room.getOwnerUserId().equals(gcmId)) {
+				content.addRegId(gcmId);
+			}
 		}
 		content.setData(sync);
 		GcmHelper.post(content);
 	}
-	
-	
+
 	@RequestMapping(value = "play/{roomId}", method = RequestMethod.POST)
 	public void hostPlay(HttpServletResponse response,
-			@PathVariable("roomId") int roomId)
-			throws JsonGenerationException, JsonMappingException, IOException {
+			@PathVariable("roomId") int roomId) throws JsonGenerationException,
+			JsonMappingException, IOException {
 		Date date = new Date();
 		Sync sync = new Sync();
 		Content content = new Content();
 		Room room = roomDao.getRoomNoObjects(roomId);
-		roomDao.updateSongData(roomId, room.getSongPosition(), true, date.getTime());
+		roomDao.updateSongData(roomId, room.getSongPosition(), true,
+				date.getTime());
 
 		List<String> gcmInRoom = userDao.getGcmInRoom(roomId);
 		sync.setRoom(room);
 		sync.setAction(Sync.roomplay);
 		for (String gcmId : gcmInRoom) {
-			content.addRegId(gcmId);
+			if (!room.getOwnerUserId().equals(gcmId)) {
+				content.addRegId(gcmId);
+			}
 		}
 		content.setData(sync);
 		GcmHelper.post(content);
