@@ -30,7 +30,7 @@
 			<display:column property="netScore" />			
 			<display:column property="songUrl" href="{song.songUrl}"/>
 			<display:column property="songUri"/>
-			<display:column property="artUrl" title="art" href="{artUrl}"/>
+			<display:column property="artUrl" title="art" href="{song.artUrl}"/>
 		</display:table>
 	</div>		
 </body>
