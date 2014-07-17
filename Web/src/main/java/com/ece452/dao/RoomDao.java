@@ -174,14 +174,16 @@ public class RoomDao {
 	}
 
 	public void updateCurrentSong(int songId, int roomId) {
-		String sql = "UPDATE room SET current_song_id=? WHERE id =?";
+		String sql = "UPDATE room SET current_song_id=?, song_position=?, song_is_playing=? ,song_play_start_time=? WHERE id =?";
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement statement;
 			statement = conn.prepareStatement(sql);
 			statement.setInt(1, songId);
-			statement.setInt(2, roomId);
+			statement.setInt(2, 0);
+			statement.setInt(3, 1);
+			statement.setInt(4, (int)System.currentTimeMillis());
 			statement.executeUpdate();
 			statement.close();
 		} catch (SQLException e) {
