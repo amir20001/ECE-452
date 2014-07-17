@@ -19,11 +19,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_facebookAuth"
-        android:layout_marginBottom="20dp"
-        android:layout_alignRight="@+id/button_facebookAuth"
         android:layout_alignEnd="@+id/button_facebookAuth"
         android:layout_alignLeft="@+id/button_facebookAuth"
-        android:layout_alignStart="@+id/button_facebookAuth">
+        android:layout_alignRight="@+id/button_facebookAuth"
+        android:layout_alignStart="@+id/button_facebookAuth"
+        android:layout_marginBottom="20dp"
+        android:visibility="invisible" >
+
     </com.google.android.gms.common.SignInButton>
 
     <ImageView
