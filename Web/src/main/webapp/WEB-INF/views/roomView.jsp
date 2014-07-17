@@ -14,24 +14,15 @@
 <link
 	href="<%=request.getContextPath()%>/resources/css/bootstrap.min.css"
 	rel="stylesheet" />
-			<%!
-			List<Room> rooms = (List<Room>)request.getAttribute("rooms");
-			for(int i=0; i< rooms.size(); i++)
-			{
- 				int roomId= rooms.get(i).id();
- 				int random=76;
-			}
-			%>
-
 </head>
 <body>
 
  	<div class="panel panel-default">
 		<display:table class="table table-hover row-clickable"
-			name="rooms">
+			name="rooms" id="room">
 
 			<display:column property="id" title="roomID"
-			 url="/room/view/<%=roomId%>" />
+			 href="/room/view/${room.id}" />
 			<display:column property="name" />
 			<display:column property="ownerUserId" />
 			<display:column property="listenerCount" />
