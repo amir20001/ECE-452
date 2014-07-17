@@ -1,13 +1,13 @@
 package com.ece452.domain;
 
+import com.ece452.util.MapperIgnore;
+
 public class Favourite extends BaseEntity {
 	private int id;
-	private String title;
-	private String artist;
-	private String album;
-	private String duration;
 	private String userId;
-	private String artUrl;
+	private int songId;
+	@MapperIgnore
+	private Song song;
 
 	public int getId() {
 		return id;
@@ -15,30 +15,6 @@ public class Favourite extends BaseEntity {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getArtist() {
-		return artist;
-	}
-
-	public void setArtist(String artist) {
-		this.artist = artist;
-	}
-
-	public String getAlbum() {
-		return album;
-	}
-
-	public void setAlbum(String album) {
-		this.album = album;
 	}
 
 	public String getUserId() {
@@ -49,20 +25,20 @@ public class Favourite extends BaseEntity {
 		this.userId = userId;
 	}
 
-	public String getDuration() {
-		return duration;
+	public int getSongId() {
+		return songId;
 	}
 
-	public void setDuration(String duration) {
-		this.duration = duration;
+	public void setSongId(int songId) {
+		this.songId = songId;
 	}
 
-	public String getArtUrl() {
-		return artUrl;
+	public Song getSong() {
+		return song;
 	}
 
-	public void setArtUrl(String artUrl) {
-		this.artUrl = artUrl;
+	public void setSong(Song song) {
+		this.song = song;
 	}
 
 }

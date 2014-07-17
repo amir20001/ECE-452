@@ -32,18 +32,16 @@ public class FavouriteDao {
 
 	public Favourite insert(Favourite favourite) {
 
-		String sql = "INSERT INTO favourite (title,album,artist,duration,user_id,art_url ) VALUES (?,?,?,?,?,?)";
+		String sql = "INSERT INTO favourite (user_id,song_id ) VALUES (?,?)";
 		ResultSet generatedKeys = null;
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
-			PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			statement.setString(1, favourite.getTitle());
-			statement.setString(2, favourite.getAlbum());
-			statement.setString(3, favourite.getArtist());
-			statement.setString(4, favourite.getDuration());
-			statement.setString(5, favourite.getUserId());
-			statement.setString(6, favourite.getArtUrl());
+			PreparedStatement statement = conn.prepareStatement(sql,
+					Statement.RETURN_GENERATED_KEYS);
+
+			statement.setString(1, favourite.getUserId());
+			statement.setInt(2, favourite.getSongId());
 
 			statement.executeUpdate();
 
@@ -52,7 +50,8 @@ public class FavouriteDao {
 				// get auto increment key
 				favourite.setId(generatedKeys.getInt(1));
 			} else {
-				throw new SQLException("Creating room failed, no generated key obtained.");
+				throw new SQLException(
+						"Creating favs failed, no generated key obtained.");
 			}
 			generatedKeys.close();
 			statement.close();
@@ -71,23 +70,28 @@ public class FavouriteDao {
 	}
 
 	public List<Favourite> getAllFavourites(String userId) {
-		String sql = "select * from favourite where user_id = ?";
+		String sql = "SELECT favourite.id AS favourite_id, favourite.song_id AS "
+				+ "favourite_song_id,favourite.user_id AS favourite_user_id, "
+				+ "song.* FROM favourite JOIN song ON favourite.song_id = "
+				+ "song.id AND favourite.user_id = ?";
 		List<Favourite> favourite = new ArrayList<Favourite>();
 		try {
-			favourite = jdbcTemplate.query(sql, new Object[] { userId }, new FavouriteMapper());
+			favourite = jdbcTemplate.query(sql, new Object[] { userId },
+					new FavouriteMapper());
 			return favourite;
 		} catch (Exception e) {
 			return favourite;
 		}
 	}
 
-	public void delete(int favouriteId) {
-		String sql = "DELETE FROM favourite WHERE id  = ?;";
+	public void delete(String userId, int songId) {
+		String sql = "DELETE FROM favourite WHERE user_id  = ? and song_id =?;";
 		Connection conn = null;
 		try {
 			conn = dataSource.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setInt(1, favouriteId);
+			statement.setString(1, userId);
+			statement.setInt(2, songId);
 			statement.executeUpdate();
 			statement.close();
 		} catch (SQLException e) {
