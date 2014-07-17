@@ -15,7 +15,7 @@
 	href="<%=request.getContextPath()%>/resources/css/bootstrap.min.css"
 	rel="stylesheet" />
 			<%!
-			List<Room> rooms = (List<Room>)request.getAttribute("rooms");
+			List<Room> rooms = (List<Room>).request.getAttribute("rooms");
 			for(int i=0; i< rooms.size(); i++)
 			{
  				int roomId= rooms.get(i).id();
