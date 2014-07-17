@@ -25,14 +25,12 @@ CREATE TABLE follow (
 
 CREATE TABLE favourite (
 	id INT AUTO_INCREMENT,
-	title VARCHAR(255),
-	album VARCHAR(255),
-	artist VARCHAR(255),
 	user_id VARCHAR(255),
-	duration VARCHAR(255),
-	art_url  VARCHAR(2083),
+	song_id  int,
 	PRIMARY KEY (id),
-	CONSTRAINT fk_favourite_user FOREIGN KEY (user_id) REFERENCES `user`(user_id)
+	CONSTRAINT fk_favourite_user FOREIGN KEY (user_id) REFERENCES `user`(user_id),
+	CONSTRAINT fk_favourite_song FOREIGN KEY (song_id) REFERENCES `song`(id)
+
 );
 
 CREATE TABLE playlist(

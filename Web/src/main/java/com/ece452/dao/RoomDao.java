@@ -184,6 +184,7 @@ public class RoomDao {
 			statement.setInt(2, 0);
 			statement.setInt(3, 1);
 			statement.setInt(4, (int)System.currentTimeMillis());
+			statement.setInt(5, roomId); 
 			statement.executeUpdate();
 			statement.close();
 		} catch (SQLException e) {
