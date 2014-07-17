@@ -19,7 +19,7 @@
 
  	<div class="panel panel-default">
 		<display:table class="table table-hover row-clickable"
-			name="songs">
+			name="songs" id="song">
 			<display:column property="id"/>
 			<display:column property="title" />
 			<display:column property="artist" />
@@ -28,7 +28,7 @@
 			<display:column property="uuid" />
 			<display:column property="playlistId" />
 			<display:column property="netScore" />			
-			<display:column property="songUrl" href="{songUrl}"/>
+			<display:column property="songUrl" href="{song.id}"/>
 			<display:column property="songUri"/>
 			<display:column property="artUrl" title="art" href="{artUrl}"/>
 		</display:table>

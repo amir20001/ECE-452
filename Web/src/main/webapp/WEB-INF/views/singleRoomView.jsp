@@ -19,12 +19,12 @@
 
  	<div class="panel panel-default">
 		<display:table class="table table-hover row-clickable"
-			name="rooms">
+			name="rooms" id="room">
 			<display:column property="id" title="roomID"/>
 			<display:column property="name" />
 			<display:column property="ownerUserId" />
 			<display:column property="listenerCount" />
-			<display:column property="currentSongId" url="/song/view/{currentSongId}"/>
+			<display:column property="currentSongId" url="/song/view/${room.currentSongId}"/>
 			<display:column property="playlistId" />
 			<display:column property="songPosition" />
 			<display:column property="songIsPlaying" />
