@@ -22,9 +22,8 @@
  	<div class="panel panel-default">
 		<display:table class="table table-hover row-clickable"
 			name="rooms" id="room">
-
 			<display:column property="id" title="roomID"
-			 href="/room/view/${room.id}" />
+			 url="/room/view/${room.id}" />
 			<display:column property="name" />
 			<display:column property="ownerUserId" />
 			<display:column property="listenerCount" />
