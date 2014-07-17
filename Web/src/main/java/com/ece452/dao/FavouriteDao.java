@@ -41,7 +41,7 @@ public class FavouriteDao {
 					Statement.RETURN_GENERATED_KEYS);
 
 			statement.setString(1, favourite.getUserId());
-			statement.setInt(2, favourite.getId());
+			statement.setInt(2, favourite.getSongId());
 
 			statement.executeUpdate();
 
