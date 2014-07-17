@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -115,7 +116,8 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 					"StationsFragment");
 			fragmentTransaction.commit();
 			AlertDialog.Builder builder = new AlertDialog.Builder(
-					this.getActivity(), android.R.style.Theme_Holo_Dialog);
+					new ContextThemeWrapper(activity,
+							android.R.style.Theme_Holo_Dialog));
 			builder.setMessage("Select a station.").setTitle("No Station");
 			AlertDialog dialog = builder.create();
 			dialog.show();
@@ -348,13 +350,13 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 		Boolean userIsHost = prefs.getBoolean("userIsHosting", false);
 		if (mediaplayer.isPlaying()) {
 			mediaplayer.pause();
-			activity.runOnUiThread(new Runnable(){
+			activity.runOnUiThread(new Runnable() {
 
 				@Override
 				public void run() {
 					btn_play.setImageResource(R.drawable.ic_action_play);
 				}
-				
+
 			});
 			if (userIsHost) {
 				ServicePostHelper helper = new ServicePostHelper();
@@ -373,8 +375,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 				startPlayer();
 
 			} else {
-				final ProgressDialog dialog = new ProgressDialog(this.activity,
-						android.R.style.Theme_Holo_Dialog);
+				final ProgressDialog dialog = new ProgressDialog(
+						new ContextThemeWrapper(activity,
+								android.R.style.Theme_Holo_Dialog));
 				dialog.setCanceledOnTouchOutside(false);
 				dialog.setTitle("Syncing");
 				dialog.setMessage("Please Wait...");
@@ -418,7 +421,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 	}
 
 	private void startPlayer() {
-		activity.runOnUiThread(new Runnable(){
+		activity.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -431,19 +434,21 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 						"%d:%02d",
 						TimeUnit.MILLISECONDS.toMinutes((long) endTime),
 						TimeUnit.MILLISECONDS.toSeconds((long) endTime)
-								- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
-										.toMinutes((long) endTime))));
+								- TimeUnit.MINUTES
+										.toSeconds(TimeUnit.MILLISECONDS
+												.toMinutes((long) endTime))));
 				text_curTime.setText(String.format(
 						"%d:%02d",
 						TimeUnit.MILLISECONDS.toMinutes((long) curTime),
 						TimeUnit.MILLISECONDS.toSeconds((long) curTime)
-								- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
-										.toMinutes((long) curTime))));
+								- TimeUnit.MINUTES
+										.toSeconds(TimeUnit.MILLISECONDS
+												.toMinutes((long) curTime))));
 				seekbar.setProgress((int) curTime);
 				updateHandler.postDelayed(UpdateSeekBar, 100);
-				
+
 			}
-			
+
 		});
 	}
 
@@ -460,8 +465,10 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 					TimeUnit.MILLISECONDS.toSeconds((long) curTime)
 							- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS
 									.toMinutes((long) curTime))));
-			// Song Complete
-			if (curTime >= endTime) {
+			// Song Complete -- subtract 1 second to prevent getting stuck if
+			// there is a discrepancy between the endTime and when the player
+			// stops
+			if (curTime >= (endTime - 1000)) {
 				nextSong();
 			} else {
 				updateHandler.postDelayed(this, 100);
@@ -549,8 +556,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 			play();
 			playlistPosition++;
 		} else {
-			final ProgressDialog dialog = new ProgressDialog(this.activity,
-					android.R.style.Theme_Holo_Dialog);
+			final ProgressDialog dialog = new ProgressDialog(
+					new ContextThemeWrapper(activity,
+							android.R.style.Theme_Holo_Dialog));
 			dialog.setCanceledOnTouchOutside(false);
 			dialog.setTitle("Getting Next Song");
 			dialog.setMessage("Please Wait...");
@@ -612,8 +620,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 	}
 
 	private void prepareRoom() {
-		final ProgressDialog dialog = new ProgressDialog(this.activity,
-				android.R.style.Theme_Holo_Dialog);
+		final ProgressDialog dialog = new ProgressDialog(
+				new ContextThemeWrapper(activity,
+						android.R.style.Theme_Holo_Dialog));
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.setTitle("Preparing Room");
 		dialog.setMessage("Please Wait...");
@@ -735,8 +744,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 
 			@Override
 			public void run() {
-				AlertDialog.Builder builder = new AlertDialog.Builder(activity,
-						android.R.style.Theme_Holo_Dialog);
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						new ContextThemeWrapper(activity,
+								android.R.style.Theme_Holo_Dialog));
 				builder.setMessage("The host has closed the room.").setTitle(
 						"Room Closed");
 				builder.show();
