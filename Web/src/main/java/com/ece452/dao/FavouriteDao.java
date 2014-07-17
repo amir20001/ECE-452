@@ -105,5 +105,26 @@ public class FavouriteDao {
 			}
 		}
 	}
+	
+	public void delete(int favId) {
+		String sql = "DELETE FROM favourite WHERE id  = ?;;";
+		Connection conn = null;
+		try {
+			conn = dataSource.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, favId);
+			statement.executeUpdate();
+			statement.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
 
 }

@@ -81,7 +81,13 @@ public class FavouriteController {
 			@PathVariable("userId") String userId,
 			@PathVariable("songId") int songId) {
 		favouriteDao.delete(userId, songId);
-
+	}
+	
+	@RequestMapping(value = "/delete/{favId}", method = RequestMethod.POST)
+	public void delete2(HttpServletRequest request,
+			HttpServletResponse response,
+			@PathVariable("favId") int favId) {
+		favouriteDao.delete(favId);
 	}
 
 }
