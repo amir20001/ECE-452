@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Playlists View</title>
+<title>Song View</title>
 <!-- <link type="text/css" href="resources/css/bootstrap.css" rel="stylesheet" /> -->
 <link type="text/css" href="css/bootstrap-responsive.min.css"
 	rel="stylesheet">
@@ -16,15 +16,22 @@
 
 </head>
 <body>
-	 
-	<div class="panel panel-default">
+
+ 	<div class="panel panel-default">
 		<display:table class="table table-hover row-clickable"
-			name="playlists">
-			<display:column property="id" title="ID" url="/room/get/{id}" />
-			<display:column property="name" />
-			<display:column property="genre" />
-			<display:column property="trackCount" />
-			<display:column property="userId" />
+			name="songs">
+			<display:column property="id"/>
+			<display:column property="title" />
+			<display:column property="artist" />
+			<display:column property="album" />
+			<display:column property="duration" />
+			<display:column property="uuid" />
+			<display:column property="playlistId" />
+			<display:column property="netScore" />			
+			<display:column property="songUrl" href="{songUrl}"/>
+			<display:column property="songUri" />
+			<display:column property="artUrl" title="art" href="{artUrl}"/>
 		</display:table>
+	</div>		
 </body>
 </html>

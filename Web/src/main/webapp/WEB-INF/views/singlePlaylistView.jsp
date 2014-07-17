@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Playlists View</title>
+<title>Current Playlist View</title>
 <!-- <link type="text/css" href="resources/css/bootstrap.css" rel="stylesheet" /> -->
 <link type="text/css" href="css/bootstrap-responsive.min.css"
 	rel="stylesheet">
@@ -20,7 +20,7 @@
 	<div class="panel panel-default">
 		<display:table class="table table-hover row-clickable"
 			name="playlists">
-			<display:column property="id" title="ID" url="/room/get/{id}" />
+			<display:column property="id" title="ID" />
 			<display:column property="name" />
 			<display:column property="genre" />
 			<display:column property="trackCount" />

@@ -87,6 +87,14 @@ public class PlaylistController {
 		return new ModelAndView("playlistView");
 	}
 	
+	@RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
+	public ModelAndView showPlaylist(@PathVariable("id") int id,
+			HttpSession session, Model model) {
+		Playlist playlist = playlistDao.getPlaylist(id);
+		model.addAttribute("playlist", playlist);
+		return new ModelAndView("singlePlaylistView");
+	}
+	
 	@RequestMapping(value = "/createlist", method = RequestMethod.POST)
 	public ModelAndView makePlaylistPage(HttpSession session, Model model,
 			@RequestParam("name") String name,
