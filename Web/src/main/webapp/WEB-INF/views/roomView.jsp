@@ -20,7 +20,7 @@
 			List<Room> rooms = (List<Room>)request.getAttribute("rooms");
 			for(int i=0; i< rooms.size(); i++)
 			{
- 				int roomId= rooms.get(i).id();
+ 				int roomId= rooms.get(i).getId();
  				int random=76;
 			}
 			%>
