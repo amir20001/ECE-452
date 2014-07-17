@@ -57,7 +57,7 @@ public class ProfileFragment extends Fragment {
 		activity = getActivity();
 		View view = inflater.inflate(R.layout.fragment_profile, container,
 				false);
-		activity.getActionBar().setTitle(R.string.title_section7);
+		activity.getActionBar().setTitle(R.string.ProfileTitle);
 		return view;
 	}
 

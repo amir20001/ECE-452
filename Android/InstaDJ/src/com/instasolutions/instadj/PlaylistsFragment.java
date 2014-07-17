@@ -47,7 +47,7 @@ public class PlaylistsFragment extends Fragment implements OnClickListener, OnIt
 	            Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.fragment_playlists, container, false);
 	        activity = this.getActivity();
-            activity.getActionBar().setTitle(R.string.title_section4);
+            activity.getActionBar().setTitle(R.string.PlaylistsTitle);
 	        return view;
 	    }
 	

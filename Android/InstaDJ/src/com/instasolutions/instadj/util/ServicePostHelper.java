@@ -41,6 +41,7 @@ public class ServicePostHelper extends AsyncTask<String, Void, String> {
 			if(br != null){
 				returnString = br.readLine();
 			}
+			System.out.println("server response: " + returnString + "(" + httpPost.getRequestLine() +")");
 			return returnString;
 		} catch (Exception e) {
 			Log.e("instadj", "exception", e);

@@ -2,13 +2,13 @@
 <resources>
 
     <string name="app_name">InstaDJ</string>
-    <string name="title_section1">Current Room</string>
-    <string name="title_section2">Stations</string>
-    <string name="title_section3">Favorites</string>
-    <string name="title_section4">Playlists</string>
-    <string name="title_section5">Following</string>
-    <string name="title_section6">Followers</string>
-    <string name="title_section7">Profile</string>
+    <string name="CurrentRoomTitle">Current Room</string>
+    <string name="StationsTitle">Stations</string>
+    <string name="PlaylistsTitle">Playlists</string>
+    <string name="FavoritesTitle">Favorites</string>
+    <string name="FollowingTitle">Following</string>
+    <string name="FollowersTitle">Followers</string>
+    <string name="ProfileTitle">Profile</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_listeners">Currently Listening</string>

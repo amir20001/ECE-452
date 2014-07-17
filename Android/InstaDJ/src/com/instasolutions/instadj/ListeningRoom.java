@@ -81,8 +81,8 @@ public class ListeningRoom extends FragmentActivity implements
 		mThis = this;
 		curRoomFrag = new CurrentRoomFragment();
 		stationsFrag = new StationsFragment();
-		favoritesFrag = new FavoritesFragment();
 		playlistsFrag = new PlaylistsFragment();
+		favoritesFrag = new FavoritesFragment();
 		followingFragment = new FollowingFragment();
 		followersFragment = new FollowersFragment();
 		profileFrag = new ProfileFragment();
@@ -140,10 +140,6 @@ public class ListeningRoom extends FragmentActivity implements
 			}
 			break;
 		case 2:
-			selectedFragment = favoritesFrag;
-			fragmentTag = "FavoritesFragment";
-			break;
-		case 3:
 			if (!prefs.getBoolean("userIsHosting", false)) {
 				selectedFragment = playlistsFrag;
 				fragmentTag = "PlaylistsFragment";
@@ -157,6 +153,10 @@ public class ListeningRoom extends FragmentActivity implements
 				dialog.show();
 				return;
 			}
+			break;
+		case 3:
+			selectedFragment = favoritesFrag;
+			fragmentTag = "FavoritesFragment";
 			break;
 		case 4:
 			selectedFragment = followingFragment;

@@ -34,6 +34,7 @@ public class ServiceGetHelper extends AsyncTask<String, Void, String> {
 					result = ServiceUtil.convertInputStreamToString(inputStream);
 
 				}
+				System.out.println("server response: " + result + "(" + httpget.getRequestLine() +")");
 				return result;
 			} catch (Exception e) {
 				Log.e("instadj", "exception", e);

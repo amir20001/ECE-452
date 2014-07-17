@@ -36,7 +36,7 @@ public class FavoritesFragment extends Fragment {
 	               
 			View view = inflater.inflate(R.layout.fragment_favorites, container, false);
 	        activity = this.getActivity();
-            activity.getActionBar().setTitle(R.string.title_section3);
+            activity.getActionBar().setTitle(R.string.FavoritesTitle);
 	        return view;
 	    }
 	

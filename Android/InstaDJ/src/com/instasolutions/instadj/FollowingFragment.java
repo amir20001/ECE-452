@@ -43,7 +43,7 @@ public class FollowingFragment extends Fragment{
                              ViewGroup container,
                              Bundle savedInstanceState) {
         activity = this.getActivity();
-        activity.getActionBar().setTitle(R.string.title_section5);
+        activity.getActionBar().setTitle(R.string.FollowingTitle);
         View view = inflater.inflate(R.layout.fragment_following, container, false);
 
         return view;
