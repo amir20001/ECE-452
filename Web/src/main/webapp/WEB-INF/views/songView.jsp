@@ -29,7 +29,7 @@
 			<display:column property="playlistId" />
 			<display:column property="netScore" />			
 			<display:column property="songUrl" href="{songUrl}"/>
-			<display:column property="songUri" />
+			<display:column property="songUri"/>
 			<display:column property="artUrl" title="art" href="{artUrl}"/>
 		</display:table>
 	</div>		

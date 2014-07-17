@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
@@ -18,11 +19,13 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.amazonaws.util.json.JSONArray;
 import com.amazonaws.util.json.JSONException;
@@ -30,6 +33,7 @@ import com.ece452.dao.PlaylistDao;
 import com.ece452.dao.SongDao;
 import com.ece452.dao.UserDao;
 import com.ece452.domain.Playlist;
+import com.ece452.domain.Room;
 import com.ece452.domain.Song;
 import com.ece452.domain.Sync;
 import com.ece452.domain.User;
@@ -103,12 +107,12 @@ public class SongController {
 				song = songList.get(i);
 				mapper.writeValue(response.getOutputStream(), song);
 			}
-
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
 	}
+
+
 
 	@RequestMapping(value = "/get/{songId}", method = RequestMethod.GET)
 	public void getSong(@PathVariable("songId") int songId,
@@ -118,6 +122,15 @@ public class SongController {
 		ObjectMapper mapper = new ObjectMapper();
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), song);
+	}
+	
+	
+	@RequestMapping(value = "/view/{songId}", method = RequestMethod.GET)
+	public ModelAndView showLoginPage(@PathVariable("songId") int songId,
+			HttpSession session, Model model) {
+		Song song = songDao.getSong(songId);
+		model.addAttribute("songs", song);
+		return new ModelAndView("songView");
 	}
 
 	@RequestMapping(value = "/getforplaylist/{playlistId}", method = RequestMethod.GET)
