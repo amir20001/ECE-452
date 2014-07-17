@@ -24,6 +24,7 @@
 			for(int i=0; i< rooms.size(); i++)
 			{
  				int roomId= rooms.get(i).id();
+ 				int random=76;
 			}
 			%>
 			<display:column property="id" title="roomID"
