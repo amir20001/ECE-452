@@ -163,16 +163,16 @@ public class RoomController {
 	public void delete(HttpServletResponse response,
 			@PathVariable("roomId") int roomId) throws JsonGenerationException,
 			JsonMappingException, IOException {
-		List<String> gcmInRoom = userDao.getGcmInRoom(roomId);
+		List<User> usersInRoom = userDao.getUsersInRoom(roomId);
 		Sync sync = new Sync();
 		Content content = new Content();
 		sync.setAction(Sync.kick);
 		content.setSync(sync);
 
 		Room room = roomDao.getRoomNoObjects(roomId);
-		for (String gcm : gcmInRoom) {
-			if (room != null && room.getOwnerUserId().equals(gcm)) {
-				content.addRegId(gcm);
+		for (User user : usersInRoom) {
+			if (!room.getOwnerUserId().equals(user.getUserId())) {
+				content.addRegId(user.getGcmId());
 			}
 		}
 		userDao.updateAllRoomRefs(roomId);
@@ -194,12 +194,12 @@ public class RoomController {
 
 		roomDao.updateSongData(roomId, position, false, date.getTime());
 		Room room = roomDao.getRoom(roomId);
-		List<String> gcmInRoom = userDao.getGcmInRoom(roomId);
+		List<User> usersInRoom = userDao.getUsersInRoom(roomId);
 		sync.setRoom(room);
 		sync.setAction(Sync.roompause);
-		for (String gcmId : gcmInRoom) {
-			if (!room.getOwnerUserId().equals(gcmId)) {
-				content.addRegId(gcmId);
+		for (User user : usersInRoom) {
+			if (!room.getOwnerUserId().equals(user.getUserId())) {
+				content.addRegId(user.getGcmId());
 			}
 		}
 		content.setData(sync);
@@ -217,12 +217,12 @@ public class RoomController {
 		roomDao.updateSongData(roomId, room.getSongPosition(), true,
 				date.getTime());
 
-		List<String> gcmInRoom = userDao.getGcmInRoom(roomId);
+		List<User> usersInRoom = userDao.getUsersInRoom(roomId);
 		sync.setRoom(room);
 		sync.setAction(Sync.roomplay);
-		for (String gcmId : gcmInRoom) {
-			if (!room.getOwnerUserId().equals(gcmId)) {
-				content.addRegId(gcmId);
+		for (User user : usersInRoom) {
+			if (!room.getOwnerUserId().equals(user.getUserId())) {
+				content.addRegId(user.getGcmId());
 			}
 		}
 		content.setData(sync);

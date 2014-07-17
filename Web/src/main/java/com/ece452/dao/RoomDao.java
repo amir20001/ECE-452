@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ece452.domain.Room;
 import com.ece452.mapper.RoomAndSubObjectMapper;
+import com.ece452.mapper.RoomMapper;
 import com.mysql.jdbc.Statement;
 
 @Repository
@@ -83,7 +84,7 @@ public class RoomDao {
 		String sql = "SELECT * FROM room WHERE id = ?";
 		try {
 			room = jdbcTemplate.queryForObject(sql, new Object[] { id },
-					new RoomAndSubObjectMapper());
+					new RoomMapper());
 		} catch (Exception e) {
 			// No room was found with the specified id, return null
 			return null;
