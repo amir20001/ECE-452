@@ -20,11 +20,11 @@
  	<div class="panel panel-default">
 		<display:table class="table table-hover row-clickable"
 			name="rooms">
-			<display:column property="id" title="roomID" url="/room/get/40" />
+			<display:column property="id" title="roomID"/>
 			<display:column property="name" />
 			<display:column property="ownerUserId" />
 			<display:column property="listenerCount" />
-			<display:column property="currentSongId" />
+			<display:column property="currentSongId" url="/song/view/{currentSongId}"/>
 			<display:column property="playlistId" />
 			<display:column property="songPosition" />
 			<display:column property="songIsPlaying" />
