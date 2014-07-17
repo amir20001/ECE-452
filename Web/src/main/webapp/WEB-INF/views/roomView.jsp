@@ -20,7 +20,14 @@
  	<div class="panel panel-default">
 		<display:table class="table table-hover row-clickable"
 			name="rooms">
-			<display:column property="id" title="roomID" url="/room/view/%{rooms.id}" />
+			<%!
+			for(int i=0; i< rooms.size(); i++)
+			{
+ 				int roomId= rooms.get(i).id();
+			}
+			%>
+			<display:column property="id" title="roomID"
+			 url="/room/view/<%=roomId%>" />
 			<display:column property="name" />
 			<display:column property="ownerUserId" />
 			<display:column property="listenerCount" />
