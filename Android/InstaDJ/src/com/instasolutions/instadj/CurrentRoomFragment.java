@@ -75,6 +75,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 	private int currentVote = 0;
 	private Boolean firstSong = false;
 	private Boolean userFollowingHost = false;
+	
+	public static final Boolean MESSAGES_SUPRESSED = true;
+	public static final Boolean MESSAGES_UNSUPRESSED = false;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -344,7 +347,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 
 	}
 
-	public void play() {
+	public void play(Boolean supressMessage) {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(activity);
 		Boolean userIsHost = prefs.getBoolean("userIsHosting", false);
@@ -358,7 +361,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 				}
 
 			});
-			if (userIsHost) {
+			if (userIsHost && !supressMessage) {
 				ServicePostHelper helper = new ServicePostHelper();
 				helper.executeOnExecutor(
 						AsyncTask.THREAD_POOL_EXECUTOR,
@@ -368,10 +371,13 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 			}
 		} else {
 			if (userIsHost) {
-				ServicePostHelper helper = new ServicePostHelper();
-				helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-						"http://instadj.amir20001.cloudbees.net/room/play/"
-								+ station.id);
+				if(!supressMessage)
+				{
+					ServicePostHelper helper = new ServicePostHelper();
+					helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+							"http://instadj.amir20001.cloudbees.net/room/play/"
+									+ station.id);
+				}
 				startPlayer();
 
 			} else {
@@ -382,6 +388,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 				dialog.setTitle("Syncing");
 				dialog.setMessage("Please Wait...");
 				dialog.setIndeterminate(true);
+				dialog.show();
 				ServiceGetHelper helper = new ServiceGetHelper() {
 					@Override
 					protected void onPostExecute(String result) {
@@ -483,20 +490,6 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 			updateHandler.removeCallbacks(UpdateSeekBar);
 		if (mediaplayer != null)
 			mediaplayer.release();
-		// Add favorited song to database
-		if (currentlyFavourited) {
-			ServicePostHelper helper = new ServicePostHelper();
-			helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-					"http://instadj.amir20001.cloudbees.net/favourite/insert/"
-							+ prefs.getString("UserID", "0") + "/"
-							+ station.Song.id);
-		}
-		if (currentVote != 0) {
-			ServicePostHelper helper = new ServicePostHelper();
-			helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-					"http://instadj.amir20001.cloudbees.net/song/vote/"
-							+ station.Song.id + "/" + currentVote);
-		}
 		// Remove previous song from storage
 		if (prefs.getBoolean("userIsHosting", false) && !firstSong) {
 			ServicePostHelper helper = new ServicePostHelper();
@@ -517,12 +510,10 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 				playlistPosition = 0;
 			}
 			station.Song = station.Playlist.Songs.get(playlistPosition);
-			if (!firstSong) {
-				ServicePostHelper helper = new ServicePostHelper();
-				helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-						"http://instadj.amir20001.cloudbees.net/room/updatecurrentsong/"
-								+ station.id + "/" + station.Song.id);
-			}
+			ServicePostHelper helper = new ServicePostHelper();
+			helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					"http://instadj.amir20001.cloudbees.net/room/updatecurrentsong/"
+							+ station.id + "/" + station.Song.id);
 			// Upload next song
 			ServiceUploadHelper upload = new ServiceUploadHelper();
 			upload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -553,7 +544,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 			btn_like.setImageResource(R.drawable.ic_action_good);
 			btn_dislike.setImageResource(R.drawable.ic_action_bad);
 			btn_favourite.setImageResource(R.drawable.ic_action_favorite);
-			play();
+			play(MESSAGES_SUPRESSED);
 			playlistPosition++;
 		} else {
 			final ProgressDialog dialog = new ProgressDialog(
@@ -609,7 +600,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 					btn_dislike.setImageResource(R.drawable.ic_action_bad);
 					btn_favourite
 							.setImageResource(R.drawable.ic_action_favorite);
-					play();
+					play(MESSAGES_SUPRESSED);
 				}
 			};
 			helper.execute("http://instadj.amir20001.cloudbees.net/room/get/"
@@ -641,6 +632,9 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 					jstation.put("playlistId", station.Playlist.id);
 					jstation.put("listenerCount", station.ListenerCount);
 					jstation.put("currentSongId", station.Song.id);
+					jstation.put("songPosition", 0);
+					jstation.put("songIsPlaying", true);
+					jstation.put("songPlayStartTime", System.currentTimeMillis());
 
 					ServicePostHelper post = new ServicePostHelper();
 					post.executeOnExecutor(
@@ -698,15 +692,34 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 			}
 
 		}
+
+			ServicePostHelper helper = new ServicePostHelper();
+			helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					"http://instadj.amir20001.cloudbees.net/song/vote/"
+							+ station.Song.id + "/" + currentVote);
 	}
 
 	private void updateFavourites() {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 		if (currentlyFavourited) {
 			btn_favourite.setImageResource(R.drawable.ic_action_favorite);
+			//TODO:Change this to remove
+//			ServicePostHelper helper = new ServicePostHelper();
+//			helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+//					"http://instadj.amir20001.cloudbees.net/favourite/insert/"
+//							+ prefs.getString("UserID", "0") + "/"
+//							+ station.Song.id);
+
 			currentlyFavourited = false;
 		} else {
 			btn_favourite.setImageResource(R.drawable.ic_action_favorite_red);
 			currentlyFavourited = true;
+			ServicePostHelper helper = new ServicePostHelper();
+			helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					"http://instadj.amir20001.cloudbees.net/favourite/insert/"
+							+ prefs.getString("UserID", "0") + "/"
+							+ station.Song.id);
+
 		}
 	}
 
@@ -778,6 +791,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 			public void run() {
 				text_score.setText(String.valueOf(song.score));
 				text_score.setVisibility(ImageView.VISIBLE);
+				Toast.makeText(activity, "Last Song Score: " + song.score, Toast.LENGTH_SHORT).show();
 			}
 
 		});
@@ -825,7 +839,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.Button_Play:
-			play();
+			play(MESSAGES_UNSUPRESSED);
 			break;
 		case R.id.button_next:
 			nextSong();

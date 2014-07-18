@@ -55,9 +55,10 @@ public class FavoritesFragment extends Fragment {
 	    		@Override
 	    		 protected void onPostExecute(String result) {
 	    			try {
-						JSONArray jSongArray = new JSONArray(result);
-						for(int i = 0; i < jSongArray.length(); i++){
-							JSONObject jSong = jSongArray.getJSONObject(i);
+						JSONArray jFavouriteArray = new JSONArray(result);
+						for(int i = 0; i < jFavouriteArray.length(); i++){
+							JSONObject jFavourite = jFavouriteArray.getJSONObject(i);
+							JSONObject jSong = jFavourite.getJSONObject("song");
 
 							songs.append(i, new SongData(jSong.getInt("id"),
 											jSong.getString("title"),

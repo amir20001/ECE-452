@@ -76,11 +76,11 @@ public class GcmIntentService extends IntentService {
                 }
                 else if(action.compareTo("roompause") == 0)
                 {
-                	currentRoom.play();
+                	currentRoom.play(CurrentRoomFragment.MESSAGES_UNSUPRESSED);
                 }
                 else if(action.compareTo("roomplay") == 0)
                 {
-                	currentRoom.play();
+                	currentRoom.play(CurrentRoomFragment.MESSAGES_UNSUPRESSED);
                 }
                 
                 Log.i(TAG, "Received: " + extras.toString());

@@ -15,6 +15,7 @@ import com.instasolutions.instadj.util.ServicePostHelper;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,6 +23,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -147,11 +149,14 @@ public class SongListAdapter extends BaseAdapter implements
 				deleteButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						SharedPreferences prefs = PreferenceManager
+								.getDefaultSharedPreferences(activity);
 						ServicePostHelper helper = new ServicePostHelper();
 						helper.executeOnExecutor(
 								AsyncTask.THREAD_POOL_EXECUTOR,
 								"http://instadj.amir20001.cloudbees.net/favourite/delete/"
-										+ song.id);
+										+ prefs.getString("UserID", "UserID")
+										+ "/" + song.id);
 						try {
 							helper.get();
 						} catch (InterruptedException e) {
@@ -251,63 +256,55 @@ public class SongListAdapter extends BaseAdapter implements
 	}
 
 	public Filter getFilter(final int filterBy) {
-		return new Filter()
-	       {
-	            @Override
-	            protected FilterResults performFiltering(CharSequence charSequence)
-	            {
-	                FilterResults results = new FilterResults();
+		return new Filter() {
+			@Override
+			protected FilterResults performFiltering(CharSequence charSequence) {
+				FilterResults results = new FilterResults();
 
-	                if(charSequence == null || charSequence.length() == 0)
-	                {
-	                    results.values = songs;
-	                    results.count = songs.size();
-	                }
-	                else
-	                {
-	                   SparseArray<SongData> filteredSongs = new  SparseArray<SongData>();
-	                    int c = 0;
-	                    for(int i = 0; i < songs.size(); i++)
-	                    {
+				if (charSequence == null || charSequence.length() == 0) {
+					results.values = songs;
+					results.count = songs.size();
+				} else {
+					SparseArray<SongData> filteredSongs = new SparseArray<SongData>();
+					int c = 0;
+					for (int i = 0; i < songs.size(); i++) {
 
-	                    	SongData song = songs.get(i);
-	                    	String compareThis = "";
-	                    	switch(filterBy)
-	                    	{
-	                    		case FILTERBYTITLE:
-	                    			compareThis = song.Title;
-		                        break;
-	                    		case FILTERBYARTIST:
-			                        compareThis = song.Artist;
-		                        break;
-	                    		case FILTERBYALBUM:
-			                        compareThis = song.Album;
-		                        break;
-	                    		default:
-			                        compareThis = song.Title;
-		                        break;
-	                    			
-	                    	}
-	                        if(compareThis.contains(charSequence))
-	                        {
-	                        	filteredSongs.append(c, song);
-	                        	c++;
-	                        }
-	                    }            
+						SongData song = songs.get(i);
+						String compareThis = "";
+						switch (filterBy) {
+						case FILTERBYTITLE:
+							compareThis = song.Title;
+							break;
+						case FILTERBYARTIST:
+							compareThis = song.Artist;
+							break;
+						case FILTERBYALBUM:
+							compareThis = song.Album;
+							break;
+						default:
+							compareThis = song.Title;
+							break;
 
-	                    results.values = filteredSongs;
-	                    results.count = filteredSongs.size();
-	                }
+						}
+						if (compareThis.contains(charSequence)) {
+							filteredSongs.append(c, song);
+							c++;
+						}
+					}
 
-	                return results;
-	            }
+					results.values = filteredSongs;
+					results.count = filteredSongs.size();
+				}
 
-	            @Override
-	            protected void publishResults(CharSequence charSequence, FilterResults filterResults)
-	            {
-	                songsFiltered = (SparseArray<SongData>)filterResults.values;
-	                notifyDataSetChanged();
-	            }
-	        };
+				return results;
+			}
+
+			@Override
+			protected void publishResults(CharSequence charSequence,
+					FilterResults filterResults) {
+				songsFiltered = (SparseArray<SongData>) filterResults.values;
+				notifyDataSetChanged();
+			}
+		};
 	}
 }
