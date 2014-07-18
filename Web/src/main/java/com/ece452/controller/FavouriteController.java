@@ -31,7 +31,7 @@ public class FavouriteController {
 	SongDao songDao;
 
 	@RequestMapping(value = "/get/{userId}", method = RequestMethod.GET)
-	public void getPlayList(@PathVariable("userId") String userId,
+	public void getall(@PathVariable("userId") String userId,
 			HttpServletResponse response) throws JsonGenerationException,
 			JsonMappingException, IOException {
 
@@ -39,6 +39,18 @@ public class FavouriteController {
 		ObjectMapper mapper = new ObjectMapper();
 		response.setContentType("application/json");
 		mapper.writeValue(response.getOutputStream(), allFavourites);
+	}
+
+	@RequestMapping(value = "get/{userId}/{songId}", method = RequestMethod.GET)
+	public void get(HttpServletResponse response,
+			@PathVariable("userId") String userId,
+			@PathVariable("songId") int songId) throws JsonGenerationException,
+			JsonMappingException, IOException {
+
+		Favourite favourite = favouriteDao.get(userId, songId);
+		ObjectMapper mapper = new ObjectMapper();
+		response.setContentType("application/json");
+		mapper.writeValue(response.getOutputStream(), favourite);
 	}
 
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
@@ -82,11 +94,10 @@ public class FavouriteController {
 			@PathVariable("songId") int songId) {
 		favouriteDao.delete(userId, songId);
 	}
-	
+
 	@RequestMapping(value = "/delete/{favId}", method = RequestMethod.POST)
 	public void delete2(HttpServletRequest request,
-			HttpServletResponse response,
-			@PathVariable("favId") int favId) {
+			HttpServletResponse response, @PathVariable("favId") int favId) {
 		favouriteDao.delete(favId);
 	}
 
