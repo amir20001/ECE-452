@@ -33,7 +33,6 @@ import com.ece452.dao.PlaylistDao;
 import com.ece452.dao.SongDao;
 import com.ece452.dao.UserDao;
 import com.ece452.domain.Playlist;
-import com.ece452.domain.Room;
 import com.ece452.domain.Song;
 import com.ece452.domain.Sync;
 import com.ece452.domain.User;
@@ -180,25 +179,26 @@ public class SongController {
 	public void delete(HttpServletRequest request,
 			HttpServletResponse response, @PathVariable("songId") int songId) {
 		Song song = songDao.getSong(songId);
+		int score =song.getNetScore();
 		song.setNetScore(0);
-		if (song != null) {
-			String uuid = song.getUuid();
-			if (!StringUtils.isEmpty(uuid)) {
-				fileHelper.delete(uuid);
-				song.setSongUrl(null);
-				song.setUuid(null);
-			}
-		}
+		song.setSongUrl(null);
+		song.setUuid(null);
 		songDao.update(song);
-
 		try {
-			Thread.sleep(5);
+			Thread.sleep(10000);
+			if (song != null) {
+				String uuid = song.getUuid();
+				if (!StringUtils.isEmpty(uuid)) {
+					fileHelper.delete(uuid);
+				}
+			}
 			song = songDao.getSong(songId);
+			song.setNetScore(score);
 			Content content = new Content();
 			Sync sync = new Sync();
 			sync.setAction(Sync.score);
 			sync.setSong(song);
-			sync.setSong(song);
+
 
 			int playlistId = song.getPlaylistId();
 			Playlist playlist = playlistDao.getPlaylist(playlistId);

@@ -201,7 +201,7 @@ public class UserDao {
 	}
 
 	public List<String> getGcmOfAllUsersInRoom() {
-		String sql = "SELECT gcm_id FROM USER WHERE room_id >0";
+		String sql = "SELECT gcm_id FROM USER ";
 
 		List<String> gcmIds = new ArrayList<String>();
 		try {

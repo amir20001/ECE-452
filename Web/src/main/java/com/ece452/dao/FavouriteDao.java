@@ -84,6 +84,21 @@ public class FavouriteDao {
 		}
 	}
 
+	public Favourite get(String userId, int songId) {
+		String sql = "SELECT favourite.id AS favourite_id, favourite.song_id AS "
+				+ "favourite_song_id,favourite.user_id AS favourite_user_id, "
+				+ "song.* FROM favourite JOIN song ON favourite.song_id = "
+				+ "song.id AND favourite.user_id = ? and favourite.song_id= ? ";
+		Favourite favourite = null;
+		try {
+			favourite = jdbcTemplate.queryForObject(sql, new Object[] { userId,
+					songId }, new FavouriteMapper());
+			return favourite;
+		} catch (Exception e) {
+			return favourite;
+		}
+	}
+
 	public void delete(String userId, int songId) {
 		String sql = "DELETE FROM favourite WHERE user_id  = ? and song_id =?;";
 		Connection conn = null;
@@ -105,7 +120,7 @@ public class FavouriteDao {
 			}
 		}
 	}
-	
+
 	public void delete(int favId) {
 		String sql = "DELETE FROM favourite WHERE id  = ?;;";
 		Connection conn = null;
