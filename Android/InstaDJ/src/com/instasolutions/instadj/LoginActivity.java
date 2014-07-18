@@ -171,6 +171,7 @@ public class LoginActivity extends Activity implements OnClickListener,
             finish();
 	    }
 	}
+
 	//Google override
 	protected void onStart(){
 		super.onStart();

@@ -16,6 +16,17 @@
     <string name="action_settings">Settings</string>
     <string name="start_time">0:00</string>
     <string name="app_id">557165717738157</string>
+    <string name="search">Search</string>
+    <string name="song_title_filter">Song</string>
+    <string name="dj_name_filter">DJ</string>
+    <string name="station_name_filter">Station</string>
+    <string name="album_name_filter">Album</string>
+    <string-array name="station_filters">
+        <item>Song</item>
+        <item>DJ</item>
+        <item>Station</item>
+        <item>Artist</item>
+    </string-array>
 
 
 </resources>

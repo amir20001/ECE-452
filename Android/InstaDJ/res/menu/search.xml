@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.instasolutions.instadj.StationsFragment" >
+
+    <item
+        android:id="@+id/magnifying_glass"
+        android:title="@string/search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:showAsAction="always"/>
+
+</menu>
