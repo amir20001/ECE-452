@@ -18,7 +18,7 @@
   <script type="text/javascript">
     $(document).ready(function(){
       $("#jquery_jplayer_1").jPlayer({
-        ready: function() {
+        ready: function() {        	
           $(this).jPlayer("setMedia", {
             mp3: "http://www.jplayer.org/audio/mp3/Miaow-snip-Stirring-of-a-fool.mp3"
           }).jPlayer("play");
@@ -33,10 +33,12 @@
         swfPath: "/js"
       });
     });
+
   </script>
 </head>
 <body>
 	<div id="jquery_jplayer_1"></div>
+	<input id="kickoff" type="button" value="Play" />
  	<div class="panel panel-default">
 		<display:table class="table table-hover row-clickable"
 			name="songs" id="song">
