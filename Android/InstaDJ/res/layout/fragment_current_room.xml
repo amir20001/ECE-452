@@ -54,19 +54,20 @@
             android:paddingBottom="5dp"
             android:src="@drawable/blankart" />
 
-		<RelativeLayout
-		    android:layout_width="wrap_content"
-		    android:layout_height="match_parent" >
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" >
 
-	        <TextView
-	            android:id="@+id/currentroom_stationname_text"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:layout_alignParentTop="true"
-	            android:text="StationName"
-	            android:textAppearance="?android:attr/textAppearanceLarge"
-	            android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/currentroom_stationname_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="16dp"
+                android:text="StationName"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/white" />
 
         </RelativeLayout>
 
@@ -91,11 +92,91 @@
             android:minHeight="40dip"
             android:minWidth="40dip"
             android:src="@drawable/ic_action_add_person" />
-
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/footer"
+        android:id="@+id/footerabove"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_above="@+id/footer"
+        android:background="@color/transparent_black"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:id="@+id/footeraboveleft"
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:layout_weight="50"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/currentroom_owner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Owner"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/footeraboveright"
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:layout_weight="50"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/currentroom_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@+id/currentroom_plus"
+                    android:text="0"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/currentroom_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="+"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/white"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/currentRoom_addScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@+id/currentroom_plus"
+                    android:text="1"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/white"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/currentroom_profile_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_action_add_person" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@id/footer"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
@@ -186,18 +267,6 @@
             android:minHeight="48dip"
             android:minWidth="48dip"
             android:src="@drawable/ic_action_favorite" />
-
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/room_score_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/header"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="101dp"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:visibility="invisible" />
 
 </RelativeLayout>

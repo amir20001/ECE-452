@@ -13,6 +13,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Region;
+import android.graphics.Shader.TileMode;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -38,6 +44,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.instasolutions.instadj.util.DownloadPictureTask;
 import com.instasolutions.instadj.util.ServiceGetHelper;
 import com.instasolutions.instadj.util.ServicePostHelper;
 import com.instasolutions.instadj.util.ServiceUploadHelper;
@@ -62,7 +69,6 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 	private TextView text_songName;
 	private TextView text_artist;
 	private TextView text_stationName;
-	private TextView text_score;
 	private ImageView large_art;
 	private ImageView small_art;
 	private double curTime = 0;
@@ -75,7 +81,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 	private int currentVote = 0;
 	private Boolean firstSong = false;
 	private Boolean userFollowingHost = false;
-	
+
 	public static final Boolean MESSAGES_SUPRESSED = true;
 	public static final Boolean MESSAGES_UNSUPRESSED = false;
 
@@ -160,7 +166,6 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 				.findViewById(R.id.currentroom_stationname_text);
 		large_art = (ImageView) activity.findViewById(R.id.image_art);
 		small_art = (ImageView) activity.findViewById(R.id.album_art);
-		text_score = (TextView) activity.findViewById(R.id.room_score_text);
 
 		btn_play.setOnClickListener(this);
 		btn_favourite.setOnClickListener(this);
@@ -175,12 +180,12 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 		if (prefs.getBoolean("userIsHosting", false)) {
 			// At this time not allowing host to skip or change position in song
 			// TODO: Determine if upload is complete before moving to next song
-			seekbar.setOnSeekBarChangeListener(this);
-			btn_next.setOnClickListener(this);
+//			seekbar.setOnSeekBarChangeListener(this);
+//			btn_next.setOnClickListener(this);
 			btn_closeRoom.setImageResource(R.drawable.ic_action_discard);
 			btn_closeRoom.setVisibility(ImageView.VISIBLE);
 
-			btn_next.setVisibility(ImageView.VISIBLE);
+			btn_next.setVisibility(ImageView.INVISIBLE);
 			btn_like.setVisibility(ImageView.INVISIBLE);
 			btn_dislike.setVisibility(ImageView.INVISIBLE);
 			btn_follow.setVisibility(ImageView.INVISIBLE);
@@ -227,7 +232,6 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 				.findViewById(R.id.currentroom_stationname_text);
 		large_art = (ImageView) activity.findViewById(R.id.image_art);
 		small_art = (ImageView) activity.findViewById(R.id.album_art);
-		text_score = (TextView) activity.findViewById(R.id.room_score_text);
 
 		btn_play.setOnClickListener(this);
 		btn_favourite.setOnClickListener(this);
@@ -236,12 +240,12 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 		if (prefs.getBoolean("userIsHosting", false)) {
 			// At this time not allowing host to skip or change position in song
 			// TODO: Determine if upload is complete before moving to next song
-			seekbar.setOnSeekBarChangeListener(this);
-			btn_next.setOnClickListener(this);
+//			seekbar.setOnSeekBarChangeListener(this);
+//			btn_next.setOnClickListener(this);
 			btn_closeRoom.setImageResource(R.drawable.ic_action_discard);
 			btn_closeRoom.setVisibility(ImageView.VISIBLE);
 
-			btn_next.setVisibility(ImageView.VISIBLE);
+			btn_next.setVisibility(ImageView.INVISIBLE);
 			btn_like.setVisibility(ImageView.INVISIBLE);
 			btn_dislike.setVisibility(ImageView.INVISIBLE);
 			btn_follow.setVisibility(ImageView.INVISIBLE);
@@ -317,6 +321,33 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 						+ station.Owner.getUserID());
 	}
 
+	private void initFavourite() {
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(activity);
+		ServiceGetHelper helper = new ServiceGetHelper() {
+			@Override
+			protected void onPostExecute(String result) {
+
+				if (!result.equals("null")) {
+					btn_favourite
+							.setImageResource(R.drawable.ic_action_favorite_red);
+					currentlyFavourited = true;
+				} else {
+					btn_favourite
+							.setImageResource(R.drawable.ic_action_favorite);
+					currentlyFavourited = false;
+
+				}
+			}
+
+		};
+		helper.executeOnExecutor(
+				AsyncTask.THREAD_POOL_EXECUTOR,
+				"http://instadj.amir20001.cloudbees.net/favourite/get/"
+						+ prefs.getString("UserID", "UserID") + "/"
+						+ station.Song.id);
+	}
+
 	public void setStation(StationData s, Activity a) {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(a);
@@ -326,12 +357,15 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 					+ station.id + "/" + prefs.getString("UserID", "UserID"));
 		}
 		this.station = s;
+		if(!prefs.getBoolean("userIsHosting", false))
+		{
+			setHostProfileData();
+		}
 		this.station.Playlist.populateSongs();
 		if (updateHandler != null)
 			updateHandler.removeCallbacks(UpdateSeekBar);
 		if (mediaplayer != null)
 			mediaplayer.release();
-
 		if (text_stationName != null) {
 			text_stationName.setText(station.Name);
 		}
@@ -371,8 +405,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 			}
 		} else {
 			if (userIsHost) {
-				if(!supressMessage)
-				{
+				if (!supressMessage) {
 					ServicePostHelper helper = new ServicePostHelper();
 					helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 							"http://instadj.amir20001.cloudbees.net/room/play/"
@@ -510,6 +543,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 				playlistPosition = 0;
 			}
 			station.Song = station.Playlist.Songs.get(playlistPosition);
+			initFavourite();
 			ServicePostHelper helper = new ServicePostHelper();
 			helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
 					"http://instadj.amir20001.cloudbees.net/room/updatecurrentsong/"
@@ -555,56 +589,68 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 			dialog.setMessage("Please Wait...");
 			dialog.setIndeterminate(true);
 			dialog.show();
-			ServiceGetHelper helper = new ServiceGetHelper() {
-				@Override
-				protected void onPostExecute(String result) {
-					try {
-						JSONObject jStation = new JSONObject(result);
-						JSONObject jSong = jStation.getJSONObject("song");
-						SongData song = new SongData(jSong.getInt("id"),
-								jSong.getString("title"),
-								jSong.getString("artist"),
-								jSong.getString("album"),
-								jSong.getString("duration"),
-								jSong.getString("songUri"),
-								jSong.getString("artUrl"),
-								jSong.getString("songUrl"),
-								jSong.getInt("netScore"));
-						station.Song = song;
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					dialog.dismiss();
-					mediaplayer = MediaPlayer.create(activity,
-							new Uri.Builder().path(station.Song.Song_URL)
-									.build());
-					// Async task currently takes some time to fire update the
-					// art to blank until it does
-					large_art.setImageResource(R.drawable.blankart);
-					small_art.setImageResource(R.drawable.blankart);
-					final GettArtworkTask task1 = new GettArtworkTask(large_art);
-					task1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-							station.Song.Art_URL);
-					final GettArtworkTask task2 = new GettArtworkTask(small_art);
-					task2.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-							station.Song.Art_URL);
-					text_songName.setText(station.Song.Title);
-					text_artist.setText(station.Song.Artist);
-					endTime = mediaplayer.getDuration();
-					seekbar.setMax((int) endTime);
-					firstSong = false;
+			Handler loadHandler = new Handler();
+			loadHandler.postDelayed(new Runnable(){
 
-					currentlyFavourited = false;
-					currentVote = 0;
-					btn_like.setImageResource(R.drawable.ic_action_good);
-					btn_dislike.setImageResource(R.drawable.ic_action_bad);
-					btn_favourite
-							.setImageResource(R.drawable.ic_action_favorite);
-					play(MESSAGES_SUPRESSED);
+				@Override
+				public void run() {
+					ServiceGetHelper helper = new ServiceGetHelper() {
+						@Override
+						protected void onPostExecute(String result) {
+							try {
+								JSONObject jStation = new JSONObject(result);
+								JSONObject jSong = jStation.getJSONObject("song");
+								SongData song = new SongData(jSong.getInt("id"),
+										jSong.getString("title"),
+										jSong.getString("artist"),
+										jSong.getString("album"),
+										jSong.getString("duration"),
+										jSong.getString("songUri"),
+										jSong.getString("artUrl"),
+										jSong.getString("songUrl"),
+										jSong.getInt("netScore"));
+								station.Song = song;
+								initFavourite();
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+							dialog.dismiss();
+							mediaplayer = MediaPlayer.create(activity,
+									new Uri.Builder().path(station.Song.Song_URL)
+											.build());
+							// Async task currently takes some time to fire update the
+							// art to blank until it does
+							large_art.setImageResource(R.drawable.blankart);
+							small_art.setImageResource(R.drawable.blankart);
+							final GettArtworkTask task1 = new GettArtworkTask(large_art);
+							task1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+									station.Song.Art_URL);
+							final GettArtworkTask task2 = new GettArtworkTask(small_art);
+							task2.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+									station.Song.Art_URL);
+							text_songName.setText(station.Song.Title);
+							text_artist.setText(station.Song.Artist);
+							endTime = mediaplayer.getDuration();
+							seekbar.setMax((int) endTime);
+							firstSong = false;
+
+							currentlyFavourited = false;
+							currentVote = 0;
+							btn_like.setImageResource(R.drawable.ic_action_good);
+							btn_dislike.setImageResource(R.drawable.ic_action_bad);
+							btn_favourite
+									.setImageResource(R.drawable.ic_action_favorite);
+							play(MESSAGES_SUPRESSED);
+						}
+					};
+					
+					helper.execute("http://instadj.amir20001.cloudbees.net/room/get/"
+							+ station.id);
+					
 				}
-			};
-			helper.execute("http://instadj.amir20001.cloudbees.net/room/get/"
-					+ station.id);
+				
+			}, 5000);
+			
 
 		}
 
@@ -634,7 +680,8 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 					jstation.put("currentSongId", station.Song.id);
 					jstation.put("songPosition", 0);
 					jstation.put("songIsPlaying", true);
-					jstation.put("songPlayStartTime", System.currentTimeMillis());
+					jstation.put("songPlayStartTime",
+							System.currentTimeMillis());
 
 					ServicePostHelper post = new ServicePostHelper();
 					post.executeOnExecutor(
@@ -644,6 +691,7 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 					String jString = post.get();
 					jstation = new JSONObject(jString);
 					station.id = jstation.getInt("id");
+
 					ServicePostHelper helper = new ServicePostHelper();
 					helper.executeOnExecutor(
 							AsyncTask.THREAD_POOL_EXECUTOR,
@@ -653,6 +701,20 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 					Editor prefEdit = prefs.edit();
 					prefEdit.putInt("userCurrentRoom", station.id);
 					prefEdit.commit();
+					
+					//TODO: FIX THIS
+					ServiceGetHelper get = new ServiceGetHelper();
+					get.executeOnExecutor(
+							AsyncTask.THREAD_POOL_EXECUTOR,
+							"http://instadj.amir20001.cloudbees.net/user/get" + "/" +
+							prefs.getString("UserID", "0"));
+					JSONObject jUser = new JSONObject(get.get());
+					UserData host = new UserData(jUser.getString("firstName"),
+											jUser.getString("lastName"),
+											jUser.getString("userId"),
+											jUser.getString("score"));
+					station.Owner = host;
+					setHostProfileData();
 
 				} catch (Exception e) {
 					Log.e("instaDJ", "JSONException", e);
@@ -693,22 +755,22 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 
 		}
 
-			ServicePostHelper helper = new ServicePostHelper();
-			helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-					"http://instadj.amir20001.cloudbees.net/song/vote/"
-							+ station.Song.id + "/" + currentVote);
+		ServicePostHelper helper = new ServicePostHelper();
+		helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+				"http://instadj.amir20001.cloudbees.net/song/vote/"
+						+ station.Song.id + "/" + currentVote);
 	}
 
 	private void updateFavourites() {
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(activity);
 		if (currentlyFavourited) {
-			btn_favourite.setImageResource(R.drawable.ic_action_favorite);
-			//TODO:Change this to remove
-//			ServicePostHelper helper = new ServicePostHelper();
-//			helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-//					"http://instadj.amir20001.cloudbees.net/favourite/insert/"
-//							+ prefs.getString("UserID", "0") + "/"
-//							+ station.Song.id);
+
+			ServicePostHelper helper = new ServicePostHelper();
+			helper.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+					"http://instadj.amir20001.cloudbees.net/favourite/delete/"
+							+ prefs.getString("UserID", "0") + "/"
+							+ station.Song.id);
 
 			currentlyFavourited = false;
 		} else {
@@ -784,34 +846,135 @@ public class CurrentRoomFragment extends Fragment implements OnClickListener,
 	}
 
 	public void displayScore(final SongData song) {
-
+		
+		int score = song.score;
 		activity.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				text_score.setText(String.valueOf(song.score));
-				text_score.setVisibility(ImageView.VISIBLE);
-				Toast.makeText(activity, "Last Song Score: " + song.score, Toast.LENGTH_SHORT).show();
+				TextView plusText = (TextView) activity.findViewById(R.id.currentroom_plus);
+				plusText.setVisibility(TextView.VISIBLE);
 			}
 
 		});
-		scoreHandler.postDelayed(new Runnable() {
+		
+		class addScore implements Runnable{
+			
+			int step;
+			int score;
+			addScore(int step, int score)
+			{
+				this.step = step;
+				this.score = score;
+			}
 
 			@Override
 			public void run() {
-				activity.runOnUiThread(new Runnable() {
-
+				
+				class RunOnUI implements Runnable{
+					int step;
+					int score;
+					RunOnUI(int step, int score)
+					{
+						this.step = step;
+						this.score = score;
+					}
+					
 					@Override
 					public void run() {
-						text_score.setVisibility(ImageView.INVISIBLE);
+						if(step == 0)
+						{
+							TextView scoreText = (TextView) activity.findViewById(R.id.currentRoom_addScore);
+							scoreText.setText(String.valueOf(score));
+							scoreText.setVisibility(TextView.VISIBLE);
+						}
+						else if(step == 1)
+						{
+							TextView userScoreText = (TextView) activity.findViewById(R.id.currentroom_score);
+							TextView scoreText = (TextView) activity.findViewById(R.id.currentRoom_addScore);
+							scoreText.setText(String.valueOf(score));
+							String text = userScoreText.getText().toString();
+							int curScore = Integer.parseInt(text);
+							userScoreText.setText(String.valueOf(curScore+1));
 
+						}
+						else if(step == 2)
+						{
+							TextView userScoreText = (TextView) activity.findViewById(R.id.currentroom_score);
+							TextView scoreText = (TextView) activity.findViewById(R.id.currentRoom_addScore);
+							scoreText.setText(String.valueOf(score));
+							String text = userScoreText.getText().toString();
+							int curScore = Integer.parseInt(text);
+							userScoreText.setText(String.valueOf(curScore-1));
+
+						}
+						else if(step == 3)
+						{
+							TextView scoreText = (TextView) activity.findViewById(R.id.currentRoom_addScore);
+							scoreText.setVisibility(TextView.INVISIBLE);
+							TextView plusText = (TextView) activity.findViewById(R.id.currentroom_plus);
+							plusText.setVisibility(TextView.INVISIBLE);
+						}
+						
 					}
-
-				});
-
+					
+				}
+				activity.runOnUiThread(new RunOnUI(step, score));
 			}
-		}, 5000);
+		}
 
+		scoreHandler.postDelayed(new addScore(0, 0), 500);
+		if (score > 0) {
+			while (score > 0) {
+				scoreHandler.postDelayed(new addScore(1, score), 500);
+				score--;
+			}
+		} else if (score < 0) {
+			while (score < 0) {
+				scoreHandler.postDelayed(new addScore(2, score), 500);
+				score++;
+			}
+		}
+		scoreHandler.postDelayed(new addScore(3, 0), 2000);
+
+	}
+
+	public void setHostProfileData() {
+		final DownloadPictureTask task = new DownloadPictureTask() {
+			@Override
+			protected void onPostExecute(Bitmap picture) {
+
+				TextView ownerText = (TextView) activity
+						.findViewById(R.id.currentroom_owner);
+				ownerText.setText("DJ " + station.Owner.getFirstName() + " "
+						+ station.Owner.getLastName().charAt(0) + ".");
+				TextView scoreText = (TextView) activity
+						.findViewById(R.id.currentroom_score);
+				scoreText.setText(station.Owner.getScore());
+				if (picture.getWidth() > 0 && picture.getHeight() > 0) {
+					Bitmap circleBitmap = Bitmap.createBitmap(
+							picture.getWidth(), picture.getHeight(),
+							Bitmap.Config.ARGB_8888);
+					BitmapShader shader = new BitmapShader(picture,
+							TileMode.CLAMP, TileMode.CLAMP);
+					Paint paint = new Paint();
+					paint.setAntiAlias(true);
+					paint.setShader(shader);
+					Canvas c = new Canvas(circleBitmap);
+					c.drawCircle(picture.getWidth() / 2,
+							picture.getHeight() / 2, picture.getWidth() / 2,
+							paint);
+					ImageView profileImage = (ImageView) activity
+							.findViewById(R.id.currentroom_profile_pic);
+					profileImage.setImageBitmap(circleBitmap);
+				}
+
+				
+			}
+		};
+		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+				"https://graph.facebook.com/" + station.Owner.getUserID()
+						+ "/picture?width=200&height=200");
 	}
 
 	private void updateFollowing() {
